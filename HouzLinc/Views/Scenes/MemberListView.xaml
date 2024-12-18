@@ -1,0 +1,103 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Scenes.MemberListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Scenes"
+    xmlns:vm="using:ViewModel.Scenes"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:android="http://uno.ui/android"
+    xmlns:ios="http://uno.ui/ios"
+    xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_win="http://uno.ui/not_win"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d android ios wasm not_win"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    IsTabStop="False">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:SceneViewModel">
+            <StackPanel HorizontalAlignment="Stretch">
+                <TextBlock
+                    Text="This scene has no member"
+                    Margin="10"
+                    TextWrapping="NoWrap"
+                    Style="{StaticResource BodyTextBlockStyle}"
+                    Visibility="{x:Bind HasAnyMember, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"/>
+                <GridView
+                    ItemsSource="{x:Bind SceneMembers, Mode=OneWay}"
+                    SelectedItem="{x:Bind SceneMembers.SelectedMember, Mode=TwoWay}"
+                    ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
+                    ItemClick="OnItemClick"
+                    IsItemClickEnabled="True">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MemberViewModel">
+                            <Grid MinHeight="100" PointerEntered="{x:Bind PointerEntered}" PointerExited="{x:Bind PointerExited}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- - Canvas is necessary for PointerEntered/Exited to cover the whole item area -->
+                                <Canvas
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="Transparent"/>
+                                <Ellipse
+                                    Grid.Column="0"
+                                    Width="96"
+                                    Height="96"
+                                    Margin="10"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Fill="{ThemeResource SceneMemberStampColor}"/>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="72"
+                                    Height="72"
+                                    Margin="6"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Source="{x:Bind DeviceModelIconPath_64x64, Mode=OneWay}"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="400">
+                                    <TextBlock Text="{x:Bind DeviceDisplayNameAndId}" FontWeight="Bold" TextWrapping="NoWrap"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Controller" Visibility="{x:Bind IsController}"/>
+                                        <TextBlock Text="," Visibility="{x:Bind IsBoth}" Margin="0,0,5,0"/>
+                                        <TextBlock Text="Responder" Visibility="{x:Bind IsResponder}"/>
+                                    </StackPanel>
+                                    <TextBlock Visibility="{x:Bind DeviceHasRoom}" Text="{x:Bind DeviceRoom}" TextWrapping="NoWrap"/>
+                                    <TextBlock Visibility="{x:Bind DeviceHasChannels}" Text="{x:Bind DeviceChannelTypeIdAndName}" TextWrapping="NoWrap"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Bind OnLevel, Converter={StaticResource StringFormatConverter}, ConverterParameter='Level: {0}'}" TextWrapping="NoWrap"/>
+                                        <TextBlock Text="{x:Bind RampRateAsString, Converter={StaticResource StringFormatConverter}, ConverterParameter=', Ramp: {0}'}" TextWrapping="NoWrap"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--
+                                    HorizontalAlignment is off by around 74 pixels on non-Windows platforms.
+                                    CommandBarFlyoutEllipsisButtonStyle does not render correctly on non-Windows platforms.
+                                    Prefixing below works around that issue temporarily.
+                                    TODO: need a better fix.
+                                -->
+                                <Button
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Right"
+                                    Style="{ThemeResource SplitViewPaneButtonStyle}"
+                                    Click="EditSceneMemberAsync"
+                                    win:ToolTipService.ToolTip="Edit or remove this scene member"
+                                    Visibility="{x:Bind IsEditButtonShown, Mode=OneWay}">
+                                    <SymbolIcon Symbol="Edit"/>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </StackPanel>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

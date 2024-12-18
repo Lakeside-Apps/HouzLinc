@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "HouzLinc",
+  "display": "standalone",
+  "name": "HouzLinc",
+  "short_name": "HouzLinc",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

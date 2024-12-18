@@ -1,0 +1,47 @@
+﻿<UserControl
+    x:Class="HouzLinc.Controls.LevelControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Controls"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="ThisLevelControl">
+
+    <StackPanel Orientation="Horizontal">
+        <FontIcon Glyph="&#xEC8A;" Visibility="{x:Bind AreIconsVisible}"/>
+        <Slider
+            Grid.Column="0"
+            Minimum="0"
+            Maximum="100"
+            Orientation="Horizontal"
+            MinWidth="{x:Bind ThisLevelControl.MinWidth}"
+            MaxWidth="{x:Bind ThisLevelControl.MaxWidth}"
+            Value="{x:Bind doublePercentLevel, Mode=OneWay}"
+            ValueChanged="{x:Bind SliderValueChanged}"
+            Margin="0,5,0,0"
+            IsThumbToolTipEnabled="False">
+            <Slider.Header>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,-5">
+                    <TextBlock
+                        Text="{x:Bind Header, Mode=OneWay}"
+                        Padding="1"
+                        Margin="0,0,5,0"
+                        Visibility="{x:Bind isHeaderVisible}"/>
+                    <TextBox
+                        Padding="2,0,2,0"
+                        Margin="0,0,0,0"
+                        TextChanged="TextValueChanged"
+                        Text="{x:Bind stringPercentLevel, Mode=OneWay}"
+                        MaxLength="4"
+                        MinHeight="15"
+                        MinWidth="40"/>
+                </StackPanel>
+            </Slider.Header>
+        </Slider>
+        <FontIcon Glyph="&#xE706;" Visibility="{x:Bind AreIconsVisible}"/>
+    </StackPanel>
+</UserControl>

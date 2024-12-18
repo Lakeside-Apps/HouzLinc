@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0">
+  <application />
+  <insteon>
+    <active_gateways>
+      <gateway insteonID="AA.00.00">
+        <ip port="25105" address="10.0.0.34" />
+      </gateway>
+      <gateway insteonID="BB.00.00">
+        <ip port="25105" address="10.0.0.99" />
+      </gateway>
+    </active_gateways>
+    <active_devices>
+      <device insteonID="AA.00.00" category="3" subcategory="51" revision="165" status="connected" powerline="0" radio="0" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" displayName="Hub" active="1">
+        <location />
+        <channels>
+          <channel id="0" />
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+          <channel id="7" />
+          <channel id="8" />
+          <channel id="9" />
+          <channel id="10" />
+          <channel id="11" />
+          <channel id="12" />
+          <channel id="13" />
+          <channel id="14" />
+          <channel id="15" />
+          <channel id="16" />
+          <channel id="17" />
+          <channel id="18" />
+          <channel id="19" />
+          <channel id="20" />
+          <channel id="21" />
+          <channel id="22" />
+          <channel id="23" />
+          <channel id="24" />
+          <channel id="25" />
+          <channel id="26" />
+          <channel id="27" />
+          <channel id="28" />
+          <channel id="29" />
+          <channel id="30" />
+          <channel id="31" />
+          <channel id="32" />
+          <channel id="33" />
+          <channel id="34" />
+          <channel id="35" />
+          <channel id="36" />
+          <channel id="37" />
+          <channel id="38" />
+          <channel id="39" />
+          <channel id="40" />
+          <channel id="41" />
+          <channel id="42" />
+          <channel id="43" />
+          <channel id="44" />
+          <channel id="45" />
+          <channel id="46" />
+          <channel id="47" />
+          <channel id="48" />
+          <channel id="49" />
+          <channel id="50" />
+          <channel id="51" />
+          <channel id="52" />
+          <channel id="53" />
+          <channel id="54" />
+          <channel id="55" />
+          <channel id="56" />
+          <channel id="57" />
+          <channel id="58" />
+          <channel id="59" />
+          <channel id="60" />
+          <channel id="61" />
+          <channel id="62" />
+          <channel id="63" />
+          <channel id="64" />
+          <channel id="65" />
+          <channel id="66" />
+          <channel id="67" />
+          <channel id="68" />
+          <channel id="69" />
+          <channel id="70" />
+          <channel id="71" />
+          <channel id="72" />
+          <channel id="73" />
+          <channel id="74" />
+          <channel id="75" />
+          <channel id="76" />
+          <channel id="77" />
+          <channel id="78" />
+          <channel id="79" />
+          <channel id="80" />
+          <channel id="81" />
+          <channel id="82" />
+          <channel id="83" />
+          <channel id="84" />
+          <channel id="85" />
+          <channel id="86" />
+          <channel id="87" />
+          <channel id="88" />
+          <channel id="89" />
+          <channel id="90" />
+          <channel id="91" />
+          <channel id="92" />
+          <channel id="93" />
+          <channel id="94" />
+          <channel id="95" />
+          <channel id="96" />
+          <channel id="97" />
+          <channel id="98" />
+          <channel id="99" />
+          <channel id="100" />
+          <channel id="101" />
+          <channel id="102" />
+          <channel id="103" />
+          <channel id="104" />
+          <channel id="105" />
+          <channel id="106" />
+          <channel id="107" />
+          <channel id="108" />
+          <channel id="109" />
+          <channel id="110" />
+          <channel id="111" />
+          <channel id="112" />
+          <channel id="113" />
+          <channel id="114" />
+          <channel id="115" />
+          <channel id="116" />
+          <channel id="117" />
+          <channel id="118" />
+          <channel id="119" />
+          <channel id="120" />
+          <channel id="121" />
+          <channel id="122" />
+          <channel id="123" />
+          <channel id="124" />
+          <channel id="125" />
+          <channel id="126" />
+          <channel id="127" />
+          <channel id="128" />
+          <channel id="129" />
+          <channel id="130" />
+          <channel id="131" />
+          <channel id="132" />
+          <channel id="133" />
+          <channel id="134" />
+          <channel id="135" />
+          <channel id="136" />
+          <channel id="137" />
+          <channel id="138" />
+          <channel id="139" />
+          <channel id="140" />
+          <channel id="141" />
+          <channel id="142" />
+          <channel id="143" />
+          <channel id="144" />
+          <channel id="145" />
+          <channel id="146" />
+          <channel id="147" />
+          <channel id="148" />
+          <channel id="149" />
+          <channel id="150" />
+          <channel id="151" />
+          <channel id="152" />
+          <channel id="153" />
+          <channel id="154" />
+          <channel id="155" />
+          <channel id="156" />
+          <channel id="157" />
+          <channel id="158" />
+          <channel id="159" />
+          <channel id="160" />
+          <channel id="161" />
+          <channel id="162" />
+          <channel id="163" />
+          <channel id="164" />
+          <channel id="165" />
+          <channel id="166" />
+          <channel id="167" />
+          <channel id="168" />
+          <channel id="169" />
+          <channel id="170" />
+          <channel id="171" />
+          <channel id="172" />
+          <channel id="173" />
+          <channel id="174" />
+          <channel id="175" />
+          <channel id="176" />
+          <channel id="177" />
+          <channel id="178" />
+          <channel id="179" />
+          <channel id="180" />
+          <channel id="181" />
+          <channel id="182" />
+          <channel id="183" />
+          <channel id="184" />
+          <channel id="185" />
+          <channel id="186" />
+          <channel id="187" />
+          <channel id="188" />
+          <channel id="189" />
+          <channel id="190" />
+          <channel id="191" />
+          <channel id="192" />
+          <channel id="193" />
+          <channel id="194" />
+          <channel id="195" />
+          <channel id="196" />
+          <channel id="197" />
+          <channel id="198" />
+          <channel id="199" />
+          <channel id="200" />
+          <channel id="201" />
+          <channel id="202" />
+          <channel id="203" />
+          <channel id="204" />
+          <channel id="205" />
+          <channel id="206" />
+          <channel id="207" />
+          <channel id="208" />
+          <channel id="209" />
+          <channel id="210" />
+          <channel id="211" />
+          <channel id="212" />
+          <channel id="213" />
+          <channel id="214" />
+          <channel id="215" />
+          <channel id="216" />
+          <channel id="217" />
+          <channel id="218" />
+          <channel id="219" />
+          <channel id="220" />
+          <channel id="221" />
+          <channel id="222" />
+          <channel id="223" />
+          <channel id="224" />
+          <channel id="225" />
+          <channel id="226" />
+          <channel id="227" />
+          <channel id="228" />
+          <channel id="229" />
+          <channel id="230" />
+          <channel id="231" />
+          <channel id="232" />
+          <channel id="233" />
+          <channel id="234" />
+          <channel id="235" />
+          <channel id="236" />
+          <channel id="237" />
+          <channel id="238" />
+          <channel id="239" />
+          <channel id="240" />
+          <channel id="241" />
+          <channel id="242" />
+          <channel id="243" />
+          <channel id="244" />
+          <channel id="245" />
+          <channel id="246" />
+          <channel id="247" />
+          <channel id="248" />
+          <channel id="249" />
+          <channel id="250" />
+          <channel id="251" />
+          <channel id="252" />
+          <channel id="253" />
+          <channel id="254" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="11.11.11" category="1" subcategory="65" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="-1" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc04DCS" displayName="Keypad - Sink" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3">
+            <onMask>
+              <device value="2" lastUpdate="6/18/2024 6:25:12 PM" />
+            </onMask>
+            <onLevel>
+              <device value="255" lastUpdate="6/18/2024 6:25:12 PM" />
+            </onLevel>
+            <rampRate>
+              <device value="28" lastUpdate="6/18/2024 6:25:12 PM" />
+            </rampRate>
+          </channel>
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="6/18/2024 6:25:12 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="22.22.22" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="2975856854" />
+          </record>
+          <record sequence="1">
+            <device address="33.33.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="2378528075" />
+          </record>
+          <record sequence="2">
+            <device address="44.44.44" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="988657427" />
+          </record>
+          <record sequence="3">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="1274138285" />
+          </record>
+          <record sequence="4">
+            <device address="55.55.55" group="6" recordControl="162" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="1854405623" />
+          </record>
+          <record sequence="5">
+            <device address="22.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="1860217812" />
+          </record>
+          <record sequence="6">
+            <device address="33.33.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="1965498010" />
+          </record>
+          <record sequence="7">
+            <device address="44.44.44" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="2614088479" />
+          </record>
+          <record sequence="8">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="3385680346" />
+          </record>
+        </database>
+        <properties>
+          <p name="operatingFlags">
+            <device value="0x80" lastUpdate="6/18/2024 6:25:12 PM" />
+          </p>
+        </properties>
+      </device>
+      <device insteonID="22.22.22" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="100" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Cove Lighting" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="6/18/2024 6:25:12 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="2" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="1881752693" />
+          </record>
+          <record sequence="1">
+            <device address="11.11.11" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="826254717" />
+          </record>
+          <record sequence="2">
+            <device address="33.33.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="1175647712" />
+          </record>
+          <record sequence="3">
+            <device address="44.44.44" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="3918886030" />
+          </record>
+          <record sequence="4">
+            <device address="55.55.55" group="6" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="3812170437" />
+          </record>
+          <record sequence="5">
+            <device address="11.11.11" group="3" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="2787737559" />
+          </record>
+          <record sequence="6">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="506276426" />
+          </record>
+        </database>
+        <properties>
+          <p name="operatingFlags">
+            <device value="0x80" lastUpdate="6/18/2024 6:25:12 PM" />
+          </p>
+        </properties>
+      </device>
+      <device insteonID="33.33.33" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="20" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Island Cans" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="6/18/2024 6:25:12 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="2" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="2502517135" />
+          </record>
+          <record sequence="1">
+            <device address="22.22.22" group="1" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="4260362592" />
+          </record>
+          <record sequence="2">
+            <device address="55.55.55" group="6" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="1467204031" />
+          </record>
+          <record sequence="3">
+            <device address="11.11.11" group="3" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="1332985265" />
+          </record>
+          <record sequence="4">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="229666457" />
+          </record>
+        </database>
+        <properties />
+      </device>
+      <device insteonID="44.44.44" category="1" subcategory="65" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="20" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc04DCS" displayName="Keypad - Stove Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="6/18/2024 6:25:12 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="2" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="2921798636" />
+          </record>
+          <record sequence="1">
+            <device address="11.11.11" group="2" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="2366099929" />
+          </record>
+          <record sequence="2">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="1533793538" />
+          </record>
+          <record sequence="3">
+            <device address="22.22.22" group="1" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1599469118" />
+          </record>
+          <record sequence="4">
+            <device address="55.55.55" group="6" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="2364234352" />
+          </record>
+          <record sequence="5">
+            <device address="55.55.55" group="6" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1050975217" />
+          </record>
+          <record sequence="6">
+            <device address="11.11.11" group="3" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="3444901628" />
+          </record>
+          <record sequence="7">
+            <device address="11.11.11" group="3" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1630597473" />
+          </record>
+          <record sequence="8">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="1279118515" />
+          </record>
+        </database>
+        <properties />
+      </device>
+      <device insteonID="55.55.55" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Ceiling Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="6/18/2024 6:25:12 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="6" recordControl="226" data1="3" data2="27" data3="6" scene="1" syncstatus="changed" uid="1574251401" />
+          </record>
+          <record sequence="1">
+            <device address="22.22.22" group="6" recordControl="226" data1="3" data2="27" data3="6" scene="1" syncstatus="changed" uid="3706552535" />
+          </record>
+          <record sequence="2">
+            <device address="33.33.33" group="6" recordControl="226" data1="3" data2="27" data3="6" scene="1" syncstatus="changed" uid="2148079921" />
+          </record>
+          <record sequence="3">
+            <device address="44.44.44" group="6" recordControl="226" data1="3" data2="27" data3="6" scene="1" syncstatus="changed" uid="3921704637" />
+          </record>
+          <record sequence="4">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="1793579254" />
+          </record>
+        </database>
+        <properties />
+      </device>
+      <device insteonID="AA.AA.AA" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Under Cabinet Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="BB.BB.BB" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Nook Ceiling Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="CC.CC.CC" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Pantry Lights" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+    </active_devices>
+    <scenes nextSceneID="2">
+      <scene id="1" name="Kitchen" lastTrigger="05/17/2014 11:02:08 AM, On" notes="Turn on kitchen main lights">
+        <members>
+          <member iid="11.11.11" group="2" controller="1" responder="1" data1="255" data2="28" data3="2" status="Done" tag="35" />
+          <member iid="22.22.22" group="1" controller="1" responder="1" data1="76" data2="28" data3="1" status="Done" tag="1" />
+          <member iid="33.33.33" group="1" responder="1" data1="153" data2="28" data3="1" status="Done" tag="1" />
+          <member iid="44.44.44" group="4" responder="1" data1="255" data2="28" data3="4" status="Done" tag="35" />
+          <member iid="55.55.55" group="6" controller="1" data1="100" data2="27" data3="6" status="Done" tag="35" />
+          <member iid="44.44.44" group="5" responder="1" data1="76" data2="28" data3="5" status="Done" tag="33" />
+          <member iid="11.11.11" group="3" controller="1" data1="160" data2="28" data3="3" status="Done" tag="35" />
+        </members>
+      </scene>
+    </scenes>
+  </insteon>
+</settings>

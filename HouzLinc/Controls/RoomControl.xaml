@@ -1,0 +1,33 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Controls.RoomControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Scenes"
+    xmlns:vm="using:ViewModel.Scenes"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:dlg="using:HouzLinc.Dialogs"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    HorizontalContentAlignment="Stretch"
+    IsTabStop="False">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ComboBox
+            MinWidth="120"
+            ItemsSource="{x:Bind Rooms, Mode=OneWay}"
+            SelectedItem="{x:Bind RoomDisplayText, Mode=TwoWay}"/>
+        <Button
+            Tag="AddRoom"
+            Grid.Column="1"
+            win:ToolTipService.ToolTip="Add New Room"
+            Margin="0,0,3,0"
+            Style="{ThemeResource SplitViewPaneButtonStyle}"
+            Click="AddNewRoomButton_Click">
+            <SymbolIcon Symbol="Add"/>
+        </Button>
+    </Grid>
+</ContentControl>

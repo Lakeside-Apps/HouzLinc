@@ -1,0 +1,25 @@
+﻿<ContentDialog
+    x:Class="HouzLinc.Dialogs.ConfirmRemoveSceneMemberDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Dialogs"
+    xmlns:vm="using:ViewModel.Scenes"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    PrimaryButtonText="Yes, remove it!"
+    CloseButtonText="No, cancel"
+    MinWidth="0"
+    MinHeight="0">
+
+    <ContentDialog.TitleTemplate>
+        <DataTemplate x:DataType="vm:MemberViewModel">
+            <StackPanel>
+                <TextBlock Text="Remove Scene Member" Style="{StaticResource TitleTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind DeviceDisplayNameAndId, Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+    </ContentDialog.TitleTemplate>
+
+    <TextBlock Text="Are you sure you want to remove this scene member?"/>
+</ContentDialog>

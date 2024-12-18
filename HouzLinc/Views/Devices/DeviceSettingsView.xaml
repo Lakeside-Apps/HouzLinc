@@ -1,0 +1,102 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Devices.DeviceSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Devices"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:ctkControls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    HorizontalContentAlignment="Stretch">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:DeviceViewModel">
+            <StackPanel>
+                <ctkControls:SettingsCard Header="Local Programming" Description="Lock manual programming at the device?">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="120"
+                        HorizontalAlignment="Right"
+                        IsOn="{x:Bind ProgramLock, Mode=TwoWay}"
+                        OffContent="Unlocked"
+                        OnContent="Locked"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="LED Backlight" Description="Turn all LED backlight on or off.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="120"
+                        HorizontalAlignment="Right"
+                        IsOn="{x:Bind LEDOn, Mode=TwoWay}"
+                        OffContent="Off"
+                        OnContent="On"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="LED Brightness" Description="Sets the brightness of LED backlight." MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ctl:LevelControl
+                        MinWidth="120"
+                        MinLevel="1"
+                        MaxLevel="127"
+                        Level="{x:Bind LEDBrightness, Mode=TwoWay}"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="On Level" Description="Sets level to set the load at when the button is pressed." MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ctl:LevelControl MinWidth="120" AreIconsVisible="False" Level="{x:Bind OnLevel, Mode=TwoWay}"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Ramp Rate" Description="Sets ramp rate to use when the button is pressed." MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ctl:RampRatesComboBox SelectedIndex="{x:Bind RampRate, Mode=TwoWay}"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Show Traffic" Description="LED flashes on data traffic.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        HorizontalAlignment="Right"
+                        IsOn="{x:Bind LEDOnTx, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Resume Dim" Description="Device returns to last level used when turned on.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="120"
+                        IsOn="{x:Bind ResumeDim, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Load Sense" Description="Device senses when its load is turned on/off and triggers links.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="120"
+                        IsOn="{x:Bind LoadSenseOn, Mode=TwoWay}"
+                        OffContent="Off"
+                        OnContent="On"/>
+                </ctkControls:SettingsCard>
+            </StackPanel>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

@@ -1,0 +1,90 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Devices.RemoteLincSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Devices"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:ctkControls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    HorizontalContentAlignment="Stretch">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:RemoteLincViewModel">
+            <StackPanel>
+                <ctkControls:SettingsCard Header="Local Programming" Description="Locks manual programming at the device.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="120"
+                        HorizontalAlignment="Right"
+                        IsOn="{x:Bind ProgramLock, Mode=TwoWay}"
+                        OffContent="Unlocked"
+                        OnContent="Locked"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Snoozed" Description="Requires pressing key or set button to wake up.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="0"
+                        IsOn="{x:Bind Snoozed, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="LED On" Description="LED lights up on data traffic.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="0"
+                        IsOn="{x:Bind LEDOn, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Beeps on Key Press" Description="Beeps on every key press.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="0"
+                        IsOn="{x:Bind BeeperOn, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Keep awake" Description="Do not allow device to fall asleep (at the cost of battery use).">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="0"
+                        IsOn="{x:Bind StayAwake, Mode=TwoWay}"
+                        OffContent="Yes"
+                        OnContent="No"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Allow Heartbeep" Description="Allow device to wake up every so often.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="0"
+                        IsOn="{x:Bind NoHeartbeat, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+            </StackPanel>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

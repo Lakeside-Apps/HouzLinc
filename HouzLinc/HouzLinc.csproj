@@ -1,0 +1,150 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>
+      net8.0-android;
+      net8.0-ios;
+      net8.0-maccatalyst;
+      net8.0-windows10.0.22621;
+      net8.0-desktop;
+      net8.0-browserwasm;
+    </TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <!-- Display name -->
+    <ApplicationTitle>HouzLinc</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.ehouz.houzlinc</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!--
+      If you encounter this error message:
+
+        error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+        Please update to a newer .NET SDK in order to reference this assembly.
+
+      This means that the two packages below must be aligned with the "build" version number of
+      the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+      must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+    -->
+    <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+      Lottie;
+      Hosting;
+      Configuration;
+    </UnoFeatures>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+  </PropertyGroup>
+
+<!-- 
+ The following sections set packaging attributes based on how the build is run and
+ what the expected output is. In particular this writes the Publisher attribute in the
+ Package.appxmanifest file as follows:
+  - For Visual Studio local installs (F5, Ctrl F5), OID should not be present in the
+    publisher (Package.appxmanifest/Package/Identity/Provider) or Visual Studio
+    will not be able to deploy the package.
+  - To create an unsigned package, we use the magic OID specified below in the Publisher.
+    This is a special value that indicates that the Publisher is in the unsigned namespace,
+    see: https://github.com/MicrosoftDocs/msix-docs/issues/365.
+  - To create a signed package, we need to specify a Publisher CN (Common name)
+    that matches the certificate used to sign the package (not done yet!).
+ -->
+  <PropertyGroup>
+    <Publisher>CN=eHouz</Publisher>
+    <Namespace>
+      <Namespace Prefix="dn" Uri="http://schemas.microsoft.com/appx/manifest/foundation/windows10" />
+    </Namespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(PublishUnsignedPackage)' == 'true' ">
+    <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
+    <AppxBundle>Never</AppxBundle>
+    <UapAppxPackageBuildMode>Sideloading</UapAppxPackageBuildMode>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <Publisher>CN=eHouz, OID.2.25.311729368913984317654407730594956997722=1</Publisher>
+  </PropertyGroup>
+
+  <Target Name="UpdateAppxManifest" BeforeTargets="GenerateManifests" Outputs=".\Package.appmanifest">
+    <XmlPoke XmlInputPath=".\Package.appxmanifest" 
+             Query="/dn:Package/dn:Identity/@Publisher"
+             Namespaces="$(Namespace)"
+             Value="$(Publisher)" />
+    <Message Importance="High" Text="Setting Package.appxmanifest/Package/Identity/Publisher to: $(Publisher)" />
+  </Target>
+
+  <!--
+  Platform specific properties and dependencies
+  -->
+  <Choose>
+    <When Condition="'$(TargetFramework)'=='net8.0-ios'">
+    </When>
+    <When Condition="'$(TargetFramework)'=='net8.0-android'">
+      <PropertyGroup>
+        <SupportedOSPlatformVersion>33.0</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(TargetFramework)'=='net8.0-maccatalyst'">
+    </When>
+    <When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041'">
+      <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(TargetFramework)'=='net8.0-desktop'">
+    </When>
+    <When Condition="'$(TargetFramework)'=='net8.0-browserwasm'">
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" />
+    <!-- Add more community toolkit references here -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
+  </ItemGroup>
+
+  <!--
+  This is a temporary workaround to avoid error "NETSDK1152: Found multiple publish output files with the same relative path:"
+  for Microsoft.Web.WebView2.Core.dll, with one coming from MsixContent and the other from the Microsoft.Web.Webview2 Nuget package.
+  If both are present, we only keep the one from the NuGet package. See https://github.com/unoplatform/uno/issues/14555.
+-->
+  <Target Name="ResolveWebView2CoreDuplicates1" BeforeTargets="_ComputeResolvedFilesToPublishTypes" AfterTargets="ComputeFilesToPublish">
+    <Message Importance="high" Text="Applying workaround to resolve Microsoft.Web.WebView2.Core.dll duplication in package (1)" />
+    <ItemGroup>
+      <_WebView2CoreFilesToExclude Include="@(ResolvedFileToPublish)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Core'" />
+    </ItemGroup>
+    <ItemGroup Condition="'@(_WebView2CoreFilesToExclude-&gt;Count())' &gt; 1">
+      <_WebView2CoreFilesToExclude Remove="@(_WebView2CoreFilesToExclude)" Condition="$([System.String]::Copy(%(FullPath)).Contains('.nuget'))" />
+      <ResolvedFileToPublish Remove="@(_WebView2CoreFilesToExclude)" />
+    </ItemGroup>
+    <Message Importance="high" Text="Removed: @(_WebView2CoreFilesToExclude)" />
+  </Target>
+
+  <Target Name="ResolveWebView2CoreDuplicates2" BeforeTargets="_ComputeAppxPackagePayload" AfterTargets="GetPackagingOutputs">
+    <Message Importance="high" Text="Applying workaround to resolve Microsoft.Web.WebView2.Core.dll duplication in package (2)" />
+    <ItemGroup>
+      <_WebView2CoreOutputsToExclude Include="@(PackagingOutputs)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Core'" />
+    </ItemGroup>
+    <ItemGroup Condition="'@(_WebView2CoreOutputsToExclude-&gt;Count())' &gt; 1">
+      <_WebView2CoreOutputsToExclude Remove="@(_WebView2CoreOutputsToExclude)" Condition="$([System.String]::Copy(%(FullPath)).Contains('.nuget'))" />
+      <PackagingOutputs Remove="@(_WebView2CoreOutputsToExclude)" />
+    </ItemGroup>
+    <Message Importance="high" Text="Removed: @(_WebView2CoreOutputsToExclude)" />
+  </Target>
+
+  <ItemGroup>
+    <UnoIcon Include="Assets\Icons\appicon.svg" ForegroundFile="Assets\Icons\appicon_foreground.svg" ForegroundScale="0.65" />
+    <UnoSplashScreen Include="Assets\SplashScreen\splash_screen.svg" />
+  </ItemGroup>
+
+</Project>

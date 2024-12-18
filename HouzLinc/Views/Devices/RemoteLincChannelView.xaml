@@ -1,0 +1,130 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Devices.RemoteLincChannelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Devices"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:links="using:HouzLinc.Views.Links"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <ContentControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Devices/RemoteLincButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <utils:BoolToNullableBool x:Key="BoolToNullableBool"/>
+        </ResourceDictionary>
+    </ContentControl.Resources>
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:RemoteLincViewModel">
+            <Grid
+                HorizontalAlignment="Left"
+                Height="250"
+                VerticalAlignment="Top"
+                Width="125">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <local:RemoteLincButton
+                    x:Name="Scene1Off"
+                    IsChecked="{x:Bind Button1Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    <Grid HorizontalAlignment="Left" Margin="3,0,3,0">
+                        <FontIcon Glyph="&#xE70D;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene1On"
+                    IsChecked="{x:Bind Button2Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="1"
+                    Grid.Row="0">
+                    <Grid HorizontalAlignment="Right" Margin="3,0,3,0">
+                        <TextBlock Text="a" TextAlignment="Center" VerticalAlignment="Top"/>
+                        <FontIcon Glyph="&#xE70E;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene2Off"
+                    IsChecked="{x:Bind Button3Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="0"
+                    Grid.Row="1">
+                    <Grid HorizontalAlignment="Left" Margin="3,0,3,0">
+                        <FontIcon Glyph="&#xE70D;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene2On"
+                    IsChecked="{x:Bind Button4Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                    <Grid HorizontalAlignment="Right" Margin="3,0,3,0">
+                        <TextBlock Text="b" TextAlignment="Center" VerticalAlignment="Top"/>
+                        <FontIcon Glyph="&#xE70E;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene3Off"
+                    IsChecked="{x:Bind Button5Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="0"
+                    Grid.Row="2">
+                    <Grid HorizontalAlignment="Left" Margin="3,0,3,0">
+                        <FontIcon Glyph="&#xE70D;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene3On"
+                    IsChecked="{x:Bind Button6Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="1"
+                    Grid.Row="2">
+                    <Grid HorizontalAlignment="Right" Margin="3,0,3,0">
+                        <TextBlock Text="c" TextAlignment="Center" VerticalAlignment="Top"/>
+                        <FontIcon Glyph="&#xE70E;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene4Off"
+                    IsChecked="{x:Bind Button7Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="0"
+                    Grid.Row="3">
+                    <Grid HorizontalAlignment="Left" Margin="3,0,3,0">
+                        <FontIcon Glyph="&#xE70D;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+                <local:RemoteLincButton
+                    x:Name="Scene4On"
+                    IsChecked="{x:Bind Button8Checked, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                    Style="{StaticResource RemoteLincButtonStyle}"
+                    Grid.Column="1"
+                    Grid.Row="3">
+                    <Grid HorizontalAlignment="Right" Margin="3,0,3,0">
+                        <TextBlock Text="d" TextAlignment="Center" VerticalAlignment="Top"/>
+                        <FontIcon Glyph="&#xE70E;" VerticalAlignment="Bottom" FontSize="14"/>
+                    </Grid>
+                </local:RemoteLincButton>
+            </Grid>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

@@ -1,0 +1,78 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Devices.DeviceStatusView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Devices"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:scenesvm="using:ViewModel.Scenes"
+    xmlns:links="using:HouzLinc.Views.Links"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:dialogs="using:HouzLinc.Dialogs"
+    HorizontalContentAlignment="Stretch">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:DeviceViewModel">
+            <StackPanel>
+                <!-- We can't use x:Load here or the button bindings won't work (Uno Bug?) -->
+                <StackPanel x:Name="DeviceStatusConnectedView" Visibility="{x:Bind IsConnected, Mode=OneWay}">
+                    <Border
+                        Background="{StaticResource DeviceStampColor}"
+                        CornerRadius="10"
+                        Height="250"
+                        Width="150"
+                        Margin="0,10,0,30">
+                        <ctl:LoadController
+                            Margin="5,10,10,10"
+                            IsSliderVisible="True"
+                            LoadFullOn="{x:Bind LightFullOn}"
+                            LoadOn="{x:Bind LightOn}"
+                            LoadOff="{x:Bind LightOff}"
+                            Level="{x:Bind LightOnLevel, Mode=TwoWay}"/>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel
+                    Margin="0,6,0,20"
+                    x:Name="DevceStatusDisconnectedView"
+                    x:Load="{x:Bind IsDisconnected, Mode=OneWay}"
+                    Visibility="{x:Bind IsDisconnected, Mode=OneWay}">
+                    <TextBlock Margin="0,0,0,6" FontWeight="Bold">Device not connected!</TextBlock>
+                    <TextBlock Margin="0,0,0,6">This device is not connected to the Hub!</TextBlock>
+                    <Button x:Name="ConnectDeviceButton" Click="{x:Bind ConnectDevice_Click}">Connect Device</Button>
+                </StackPanel>
+
+                <!-- We can't use x:Load here or the button bindings won't work (Uno Bug?) -->
+                <Grid x:Name="DeviceStatusGatewayError" Visibility="{x:Bind IsGatewayError, Mode=OneWay}" Margin="0,0,20,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel
+                        Grid.Row="1"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Margin="0,10,0,30"
+                        Background="LightSalmon"
+                        Padding="10">
+                        <TextBlock Margin="0,0,0,6" FontWeight="Bold" TextWrapping="Wrap">We could not contact the Insteon Gateway (Hub).</TextBlock>
+                        <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">
+                            It is either not on the local network or not configured properly.
+                            Go to "Settings" to enter the configuration information.
+                        </TextBlock>
+                        <Button x:Name="DeviceConnectionStatusButton" Click="{x:Bind ForceCheckDeviceConnectionStatus_Click}">Retry</Button>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    x:Name="DeviceStatusPending"
+                    x:Load="{x:Bind IsStatusPending, Mode=OneWay}"
+                    Visibility="{x:Bind IsStatusPending, Mode=OneWay}">
+                    <TextBlock Margin="0,6,0,20">Checking device connection status...</TextBlock>
+                </StackPanel>
+
+            </StackPanel>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

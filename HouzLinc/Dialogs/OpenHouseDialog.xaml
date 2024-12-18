@@ -1,0 +1,39 @@
+﻿<ContentDialog
+    x:Class="HouzLinc.Dialogs.OpenHouseDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utils="using:HouzLinc.Utils"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Title="Open or Create House Configuration"
+    PrimaryButtonText="Select"
+    IsPrimaryButtonEnabled="True"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel
+            Grid.Row="0"
+            Background="LightSalmon"
+            Padding="10,5,10,7"
+            Margin="0,0,0,10"
+            Visibility="{x:Bind ShowPreviousError, Mode=OneTime}">
+            <TextBlock TextWrapping="Wrap" Text="An attempt to open the house configuration file failed. Retry or create a new house configuration." />
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <RadioButton x:Name="File" Checked="Option_Checked">Open house configuration from an existing local file (Houselinc-like format).</RadioButton>
+            <RadioButton x:Name="New" Checked="Option_Checked">Create a new house configuration as a local file</RadioButton>
+            <RadioButton x:Name="OneDrive" Checked="Option_Checked">Create or open the house configuration on your OneDrive</RadioButton>
+        </StackPanel>
+
+    </Grid>
+</ContentDialog>
+

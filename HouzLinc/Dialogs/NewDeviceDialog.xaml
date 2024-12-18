@@ -1,0 +1,42 @@
+﻿<ContentDialog
+    x:Class="HouzLinc.Dialogs.NewDeviceDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Dialogs"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Add New Device"
+    PrimaryButtonText="Add"
+    IsPrimaryButtonEnabled="{x:Bind DeviceIdBox.IsValueValid, Mode=OneWay}"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <StackPanel>
+        <Border
+            x:Name="PriorErrorMessage"
+            x:Load="{x:Bind showPriorError}"
+            Background="LightSalmon"
+            Margin="0,10,0,20"
+            Padding="10">
+            <TextBlock Text="No device with the id that you entered was found on your network. Try another device id, or try to auto-discover the device." TextWrapping="Wrap"/>
+        </Border>
+
+        <TextBlock Margin="0,10,0,10" Text="Either enter the device id below and click 'Add'." TextWrapping="Wrap"/>
+        <ctl:DeviceIDBox
+            x:Name="DeviceIdBox"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,0"
+            IsEnabled="{x:Bind isAutoDiscovering, Converter={StaticResource BoolNegation}, Mode=OneWay}"/>
+
+        <TextBlock Margin="0,20,0,0" Text="Or auto-discover the device: click below, then walk to the device and press and hold its 'set' button." TextWrapping="Wrap"/>
+        <Button
+            Content="Auto-discover device"
+            Margin="0,20,0,0"
+            HorizontalAlignment="Center"
+            IsEnabled="{x:Bind isAutoDiscovering, Converter={StaticResource BoolNegation}, Mode=OneWay}"
+            Click="AutoDiscover_Click"/>
+    </StackPanel>
+</ContentDialog>

@@ -1,0 +1,12 @@
+[merge]
+    tool = kdiff3
+[mergetool "kdiff3"]
+    path = C:/Program Files/KDiff3/kdiff3.exe
+    trustExitCode = false
+    cmd = kdiff3.exe $BASE $LOCAL $REMOTE -o $MERGED
+[diff]
+    guitool = kdiff3
+[difftool "kdiff3"]
+    path = C:/Program Files/KDiff3/kdiff3.exe
+    trustExitCode = false
+    cmd = kdiff3.exe $BASE $LOCAL $REMOTE -o $MERGED

@@ -1,0 +1,53 @@
+﻿<ContentDialog
+    x:Class="HouzLinc.Dialogs.NewHubDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Install New Hub"
+    PrimaryButtonText="Install"
+    SecondaryButtonText="Cancel">
+
+    <StackPanel>
+        <TextBox
+            x:Name="HubIPAddressBox"
+            HorizontalAlignment="Left"
+            Margin="10,10,0,0"
+            TextWrapping="NoWrap"
+            VerticalAlignment="Top"
+            Header="Hub IP Address:"
+            Width="150"
+            Text="{x:Bind HubIPAddress, Mode=TwoWay}"/>
+
+        <TextBox
+            x:Name="HubIPPortBox"
+            HorizontalAlignment="Left"
+            Margin="10,10,0,0"
+            TextWrapping="NoWrap"
+            VerticalAlignment="Top"
+            Header="Hub IP Port"
+            Width="150"
+            Text="{x:Bind HubIPPort, Mode=TwoWay}"/>
+
+        <TextBox
+            x:Name="HubUsernameBox"
+            HorizontalAlignment="Left"
+            Margin="10,10,0,0"
+            TextWrapping="NoWrap"
+            VerticalAlignment="Top"
+            Header="Hub Username"
+            Width="150"
+            Text="{x:Bind HubUsername, Mode=TwoWay}"/>
+
+        <PasswordBox
+            x:Name="HubPasswordBox"
+            HorizontalAlignment="Left"
+            Margin="10,10,0,0"
+            VerticalAlignment="Top"
+            Header="Hub Password"
+            Width="150"
+            Password="{x:Bind HubPassword, Mode=TwoWay}"/>
+
+    </StackPanel>
+</ContentDialog>

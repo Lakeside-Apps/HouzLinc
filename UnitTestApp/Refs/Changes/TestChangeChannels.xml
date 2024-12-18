@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0">
+  <application>
+    <location state="WA" city="Seattle" lon="-122.333144" lat="47.626353" />
+    <house name="My House" />
+  </application>
+  <insteon>
+    <active_gateways>
+      <gateway insteonID="AA.00.00">
+        <ip port="25105" address="192.168.0.10" />
+      </gateway>
+    </active_gateways>
+    <active_devices>
+      <device insteonID="AA.00.00" category="3" subcategory="51" revision="165" status="connected" powerline="0" radio="0" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" displayName="Hub" active="1">
+        <location />
+        <channels>
+          <channel id="0" />
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+          <channel id="7" />
+          <channel id="8" />
+          <channel id="9" />
+          <channel id="10" />
+          <channel id="11" />
+          <channel id="12" />
+          <channel id="13" />
+          <channel id="14" />
+          <channel id="15" />
+          <channel id="16" />
+          <channel id="17" />
+          <channel id="18" />
+          <channel id="19" />
+          <channel id="20" />
+          <channel id="21" />
+          <channel id="22" />
+          <channel id="23" />
+          <channel id="24" />
+          <channel id="25" />
+          <channel id="26" />
+          <channel id="27" />
+          <channel id="28" />
+          <channel id="29" />
+          <channel id="30" />
+          <channel id="31" />
+          <channel id="32" />
+          <channel id="33" />
+          <channel id="34" />
+          <channel id="35" />
+          <channel id="36" />
+          <channel id="37" />
+          <channel id="38" />
+          <channel id="39" />
+          <channel id="40" />
+          <channel id="41" />
+          <channel id="42" />
+          <channel id="43" />
+          <channel id="44" />
+          <channel id="45" />
+          <channel id="46" />
+          <channel id="47" />
+          <channel id="48" />
+          <channel id="49" />
+          <channel id="50" />
+          <channel id="51" />
+          <channel id="52" />
+          <channel id="53" />
+          <channel id="54" />
+          <channel id="55" />
+          <channel id="56" />
+          <channel id="57" />
+          <channel id="58" />
+          <channel id="59" />
+          <channel id="60" />
+          <channel id="61" />
+          <channel id="62" />
+          <channel id="63" />
+          <channel id="64" />
+          <channel id="65" />
+          <channel id="66" />
+          <channel id="67" />
+          <channel id="68" />
+          <channel id="69" />
+          <channel id="70" />
+          <channel id="71" />
+          <channel id="72" />
+          <channel id="73" />
+          <channel id="74" />
+          <channel id="75" />
+          <channel id="76" />
+          <channel id="77" />
+          <channel id="78" />
+          <channel id="79" />
+          <channel id="80" />
+          <channel id="81" />
+          <channel id="82" />
+          <channel id="83" />
+          <channel id="84" />
+          <channel id="85" />
+          <channel id="86" />
+          <channel id="87" />
+          <channel id="88" />
+          <channel id="89" />
+          <channel id="90" />
+          <channel id="91" />
+          <channel id="92" />
+          <channel id="93" />
+          <channel id="94" />
+          <channel id="95" />
+          <channel id="96" />
+          <channel id="97" />
+          <channel id="98" />
+          <channel id="99" />
+          <channel id="100" />
+          <channel id="101" />
+          <channel id="102" />
+          <channel id="103" />
+          <channel id="104" />
+          <channel id="105" />
+          <channel id="106" />
+          <channel id="107" />
+          <channel id="108" />
+          <channel id="109" />
+          <channel id="110" />
+          <channel id="111" />
+          <channel id="112" />
+          <channel id="113" />
+          <channel id="114" />
+          <channel id="115" />
+          <channel id="116" />
+          <channel id="117" />
+          <channel id="118" />
+          <channel id="119" />
+          <channel id="120" />
+          <channel id="121" />
+          <channel id="122" />
+          <channel id="123" />
+          <channel id="124" />
+          <channel id="125" />
+          <channel id="126" />
+          <channel id="127" />
+          <channel id="128" />
+          <channel id="129" />
+          <channel id="130" />
+          <channel id="131" />
+          <channel id="132" />
+          <channel id="133" />
+          <channel id="134" />
+          <channel id="135" />
+          <channel id="136" />
+          <channel id="137" />
+          <channel id="138" />
+          <channel id="139" />
+          <channel id="140" />
+          <channel id="141" />
+          <channel id="142" />
+          <channel id="143" />
+          <channel id="144" />
+          <channel id="145" />
+          <channel id="146" />
+          <channel id="147" />
+          <channel id="148" />
+          <channel id="149" />
+          <channel id="150" />
+          <channel id="151" />
+          <channel id="152" />
+          <channel id="153" />
+          <channel id="154" />
+          <channel id="155" />
+          <channel id="156" />
+          <channel id="157" />
+          <channel id="158" />
+          <channel id="159" />
+          <channel id="160" />
+          <channel id="161" />
+          <channel id="162" />
+          <channel id="163" />
+          <channel id="164" />
+          <channel id="165" />
+          <channel id="166" />
+          <channel id="167" />
+          <channel id="168" />
+          <channel id="169" />
+          <channel id="170" />
+          <channel id="171" />
+          <channel id="172" />
+          <channel id="173" />
+          <channel id="174" />
+          <channel id="175" />
+          <channel id="176" />
+          <channel id="177" />
+          <channel id="178" />
+          <channel id="179" />
+          <channel id="180" />
+          <channel id="181" />
+          <channel id="182" />
+          <channel id="183" />
+          <channel id="184" />
+          <channel id="185" />
+          <channel id="186" />
+          <channel id="187" />
+          <channel id="188" />
+          <channel id="189" />
+          <channel id="190" />
+          <channel id="191" />
+          <channel id="192" />
+          <channel id="193" />
+          <channel id="194" />
+          <channel id="195" />
+          <channel id="196" />
+          <channel id="197" />
+          <channel id="198" />
+          <channel id="199" />
+          <channel id="200" />
+          <channel id="201" />
+          <channel id="202" />
+          <channel id="203" />
+          <channel id="204" />
+          <channel id="205" />
+          <channel id="206" />
+          <channel id="207" />
+          <channel id="208" />
+          <channel id="209" />
+          <channel id="210" />
+          <channel id="211" />
+          <channel id="212" />
+          <channel id="213" />
+          <channel id="214" />
+          <channel id="215" />
+          <channel id="216" />
+          <channel id="217" />
+          <channel id="218" />
+          <channel id="219" />
+          <channel id="220" />
+          <channel id="221" />
+          <channel id="222" />
+          <channel id="223" />
+          <channel id="224" />
+          <channel id="225" />
+          <channel id="226" />
+          <channel id="227" />
+          <channel id="228" />
+          <channel id="229" />
+          <channel id="230" />
+          <channel id="231" />
+          <channel id="232" />
+          <channel id="233" />
+          <channel id="234" />
+          <channel id="235" />
+          <channel id="236" />
+          <channel id="237" />
+          <channel id="238" />
+          <channel id="239" />
+          <channel id="240" />
+          <channel id="241" />
+          <channel id="242" />
+          <channel id="243" />
+          <channel id="244" />
+          <channel id="245" />
+          <channel id="246" />
+          <channel id="247" />
+          <channel id="248" />
+          <channel id="249" />
+          <channel id="250" />
+          <channel id="251" />
+          <channel id="252" />
+          <channel id="253" />
+          <channel id="254" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.11.11" category="1" subcategory="65" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="Keypad 8, channels" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.22.22" category="1" subcategory="32" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="Switchlinc Dimmer" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.33.33" category="1" subcategory="32" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="Switchlinc Dimmer" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.55.55" category="1" subcategory="66" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="Keypad 6, channels" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+          <channel id="5" />
+          <channel id="6" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.77.77" category="7" subcategory="0" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="IOLinc" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.FF.FF" category="1" subcategory="33" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="OutletLinc" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="AA.CC.CC" category="2" subcategory="42" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="Switchlinc Relay" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+      <device insteonID="BB.44.44" category="0" subcategory="16" revision="0" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="Mini-Remote, 4 channels" active="1">
+        <location />
+        <channels>
+          <channel id="1" />
+          <channel id="2" />
+          <channel id="3" />
+          <channel id="4" />
+        </channels>
+        <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0" nextRecordToRead="0" />
+        <properties />
+      </device>
+    </active_devices>
+    <scenes nextSceneID="0" />
+  </insteon>
+</settings>

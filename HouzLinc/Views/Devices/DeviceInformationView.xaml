@@ -1,0 +1,68 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Devices.DeviceInformationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Devices"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:ctkControls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    HorizontalContentAlignment="Stretch">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:DeviceViewModel">
+            <StackPanel Margin="0,3">
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Device Information" Margin="0,0,0,5"/>
+                <ctkControls:SettingsCard Header="Model" MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <TextBlock Text="{x:Bind ModelName}"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Model Number" MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <TextBlock Text="{x:Bind ModelNumber}"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Category" MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <TextBlock Text="{x:Bind Category}"/>
+                </ctkControls:SettingsCard>
+
+                <ctkControls:SettingsCard Header="Firmware Revision" MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <TextBlock Text="{x:Bind Revision}"/>
+                </ctkControls:SettingsCard>
+
+              <!--
+              <ctkControls:SettingsCard Header="RF Enabled" >
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch IsOn="{x:Bind RFEnabled, Mode=TwoWay}" OffContent="No" OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+                <ctkControls:SettingsCard Header="Firmware Revision">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch
+                        MinWidth="0"
+                        IsOn="{x:Bind PowerlineEnabled, Mode=TwoWay}"
+                        OffContent="No"
+                        OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+              -->
+            </StackPanel>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

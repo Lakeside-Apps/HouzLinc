@@ -1,0 +1,80 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Devices.DeviceHeaderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Devices"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    HorizontalContentAlignment="Stretch"
+    IsTabStop="False">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:DeviceViewModel">
+            <Grid Margin="0,0,0,20" HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}"
+                    BorderThickness="0,0,0,1"/>
+                <Grid Grid.Column="0" Grid.RowSpan="2" Margin="0,0,0,-15">
+                    <Ellipse
+                        Width="96"
+                        Height="96"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Fill="{ThemeResource DeviceStampColor}"/>
+                    <Image
+                        Width="72"
+                        Height="72"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Source="{x:Bind ModelIconPath_72x72, Mode=OneWay}"/>
+                </Grid>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="0,0,3,0">
+                    <ctl:EditableTextBlock
+                        x:Name="DeviceNameBox"
+                        Style="{ThemeResource TitleEditableTextBlockStyle}"
+                        IsEditable="{x:Bind IsNameEditable, Mode=TwoWay}"
+                        Text="{x:Bind DisplayName, Mode=TwoWay}"/>
+                    <TextBlock Margin="14,0,0,0" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind Room, Mode=OneWay}"/>
+                </StackPanel>
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{x:Bind Id}"
+                    Style="{StaticResource CaptionTextBlockStyle}"/>
+                <ToggleButton
+                    Grid.Column="2"
+                    Tag="Edit"
+                    win:ToolTipService.ToolTip="Edit Device Name, Room and Location"
+                    Margin="0,5,0,0"
+                    Style="{ThemeResource SplitViewTogglePaneButtonStyle}"
+                    VerticalAlignment="Top"
+                    IsChecked="{x:Bind IsNameEditable, Mode=TwoWay}"
+                    Checked="FocusNameBox">
+                    <Grid>
+                        <SymbolIcon Symbol="Edit" Visibility="{x:Bind IsNameEditable, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"/>
+                        <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsNameEditable, Mode=OneWay}"/>
+                    </Grid>
+                </ToggleButton>
+            </Grid>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>

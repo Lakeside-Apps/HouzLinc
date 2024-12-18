@@ -1,0 +1,49 @@
+/* Copyright 2022 Christian Fortini
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+using HouzLinc.Dialogs;
+using ViewModel.Scenes;
+
+namespace HouzLinc.Views.Scenes;
+
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class SceneView : ContentControl
+{
+    public SceneView()
+    {
+        this.InitializeComponent();
+    }
+
+    /// <summary>
+    /// Add new member, bringing up UI to create it
+    /// </summary>
+    public async void AddNewSceneMemberAsync(Object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is SceneViewModel svm)
+        {
+            var dialog = new NewSceneMemberDialog(fe.XamlRoot);
+            var newMember = svm.SceneMembers.CreateNewSceneMemberWithLastUsedValue();
+            dialog.DataContext = newMember;
+
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                svm.SceneMembers.StoreSceneMemberLastUsedValues(newMember);
+                svm.SceneMembers.AddNewMember(newMember);
+            }
+        }
+    }
+}

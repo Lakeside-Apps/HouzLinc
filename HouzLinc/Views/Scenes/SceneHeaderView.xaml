@@ -1,0 +1,69 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Scenes.SceneHeaderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Scenes"
+    xmlns:vm="using:ViewModel.Scenes"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    HorizontalContentAlignment="Stretch"
+    IsTabStop="False">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:SceneViewModel">
+            <StackPanel>
+                <Grid BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,0,0,1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Ellipse
+                        Width="48"
+                        Height="48"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Fill="{ThemeResource SceneStampColor}"/>
+                    <TextBlock
+                        Text="{x:Bind Id}"
+                        Margin="0,-5,0,0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        Style="{ThemeResource TitleTextBlockStyle}"
+                        FontWeight="Normal"/>
+                    <ctl:EditableTextBlock
+                        x:Name="SceneNameBox"
+                        Grid.Column="1"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Bottom"
+                        Style="{ThemeResource TitleEditableTextBlockStyle}"
+                        Text="{x:Bind DisplayName, Mode=TwoWay}"
+                        IsEditable="{x:Bind IsNameEditable, Mode=TwoWay}"/>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <ToggleButton
+                            Tag="Edit"
+                            win:ToolTipService.ToolTip="Edit Scene Name and Notes"
+                            Margin="3,0,0,3"
+                            VerticalAlignment="Bottom"
+                            IsChecked="{x:Bind IsNameEditable, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                            Style="{ThemeResource SplitViewTogglePaneButtonStyle}"
+                            Checked="FocusNameBox">
+                            <Grid>
+                                <SymbolIcon Symbol="Edit" Visibility="{x:Bind IsNameEditable, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"/>
+                                <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsNameEditable, Mode=OneWay}"/>
+                            </Grid>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+    .
+</ContentControl>

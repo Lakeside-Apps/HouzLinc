@@ -1,0 +1,71 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Controls.StatusBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Controls"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    HorizontalContentAlignment="Stretch">
+
+    <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock
+            Margin="10,3,10,3"
+            Text="{x:Bind StatusText, Mode=OneWay}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            MinHeight="48"
+            MaxLines="2"/>
+        <Button
+            Grid.Column="1"
+            Tag="ConfirmUserAction"
+            win:ToolTipService.ToolTip="Take requested action and go!"
+            Margin="0,3,2,3"
+            Style="{ThemeResource SplitViewPaneButtonStyle}"
+            Visibility="{x:Bind IsUserActionRequest, Mode=OneWay}"
+            Click="ConfirmUserAction">
+            <FontIcon Glyph="&#xF5B0;"/>
+        </Button>
+        <Button
+            Grid.Column="2"
+            Tag="DeclineUserAction"
+            win:ToolTipService.ToolTip="Decline taking the requested action"
+            Margin="0,3,2,3"
+            Style="{ThemeResource SplitViewPaneButtonStyle}"
+            Visibility="{x:Bind IsUserActionRequest, Mode=OneWay}"
+            Click="DeclineUserAction">
+            <FontIcon Glyph="&#xEF2C;"/>
+        </Button>
+        <Button
+            Grid.Column="3"
+            Tag="SyncHouse"
+            win:ToolTipService.ToolTip="Sync House Configuration"
+            Margin="0,3,2,3"
+            Style="{ThemeResource SplitViewPaneButtonStyle}"
+            IsEnabled="{x:Bind DoesHouseConfigNeedSync, Mode=OneWay}"
+            Click="SyncHouseConfig">
+            <SymbolIcon Symbol="Sync"/>
+        </Button>
+        <Button
+            Grid.Column="4"
+            x:Name="SaveHouse"
+            win:ToolTipService.ToolTip="Save House Configuration"
+            Margin="2,3,5,3"
+            Style="{ThemeResource SplitViewPaneButtonStyle}"
+            IsEnabled="{x:Bind DoesHouseConfigNeedSave, Mode=OneWay}"
+            Click="SaveHouseConfig">
+            <SymbolIcon Symbol="Save"/>
+        </Button>
+    </Grid>
+</ContentControl>

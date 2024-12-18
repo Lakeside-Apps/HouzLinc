@@ -1,0 +1,67 @@
+﻿<ContentControl
+    x:Class="HouzLinc.Views.Scenes.SceneView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HouzLinc.Views.Scenes"
+    xmlns:vm="using:ViewModel.Scenes"
+    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:dlg="using:HouzLinc.Dialogs"
+    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:ctkControls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    HorizontalContentAlignment="Stretch"
+    IsTabStop="False">
+
+    <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:SceneViewModel">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--
+                    For some reason Content="{Bind"} causes a crash when setting the data context on SceneHeaderView
+                    Content="{Binding}" appears to work.
+                -->
+                <local:SceneHeaderView Content="{Binding}"/>
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel Margin="0,5,10,0">
+                        <ctkControls:SettingsCard Header="Room" MinHeight="48">
+                            <ctkControls:SettingsCard.Resources>
+                                <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                            </ctkControls:SettingsCard.Resources>
+                            <ctl:RoomControl Room="{x:Bind Room, Mode=TwoWay}" Rooms="{x:Bind Rooms, Mode=OneWay}"/>
+                        </ctkControls:SettingsCard>
+
+                        <ctkControls:SettingsCard Header="Notes" MinHeight="4">
+                            <ctkControls:SettingsCard.Resources>
+                                <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                            </ctkControls:SettingsCard.Resources>
+                            <TextBox MinWidth="200" MaxWidth="300" Text="{x:Bind Notes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        </ctkControls:SettingsCard>
+
+                        <Grid Margin="0,10,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Members" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                            <Button
+                                Grid.Column="1"
+                                Tag="Add Member"
+                                win:ToolTipService.ToolTip="Add a Member"
+                                win:ToolTipService.Placement="Bottom"
+                                VerticalAlignment="Top"
+                                Margin="0,0,3,0"
+                                Style="{ThemeResource SplitViewPaneButtonStyle}"
+                                Click="AddNewSceneMemberAsync">
+                                <SymbolIcon Symbol="Add"/>
+                            </Button>
+                        </Grid>
+                        <local:MemberListView/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </DataTemplate>
+    </ContentControl.ContentTemplate>
+</ContentControl>
