@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0">
+  <application />
+  <insteon>
+    <active_gateways>
+      <gateway insteonID="AA.00.00">
+        <ip port="25105" address="10.0.0.34" />
+      </gateway>
+      <gateway insteonID="BB.00.00">
+        <ip port="25105" address="10.0.0.99" />
+      </gateway>
+    </active_gateways>
+    <active_devices>
+      <device insteonID="AA.00.00" category="3" subcategory="51" revision="165" status="connected" powerline="0" radio="0" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" displayName="Hub" active="1">
+      </device>
+      <device insteonID="11.11.11" category="1" subcategory="65" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="-1" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc04DCS" displayName="Keypad - Sink" active="1">
+        <!-- Category 65 is an 8 button keypadlink, which should be reflected in the OperatingFlags bit 3 -->
+        <properties>
+          <p name="operatingFlags">
+            <device value="0x80" />
+          </p>
+        </properties>
+      </device>
+      <device insteonID="22.22.22" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="100" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Cove Lighting" active="1">
+        <!-- See note above -->
+        <properties>
+          <p name="operatingFlags">
+            <device value="0x80" />
+          </p>
+        </properties>
+      </device>
+      <device insteonID="33.33.33" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="20" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Island Cans" active="1">
+      </device>
+      <device insteonID="44.44.44" category="1" subcategory="65" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="20" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc04DCS" displayName="Keypad - Stove Lights" active="1">
+      </device>
+      <device insteonID="55.55.55" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Ceiling Lights" active="1">
+      </device>
+      <device insteonID="AA.AA.AA" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Under Cabinet Lights" active="1">
+      </device>
+      <device insteonID="BB.BB.BB" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Nook Ceiling Lights" active="1">
+      </device>
+      <device insteonID="CC.CC.CC" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Pantry Lights" active="1">
+      </device>
+
+    </active_devices>
+    <scenes nextSceneID="2">
+      <scene id="1" name="Kitchen" lastTrigger="05/17/2014 11:02:08 AM, On" notes="Turn on kitchen main lights">
+        <members>
+          <member iid="11.11.11" group="2" controller="1" responder="1" data1="255" data2="28" data3="2" status="Done" tag="35" />
+          <member iid="22.22.22" group="1" controller="1" responder="1" data1="76" data2="28" data3="1" status="Done" tag="1" />
+          <member iid="33.33.33" group="1" responder="1" data1="153" data2="28" data3="1" status="Done" tag="1" />
+          <member iid="44.44.44" group="4" responder="1" data1="255" data2="28" data3="4" status="Done" tag="35" />
+          <member iid="55.55.55" group="6" controller="1" data1="255" data2="28" data3="6" status="Done" tag="35" />
+          <member iid="55.55.55" group="6" controller="1" data1="255" data2="28" data3="6" status="Done" tag="35" />
+          <member iid="44.44.44" group="5" responder="1" data1="76" data2="28" data3="5" status="Done" tag="33" />
+          <member iid="44.44.44" group="5" responder="1" data1="76" data2="28" data3="5" status="Done" tag="33" />
+          <member iid="11.11.11" group="3" controller="1" data1="160" data2="28" data3="3" status="Done" tag="35" />
+        </members>
+      </scene>
+    </scenes>
+  </insteon>
+</settings>

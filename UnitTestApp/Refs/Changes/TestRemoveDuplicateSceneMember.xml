@@ -558,7 +558,7 @@
             <device address="AA.00.00" group="4" recordControl="162" data1="255" data2="28" data3="6" scene="12" syncstatus="synced" uid="1759536095" />
           </record>
           <record sequence="13">
-            <device address="BB.66.66" group="4" recordControl="162" data1="255" data2="28" data3="8" scene="20" syncstatus="changed" uid="1364335577" />
+            <device address="BB.66.66" group="4" recordControl="162" data1="255" data2="28" data3="8" scene="20" syncstatus="changed" uid="3486909313" />
           </record>
           <record sequence="14">
             <device address="AA.44.44" group="8" recordControl="162" data1="255" data2="0" data3="7" scene="4" syncstatus="synced" uid="448626210" />
@@ -573,7 +573,7 @@
             <device address="BB.66.66" group="7" recordControl="226" data1="3" data2="0" data3="7" scene="4" syncstatus="synced" uid="1147374401" />
           </record>
           <record sequence="18">
-            <device address="BB.66.66" group="8" recordControl="226" data1="3" data2="28" data3="8" scene="20" syncstatus="synced" uid="3255523099" />
+            <device address="BB.66.66" group="8" recordControl="226" data1="3" data2="28" data3="8" scene="20" syncstatus="changed" uid="1233590364" />
           </record>
           <record sequence="19">
             <device address="AA.44.44" group="7" recordControl="226" data1="3" data2="0" data3="7" scene="4" syncstatus="synced" uid="45176265" />
@@ -648,7 +648,7 @@
             <device address="BB.66.66" group="6" recordControl="162" data1="0" data2="28" data3="3" scene="11" syncstatus="synced" uid="1522509858" />
           </record>
           <record sequence="43">
-            <device address="BB.66.66" group="8" recordControl="98" data1="3" data2="28" data3="8" scene="20" syncstatus="changed" uid="1091643091" />
+            <device address="BB.66.66" group="8" recordControl="98" data1="3" data2="28" data3="8" scene="20" syncstatus="changed" uid="2519592394" />
           </record>
           <record sequence="44">
             <device address="BB.66.66" group="8" recordControl="162" data1="255" data2="28" data3="3" scene="19" syncstatus="synced" uid="2039575949" />
@@ -1216,7 +1216,7 @@
             <device address="AA.44.44" group="6" recordControl="162" data1="255" data2="28" data3="6" scene="11" syncstatus="synced" uid="976428886" />
           </record>
           <record sequence="4">
-            <device address="BB.22.22" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="20" syncstatus="synced" uid="3974388577" />
+            <device address="BB.22.22" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="2368129022" />
           </record>
           <record sequence="5">
             <device address="AA.11.11" group="1" recordControl="162" data1="255" data2="28" data3="6" scene="11" syncstatus="synced" uid="3515307682" />
@@ -1252,7 +1252,7 @@
             <device address="AA.22.22" group="8" recordControl="226" data1="3" data2="28" data3="8" scene="19" syncstatus="synced" uid="1725603950" />
           </record>
           <record sequence="16">
-            <device address="BB.22.22" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="1264204182" />
+            <device address="BB.22.22" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="1241371618" />
           </record>
           <record sequence="17">
             <device address="AA.AA.AA" group="3" recordControl="162" data1="0" data2="28" data3="3" scene="18" syncstatus="synced" uid="1544114227" />
@@ -1309,16 +1309,16 @@
             <device address="AA.11.11" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="4" syncstatus="synced" uid="3453202698" />
           </record>
           <record sequence="35">
-            <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="20" syncstatus="synced" uid="3909262798" />
+            <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="2331751906" />
           </record>
           <record sequence="36">
-            <device address="AA.11.11" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="2258557984" />
+            <device address="AA.11.11" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="1820153580" />
           </record>
           <record sequence="37">
             <device address="AA.44.44" group="5" recordControl="250" data1="3" data2="28" data3="5" scene="0" syncstatus="synced" uid="1328379597" />
           </record>
           <record sequence="38">
-            <device address="BB.22.22" group="5" recordControl="162" data1="255" data2="28" data3="4" scene="20" syncstatus="changed" uid="4028815863" />
+            <device address="BB.22.22" group="5" recordControl="162" data1="255" data2="28" data3="4" scene="20" syncstatus="changed" uid="3190647499" />
           </record>
           <record sequence="39">
             <device address="AA.00.00" group="6" recordControl="170" data1="0" data2="28" data3="4" scene="0" syncstatus="synced" uid="1805094016" />
@@ -1327,13 +1327,13 @@
             <device address="AA.11.11" group="7" recordControl="162" data1="255" data2="28" data3="7" scene="4" syncstatus="synced" uid="1530339041" />
           </record>
           <record sequence="41">
-            <device address="AA.11.11" group="8" recordControl="162" data1="255" data2="28" data3="4" scene="20" syncstatus="changed" uid="2818856112" />
+            <device address="AA.11.11" group="8" recordControl="162" data1="255" data2="28" data3="4" scene="20" syncstatus="changed" uid="3249173802" />
           </record>
           <record sequence="42">
-            <device address="BB.22.22" group="5" recordControl="34" data1="255" data2="28" data3="4" scene="20" syncstatus="changed" uid="2062290925" />
+            <device address="BB.22.22" group="5" recordControl="34" data1="255" data2="28" data3="4" scene="20" syncstatus="changed" uid="3078859602" />
           </record>
           <record sequence="43">
-            <device address="BB.22.22" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="143810047" />
+            <device address="BB.22.22" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="20" syncstatus="changed" uid="4053942530" />
           </record>
           <record sequence="44">
             <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2798743367" />
@@ -2230,13 +2230,13 @@
             <device address="AA.BB.BB" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="3" syncstatus="synced" uid="3480740412" />
           </record>
           <record sequence="19">
-            <device address="BB.66.66" group="4" recordControl="162" data1="255" data2="28" data3="5" scene="20" syncstatus="changed" uid="711620596" />
+            <device address="BB.66.66" group="4" recordControl="162" data1="255" data2="28" data3="5" scene="20" syncstatus="changed" uid="2972841751" />
           </record>
           <record sequence="20">
             <device address="AA.11.11" group="8" recordControl="162" data1="255" data2="28" data3="5" scene="20" syncstatus="synced" uid="3536796012" />
           </record>
           <record sequence="21">
-            <device address="BB.66.66" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="20" syncstatus="synced" uid="338996528" />
+            <device address="BB.66.66" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="20" syncstatus="changed" uid="882384342" />
           </record>
           <record sequence="22">
             <device address="AA.11.11" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="20" syncstatus="synced" uid="2134301513" />

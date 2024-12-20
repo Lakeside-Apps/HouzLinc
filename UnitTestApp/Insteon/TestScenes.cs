@@ -61,11 +61,11 @@ public sealed class TestScenes
     public void TestSceneLoaded()
     {
         Assert.IsNotNull(house);
-        Assert.IsNotNull(house.Scenes, "Has scenes");
-        Assert.IsNotNull(house.Devices, "Has devices");
+        Assert.IsNotNull(house.Scenes, "House has no scenes");
+        Assert.IsNotNull(house.Devices, "House has no devices");
         Assert.IsTrue(house.Devices.Count == 9, "Wrong count of devices");
-        Assert.IsNotNull(house.Scenes.GetSceneById(1), "Has a scene with id == 1");
-        Assert.IsTrue(house.Scenes.GetSceneById(1)!.Members.Count == 7, "Has 7 scenes members");
+        Assert.IsNotNull(house.Scenes.GetSceneById(1), "House doesn't have a scene with id == 1");
+        Assert.IsTrue(house.Scenes.GetSceneById(1)!.Members.Count == 7, "Scene 1 has wrong count of scenes members");
     }
 
     [TestMethod]

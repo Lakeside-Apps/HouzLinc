@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0">
+  <application />
+  <insteon>
+    <active_gateways>
+      <gateway insteonID="AA.00.00">
+        <ip port="25105" address="10.0.0.34" />
+      </gateway>
+      <gateway insteonID="BB.00.00">
+        <ip port="25105" address="10.0.0.99" />
+      </gateway>
+    </active_gateways>
+    <active_devices>
+      <device insteonID="AA.00.00" category="3" subcategory="51" revision="165" status="connected" powerline="0" radio="0" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" displayName="Hub" active="1">
+        <location />
+        <channels>
+          <channel id="0" lastStatus="Synchronized" />
+          <channel id="1" lastStatus="Synchronized" />
+          <channel id="2" lastStatus="Synchronized" />
+          <channel id="3" lastStatus="Synchronized" />
+          <channel id="4" lastStatus="Synchronized" />
+          <channel id="5" lastStatus="Synchronized" />
+          <channel id="6" lastStatus="Synchronized" />
+          <channel id="7" lastStatus="Synchronized" />
+          <channel id="8" lastStatus="Synchronized" />
+          <channel id="9" lastStatus="Synchronized" />
+          <channel id="10" lastStatus="Synchronized" />
+          <channel id="11" lastStatus="Synchronized" />
+          <channel id="12" lastStatus="Synchronized" />
+          <channel id="13" lastStatus="Synchronized" />
+          <channel id="14" lastStatus="Synchronized" />
+          <channel id="15" lastStatus="Synchronized" />
+          <channel id="16" lastStatus="Synchronized" />
+          <channel id="17" lastStatus="Synchronized" />
+          <channel id="18" lastStatus="Synchronized" />
+          <channel id="19" lastStatus="Synchronized" />
+          <channel id="20" lastStatus="Synchronized" />
+          <channel id="21" lastStatus="Synchronized" />
+          <channel id="22" lastStatus="Synchronized" />
+          <channel id="23" lastStatus="Synchronized" />
+          <channel id="24" lastStatus="Synchronized" />
+          <channel id="25" lastStatus="Synchronized" />
+          <channel id="26" lastStatus="Synchronized" />
+          <channel id="27" lastStatus="Synchronized" />
+          <channel id="28" lastStatus="Synchronized" />
+          <channel id="29" lastStatus="Synchronized" />
+          <channel id="30" lastStatus="Synchronized" />
+          <channel id="31" lastStatus="Synchronized" />
+          <channel id="32" lastStatus="Synchronized" />
+          <channel id="33" lastStatus="Synchronized" />
+          <channel id="34" lastStatus="Synchronized" />
+          <channel id="35" lastStatus="Synchronized" />
+          <channel id="36" lastStatus="Synchronized" />
+          <channel id="37" lastStatus="Synchronized" />
+          <channel id="38" lastStatus="Synchronized" />
+          <channel id="39" lastStatus="Synchronized" />
+          <channel id="40" lastStatus="Synchronized" />
+          <channel id="41" lastStatus="Synchronized" />
+          <channel id="42" lastStatus="Synchronized" />
+          <channel id="43" lastStatus="Synchronized" />
+          <channel id="44" lastStatus="Synchronized" />
+          <channel id="45" lastStatus="Synchronized" />
+          <channel id="46" lastStatus="Synchronized" />
+          <channel id="47" lastStatus="Synchronized" />
+          <channel id="48" lastStatus="Synchronized" />
+          <channel id="49" lastStatus="Synchronized" />
+          <channel id="50" lastStatus="Synchronized" />
+          <channel id="51" lastStatus="Synchronized" />
+          <channel id="52" lastStatus="Synchronized" />
+          <channel id="53" lastStatus="Synchronized" />
+          <channel id="54" lastStatus="Synchronized" />
+          <channel id="55" lastStatus="Synchronized" />
+          <channel id="56" lastStatus="Synchronized" />
+          <channel id="57" lastStatus="Synchronized" />
+          <channel id="58" lastStatus="Synchronized" />
+          <channel id="59" lastStatus="Synchronized" />
+          <channel id="60" lastStatus="Synchronized" />
+          <channel id="61" lastStatus="Synchronized" />
+          <channel id="62" lastStatus="Synchronized" />
+          <channel id="63" lastStatus="Synchronized" />
+          <channel id="64" lastStatus="Synchronized" />
+          <channel id="65" lastStatus="Synchronized" />
+          <channel id="66" lastStatus="Synchronized" />
+          <channel id="67" lastStatus="Synchronized" />
+          <channel id="68" lastStatus="Synchronized" />
+          <channel id="69" lastStatus="Synchronized" />
+          <channel id="70" lastStatus="Synchronized" />
+          <channel id="71" lastStatus="Synchronized" />
+          <channel id="72" lastStatus="Synchronized" />
+          <channel id="73" lastStatus="Synchronized" />
+          <channel id="74" lastStatus="Synchronized" />
+          <channel id="75" lastStatus="Synchronized" />
+          <channel id="76" lastStatus="Synchronized" />
+          <channel id="77" lastStatus="Synchronized" />
+          <channel id="78" lastStatus="Synchronized" />
+          <channel id="79" lastStatus="Synchronized" />
+          <channel id="80" lastStatus="Synchronized" />
+          <channel id="81" lastStatus="Synchronized" />
+          <channel id="82" lastStatus="Synchronized" />
+          <channel id="83" lastStatus="Synchronized" />
+          <channel id="84" lastStatus="Synchronized" />
+          <channel id="85" lastStatus="Synchronized" />
+          <channel id="86" lastStatus="Synchronized" />
+          <channel id="87" lastStatus="Synchronized" />
+          <channel id="88" lastStatus="Synchronized" />
+          <channel id="89" lastStatus="Synchronized" />
+          <channel id="90" lastStatus="Synchronized" />
+          <channel id="91" lastStatus="Synchronized" />
+          <channel id="92" lastStatus="Synchronized" />
+          <channel id="93" lastStatus="Synchronized" />
+          <channel id="94" lastStatus="Synchronized" />
+          <channel id="95" lastStatus="Synchronized" />
+          <channel id="96" lastStatus="Synchronized" />
+          <channel id="97" lastStatus="Synchronized" />
+          <channel id="98" lastStatus="Synchronized" />
+          <channel id="99" lastStatus="Synchronized" />
+          <channel id="100" lastStatus="Synchronized" />
+          <channel id="101" lastStatus="Synchronized" />
+          <channel id="102" lastStatus="Synchronized" />
+          <channel id="103" lastStatus="Synchronized" />
+          <channel id="104" lastStatus="Synchronized" />
+          <channel id="105" lastStatus="Synchronized" />
+          <channel id="106" lastStatus="Synchronized" />
+          <channel id="107" lastStatus="Synchronized" />
+          <channel id="108" lastStatus="Synchronized" />
+          <channel id="109" lastStatus="Synchronized" />
+          <channel id="110" lastStatus="Synchronized" />
+          <channel id="111" lastStatus="Synchronized" />
+          <channel id="112" lastStatus="Synchronized" />
+          <channel id="113" lastStatus="Synchronized" />
+          <channel id="114" lastStatus="Synchronized" />
+          <channel id="115" lastStatus="Synchronized" />
+          <channel id="116" lastStatus="Synchronized" />
+          <channel id="117" lastStatus="Synchronized" />
+          <channel id="118" lastStatus="Synchronized" />
+          <channel id="119" lastStatus="Synchronized" />
+          <channel id="120" lastStatus="Synchronized" />
+          <channel id="121" lastStatus="Synchronized" />
+          <channel id="122" lastStatus="Synchronized" />
+          <channel id="123" lastStatus="Synchronized" />
+          <channel id="124" lastStatus="Synchronized" />
+          <channel id="125" lastStatus="Synchronized" />
+          <channel id="126" lastStatus="Synchronized" />
+          <channel id="127" lastStatus="Synchronized" />
+          <channel id="128" lastStatus="Synchronized" />
+          <channel id="129" lastStatus="Synchronized" />
+          <channel id="130" lastStatus="Synchronized" />
+          <channel id="131" lastStatus="Synchronized" />
+          <channel id="132" lastStatus="Synchronized" />
+          <channel id="133" lastStatus="Synchronized" />
+          <channel id="134" lastStatus="Synchronized" />
+          <channel id="135" lastStatus="Synchronized" />
+          <channel id="136" lastStatus="Synchronized" />
+          <channel id="137" lastStatus="Synchronized" />
+          <channel id="138" lastStatus="Synchronized" />
+          <channel id="139" lastStatus="Synchronized" />
+          <channel id="140" lastStatus="Synchronized" />
+          <channel id="141" lastStatus="Synchronized" />
+          <channel id="142" lastStatus="Synchronized" />
+          <channel id="143" lastStatus="Synchronized" />
+          <channel id="144" lastStatus="Synchronized" />
+          <channel id="145" lastStatus="Synchronized" />
+          <channel id="146" lastStatus="Synchronized" />
+          <channel id="147" lastStatus="Synchronized" />
+          <channel id="148" lastStatus="Synchronized" />
+          <channel id="149" lastStatus="Synchronized" />
+          <channel id="150" lastStatus="Synchronized" />
+          <channel id="151" lastStatus="Synchronized" />
+          <channel id="152" lastStatus="Synchronized" />
+          <channel id="153" lastStatus="Synchronized" />
+          <channel id="154" lastStatus="Synchronized" />
+          <channel id="155" lastStatus="Synchronized" />
+          <channel id="156" lastStatus="Synchronized" />
+          <channel id="157" lastStatus="Synchronized" />
+          <channel id="158" lastStatus="Synchronized" />
+          <channel id="159" lastStatus="Synchronized" />
+          <channel id="160" lastStatus="Synchronized" />
+          <channel id="161" lastStatus="Synchronized" />
+          <channel id="162" lastStatus="Synchronized" />
+          <channel id="163" lastStatus="Synchronized" />
+          <channel id="164" lastStatus="Synchronized" />
+          <channel id="165" lastStatus="Synchronized" />
+          <channel id="166" lastStatus="Synchronized" />
+          <channel id="167" lastStatus="Synchronized" />
+          <channel id="168" lastStatus="Synchronized" />
+          <channel id="169" lastStatus="Synchronized" />
+          <channel id="170" lastStatus="Synchronized" />
+          <channel id="171" lastStatus="Synchronized" />
+          <channel id="172" lastStatus="Synchronized" />
+          <channel id="173" lastStatus="Synchronized" />
+          <channel id="174" lastStatus="Synchronized" />
+          <channel id="175" lastStatus="Synchronized" />
+          <channel id="176" lastStatus="Synchronized" />
+          <channel id="177" lastStatus="Synchronized" />
+          <channel id="178" lastStatus="Synchronized" />
+          <channel id="179" lastStatus="Synchronized" />
+          <channel id="180" lastStatus="Synchronized" />
+          <channel id="181" lastStatus="Synchronized" />
+          <channel id="182" lastStatus="Synchronized" />
+          <channel id="183" lastStatus="Synchronized" />
+          <channel id="184" lastStatus="Synchronized" />
+          <channel id="185" lastStatus="Synchronized" />
+          <channel id="186" lastStatus="Synchronized" />
+          <channel id="187" lastStatus="Synchronized" />
+          <channel id="188" lastStatus="Synchronized" />
+          <channel id="189" lastStatus="Synchronized" />
+          <channel id="190" lastStatus="Synchronized" />
+          <channel id="191" lastStatus="Synchronized" />
+          <channel id="192" lastStatus="Synchronized" />
+          <channel id="193" lastStatus="Synchronized" />
+          <channel id="194" lastStatus="Synchronized" />
+          <channel id="195" lastStatus="Synchronized" />
+          <channel id="196" lastStatus="Synchronized" />
+          <channel id="197" lastStatus="Synchronized" />
+          <channel id="198" lastStatus="Synchronized" />
+          <channel id="199" lastStatus="Synchronized" />
+          <channel id="200" lastStatus="Synchronized" />
+          <channel id="201" lastStatus="Synchronized" />
+          <channel id="202" lastStatus="Synchronized" />
+          <channel id="203" lastStatus="Synchronized" />
+          <channel id="204" lastStatus="Synchronized" />
+          <channel id="205" lastStatus="Synchronized" />
+          <channel id="206" lastStatus="Synchronized" />
+          <channel id="207" lastStatus="Synchronized" />
+          <channel id="208" lastStatus="Synchronized" />
+          <channel id="209" lastStatus="Synchronized" />
+          <channel id="210" lastStatus="Synchronized" />
+          <channel id="211" lastStatus="Synchronized" />
+          <channel id="212" lastStatus="Synchronized" />
+          <channel id="213" lastStatus="Synchronized" />
+          <channel id="214" lastStatus="Synchronized" />
+          <channel id="215" lastStatus="Synchronized" />
+          <channel id="216" lastStatus="Synchronized" />
+          <channel id="217" lastStatus="Synchronized" />
+          <channel id="218" lastStatus="Synchronized" />
+          <channel id="219" lastStatus="Synchronized" />
+          <channel id="220" lastStatus="Synchronized" />
+          <channel id="221" lastStatus="Synchronized" />
+          <channel id="222" lastStatus="Synchronized" />
+          <channel id="223" lastStatus="Synchronized" />
+          <channel id="224" lastStatus="Synchronized" />
+          <channel id="225" lastStatus="Synchronized" />
+          <channel id="226" lastStatus="Synchronized" />
+          <channel id="227" lastStatus="Synchronized" />
+          <channel id="228" lastStatus="Synchronized" />
+          <channel id="229" lastStatus="Synchronized" />
+          <channel id="230" lastStatus="Synchronized" />
+          <channel id="231" lastStatus="Synchronized" />
+          <channel id="232" lastStatus="Synchronized" />
+          <channel id="233" lastStatus="Synchronized" />
+          <channel id="234" lastStatus="Synchronized" />
+          <channel id="235" lastStatus="Synchronized" />
+          <channel id="236" lastStatus="Synchronized" />
+          <channel id="237" lastStatus="Synchronized" />
+          <channel id="238" lastStatus="Synchronized" />
+          <channel id="239" lastStatus="Synchronized" />
+          <channel id="240" lastStatus="Synchronized" />
+          <channel id="241" lastStatus="Synchronized" />
+          <channel id="242" lastStatus="Synchronized" />
+          <channel id="243" lastStatus="Synchronized" />
+          <channel id="244" lastStatus="Synchronized" />
+          <channel id="245" lastStatus="Synchronized" />
+          <channel id="246" lastStatus="Synchronized" />
+          <channel id="247" lastStatus="Synchronized" />
+          <channel id="248" lastStatus="Synchronized" />
+          <channel id="249" lastStatus="Synchronized" />
+          <channel id="250" lastStatus="Synchronized" />
+          <channel id="251" lastStatus="Synchronized" />
+          <channel id="252" lastStatus="Synchronized" />
+          <channel id="253" lastStatus="Synchronized" />
+          <channel id="254" lastStatus="Synchronized" />
+        </channels>
+        <database sequence="0" lastUpdate="12/19/2024 10:13:42 AM" lastStatus="Synchronized" revision="0" nextRecordToRead="0" />
+        <properties lastStatus="Synchronized" />
+      </device>
+      <device insteonID="11.11.11" category="1" subcategory="65" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="-1" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc04DCS" displayName="Keypad - Sink" active="1">
+        <location />
+        <channels>
+          <channel id="1" lastStatus="Synchronized" />
+          <channel id="2" lastStatus="Synchronized" />
+          <channel id="3" lastStatus="Synchronized">
+            <onMask>
+              <device value="2" lastUpdate="12/19/2024 10:13:35 AM" />
+            </onMask>
+            <onLevel>
+              <device value="255" lastUpdate="12/19/2024 10:13:35 AM" />
+            </onLevel>
+            <rampRate>
+              <device value="28" lastUpdate="12/19/2024 10:13:35 AM" />
+            </rampRate>
+          </channel>
+          <channel id="4" lastStatus="Synchronized" />
+          <channel id="5" lastStatus="Synchronized" />
+          <channel id="6" lastStatus="Synchronized" />
+        </channels>
+        <database sequence="0" lastUpdate="12/19/2024 6:02:50 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="22.22.22" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="synced" uid="153239835" />
+          </record>
+          <record sequence="1">
+            <device address="33.33.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="synced" uid="3422902834" />
+          </record>
+          <record sequence="2">
+            <device address="44.44.44" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="1634434460" />
+          </record>
+          <record sequence="3">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="391791943" />
+          </record>
+          <record sequence="4">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="2890886414" />
+          </record>
+          <record sequence="5">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="2" scene="1" syncstatus="synced" uid="3803169358" />
+          </record>
+          <record sequence="6">
+            <device address="55.55.55" group="6" recordControl="162" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="976426833" />
+          </record>
+          <record sequence="7">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="3949688230" />
+          </record>
+          <record sequence="8">
+            <device address="22.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="synced" uid="2364546963" />
+          </record>
+          <record sequence="9">
+            <device address="33.33.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="synced" uid="943266660" />
+          </record>
+          <record sequence="10">
+            <device address="44.44.44" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="2766418494" />
+          </record>
+          <record sequence="11">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="141281364" />
+          </record>
+          <record sequence="12">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="1785897471" />
+          </record>
+          <record sequence="13">
+            <device address="22.22.22" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="synced" uid="3035674208" />
+          </record>
+          <record sequence="14">
+            <device address="33.33.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="synced" uid="2248335419" />
+          </record>
+          <record sequence="15">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="2847390684" />
+          </record>
+          <record sequence="16">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="3023783691" />
+          </record>
+          <record sequence="17">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="1781713922" />
+          </record>
+          <record sequence="18">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="2" scene="1" syncstatus="synced" uid="3590981323" />
+          </record>
+          <record sequence="19">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="2300234846" />
+          </record>
+          <record sequence="20">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="3101011026" />
+          </record>
+          <record sequence="21">
+            <device address="22.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="synced" uid="3239312937" />
+          </record>
+          <record sequence="22">
+            <device address="33.33.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="synced" uid="3809891253" />
+          </record>
+          <record sequence="23">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="281492117" />
+          </record>
+          <record sequence="24">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="612314178" />
+          </record>
+          <record sequence="25">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="37932241" />
+          </record>
+          <record sequence="26">
+            <device address="22.22.22" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="synced" uid="4064844384" />
+          </record>
+          <record sequence="27">
+            <device address="33.33.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="1" syncstatus="synced" uid="468962577" />
+          </record>
+          <record sequence="28">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="3610899249" />
+          </record>
+          <record sequence="29">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="3023536447" />
+          </record>
+          <record sequence="30">
+            <device address="44.44.44" group="2" recordControl="98" data1="3" data2="28" data3="2" scene="1" syncstatus="changed" uid="2737937362" />
+          </record>
+          <record sequence="31">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="2" scene="1" syncstatus="synced" uid="3248977371" />
+          </record>
+          <record sequence="32">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="3864348104" />
+          </record>
+          <record sequence="33">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="2" scene="1" syncstatus="changed" uid="2354218281" />
+          </record>
+          <record sequence="34">
+            <device address="22.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="synced" uid="3962420010" />
+          </record>
+          <record sequence="35">
+            <device address="33.33.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="1" syncstatus="synced" uid="1227735179" />
+          </record>
+          <record sequence="36">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="1746064743" />
+          </record>
+          <record sequence="37">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="4049552499" />
+          </record>
+          <record sequence="38">
+            <device address="44.44.44" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="1" syncstatus="changed" uid="1258842097" />
+          </record>
+          <record sequence="39">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2704670422" />
+          </record>
+        </database>
+        <properties lastStatus="Synchronized">
+          <p name="operatingFlags">
+            <device value="0x80" lastUpdate="12/19/2024 10:13:35 AM" />
+          </p>
+        </properties>
+      </device>
+      <device insteonID="22.22.22" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="100" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Cove Lighting" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="12/19/2024 6:02:50 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="2" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="synced" uid="164402797" />
+          </record>
+          <record sequence="1">
+            <device address="11.11.11" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="synced" uid="1294403059" />
+          </record>
+          <record sequence="2">
+            <device address="33.33.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="synced" uid="3620933688" />
+          </record>
+          <record sequence="3">
+            <device address="44.44.44" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="3703716976" />
+          </record>
+          <record sequence="4">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="280297621" />
+          </record>
+          <record sequence="5">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="1627936002" />
+          </record>
+          <record sequence="6">
+            <device address="55.55.55" group="6" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="1208092500" />
+          </record>
+          <record sequence="7">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="3504312231" />
+          </record>
+          <record sequence="8">
+            <device address="11.11.11" group="3" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="synced" uid="2225941200" />
+          </record>
+          <record sequence="9">
+            <device address="11.11.11" group="2" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="synced" uid="1189343867" />
+          </record>
+          <record sequence="10">
+            <device address="11.11.11" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="synced" uid="2929919737" />
+          </record>
+          <record sequence="11">
+            <device address="33.33.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="synced" uid="515450109" />
+          </record>
+          <record sequence="12">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="1511842654" />
+          </record>
+          <record sequence="13">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="2676108415" />
+          </record>
+          <record sequence="14">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="3967192560" />
+          </record>
+          <record sequence="15">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="1544063555" />
+          </record>
+          <record sequence="16">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="1527466592" />
+          </record>
+          <record sequence="17">
+            <device address="11.11.11" group="3" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="synced" uid="3817997440" />
+          </record>
+          <record sequence="18">
+            <device address="11.11.11" group="2" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="synced" uid="3632613276" />
+          </record>
+          <record sequence="19">
+            <device address="11.11.11" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="synced" uid="1346764324" />
+          </record>
+          <record sequence="20">
+            <device address="33.33.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="1" syncstatus="synced" uid="2250912993" />
+          </record>
+          <record sequence="21">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="2552943681" />
+          </record>
+          <record sequence="22">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="341941166" />
+          </record>
+          <record sequence="23">
+            <device address="44.44.44" group="1" recordControl="98" data1="3" data2="28" data3="1" scene="1" syncstatus="changed" uid="415512801" />
+          </record>
+          <record sequence="24">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="175498745" />
+          </record>
+          <record sequence="25">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="1" scene="1" syncstatus="changed" uid="3740661707" />
+          </record>
+          <record sequence="26">
+            <device address="11.11.11" group="3" recordControl="162" data1="76" data2="28" data3="1" scene="1" syncstatus="synced" uid="1159424975" />
+          </record>
+          <record sequence="27">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="3436235587" />
+          </record>
+        </database>
+        <properties lastStatus="Synchronized">
+          <p name="operatingFlags">
+            <device value="0x80" lastUpdate="12/19/2024 10:13:35 AM" />
+          </p>
+        </properties>
+      </device>
+      <device insteonID="33.33.33" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="20" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Island Cans" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="12/19/2024 6:02:50 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="2" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="826194698" />
+          </record>
+          <record sequence="1">
+            <device address="22.22.22" group="1" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="769512099" />
+          </record>
+          <record sequence="2">
+            <device address="55.55.55" group="6" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="3551885859" />
+          </record>
+          <record sequence="3">
+            <device address="55.55.55" group="6" recordControl="34" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="2982622001" />
+          </record>
+          <record sequence="4">
+            <device address="11.11.11" group="3" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="3152810492" />
+          </record>
+          <record sequence="5">
+            <device address="11.11.11" group="2" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="2635434951" />
+          </record>
+          <record sequence="6">
+            <device address="22.22.22" group="1" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="4004517134" />
+          </record>
+          <record sequence="7">
+            <device address="55.55.55" group="6" recordControl="34" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="3449735591" />
+          </record>
+          <record sequence="8">
+            <device address="55.55.55" group="6" recordControl="34" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="1815999600" />
+          </record>
+          <record sequence="9">
+            <device address="11.11.11" group="3" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="2773947999" />
+          </record>
+          <record sequence="10">
+            <device address="11.11.11" group="2" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="2557239114" />
+          </record>
+          <record sequence="11">
+            <device address="22.22.22" group="1" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="2779344193" />
+          </record>
+          <record sequence="12">
+            <device address="55.55.55" group="6" recordControl="34" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="1795749785" />
+          </record>
+          <record sequence="13">
+            <device address="55.55.55" group="6" recordControl="34" data1="153" data2="28" data3="1" scene="1" syncstatus="changed" uid="3861551295" />
+          </record>
+          <record sequence="14">
+            <device address="11.11.11" group="3" recordControl="162" data1="153" data2="28" data3="1" scene="1" syncstatus="synced" uid="263461420" />
+          </record>
+          <record sequence="15">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="152069077" />
+          </record>
+        </database>
+        <properties lastStatus="Synchronized" />
+      </device>
+      <device insteonID="44.44.44" category="1" subcategory="65" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="20" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc04DCS" displayName="Keypad - Stove Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" lastStatus="Synchronized" />
+          <channel id="2" lastStatus="Synchronized" />
+          <channel id="3" lastStatus="Synchronized" />
+          <channel id="4" lastStatus="Synchronized" />
+          <channel id="5" lastStatus="Synchronized" />
+          <channel id="6" lastStatus="Synchronized" />
+        </channels>
+        <database sequence="0" lastUpdate="12/19/2024 6:02:50 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="2" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="3350787379" />
+          </record>
+          <record sequence="1">
+            <device address="11.11.11" group="2" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="383151001" />
+          </record>
+          <record sequence="2">
+            <device address="11.11.11" group="2" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1166165316" />
+          </record>
+          <record sequence="3">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="3142774219" />
+          </record>
+          <record sequence="4">
+            <device address="22.22.22" group="1" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3013071238" />
+          </record>
+          <record sequence="5">
+            <device address="22.22.22" group="1" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="915047191" />
+          </record>
+          <record sequence="6">
+            <device address="55.55.55" group="6" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="1996030918" />
+          </record>
+          <record sequence="7">
+            <device address="55.55.55" group="6" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="4018824120" />
+          </record>
+          <record sequence="8">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="4090814922" />
+          </record>
+          <record sequence="9">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="674283833" />
+          </record>
+          <record sequence="10">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3953026331" />
+          </record>
+          <record sequence="11">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3744642540" />
+          </record>
+          <record sequence="12">
+            <device address="11.11.11" group="3" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="45737954" />
+          </record>
+          <record sequence="13">
+            <device address="11.11.11" group="3" recordControl="162" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3855527775" />
+          </record>
+          <record sequence="14">
+            <device address="11.11.11" group="3" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="182332342" />
+          </record>
+          <record sequence="15">
+            <device address="11.11.11" group="2" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="4211626962" />
+          </record>
+          <record sequence="16">
+            <device address="11.11.11" group="2" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="2393453893" />
+          </record>
+          <record sequence="17">
+            <device address="11.11.11" group="2" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3968330647" />
+          </record>
+          <record sequence="18">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="2603900541" />
+          </record>
+          <record sequence="19">
+            <device address="22.22.22" group="1" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1407178622" />
+          </record>
+          <record sequence="20">
+            <device address="22.22.22" group="1" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3446631792" />
+          </record>
+          <record sequence="21">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="3678012685" />
+          </record>
+          <record sequence="22">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1549784778" />
+          </record>
+          <record sequence="23">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="155608704" />
+          </record>
+          <record sequence="24">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="3452277312" />
+          </record>
+          <record sequence="25">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3208153933" />
+          </record>
+          <record sequence="26">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="2139358114" />
+          </record>
+          <record sequence="27">
+            <device address="11.11.11" group="3" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="3076418730" />
+          </record>
+          <record sequence="28">
+            <device address="11.11.11" group="3" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1466211060" />
+          </record>
+          <record sequence="29">
+            <device address="11.11.11" group="3" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1062971667" />
+          </record>
+          <record sequence="30">
+            <device address="11.11.11" group="2" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="3977659963" />
+          </record>
+          <record sequence="31">
+            <device address="11.11.11" group="2" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3075432850" />
+          </record>
+          <record sequence="32">
+            <device address="11.11.11" group="2" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="2170493271" />
+          </record>
+          <record sequence="33">
+            <device address="22.22.22" group="1" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="3764318011" />
+          </record>
+          <record sequence="34">
+            <device address="22.22.22" group="1" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="113916685" />
+          </record>
+          <record sequence="35">
+            <device address="22.22.22" group="1" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="2236535807" />
+          </record>
+          <record sequence="36">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="2576805800" />
+          </record>
+          <record sequence="37">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1487362177" />
+          </record>
+          <record sequence="38">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="1760774770" />
+          </record>
+          <record sequence="39">
+            <device address="55.55.55" group="6" recordControl="34" data1="255" data2="28" data3="4" scene="1" syncstatus="changed" uid="1511257311" />
+          </record>
+          <record sequence="40">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3438806530" />
+          </record>
+          <record sequence="41">
+            <device address="55.55.55" group="6" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="3990418494" />
+          </record>
+          <record sequence="42">
+            <device address="11.11.11" group="3" recordControl="162" data1="255" data2="28" data3="4" scene="1" syncstatus="synced" uid="3897768486" />
+          </record>
+          <record sequence="43">
+            <device address="11.11.11" group="3" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="2481339522" />
+          </record>
+          <record sequence="44">
+            <device address="11.11.11" group="3" recordControl="34" data1="76" data2="28" data3="5" scene="1" syncstatus="changed" uid="4067795118" />
+          </record>
+          <record sequence="45">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="1158730727" />
+          </record>
+        </database>
+        <properties lastStatus="Synchronized" />
+      </device>
+      <device insteonID="55.55.55" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Ceiling Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" lastStatus="Synchronized" />
+          <channel id="2" lastStatus="Synchronized" />
+          <channel id="3" lastStatus="Synchronized" />
+          <channel id="4" lastStatus="Synchronized" />
+          <channel id="5" lastStatus="Synchronized" />
+          <channel id="6" lastStatus="Synchronized" />
+        </channels>
+        <database sequence="0" lastUpdate="12/19/2024 6:02:50 PM" lastStatus="Changed" revision="0" nextRecordToRead="0">
+          <record sequence="0">
+            <device address="11.11.11" group="6" recordControl="226" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="1206919277" />
+          </record>
+          <record sequence="1">
+            <device address="22.22.22" group="6" recordControl="226" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2906552015" />
+          </record>
+          <record sequence="2">
+            <device address="33.33.33" group="6" recordControl="226" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="793274515" />
+          </record>
+          <record sequence="3">
+            <device address="44.44.44" group="6" recordControl="226" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2865472380" />
+          </record>
+          <record sequence="4">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="1688185923" />
+          </record>
+          <record sequence="5">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="4264274583" />
+          </record>
+          <record sequence="6">
+            <device address="11.11.11" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2652726427" />
+          </record>
+          <record sequence="7">
+            <device address="22.22.22" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2176063648" />
+          </record>
+          <record sequence="8">
+            <device address="33.33.33" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="305043922" />
+          </record>
+          <record sequence="9">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="1117718072" />
+          </record>
+          <record sequence="10">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="58270996" />
+          </record>
+          <record sequence="11">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="3256516451" />
+          </record>
+          <record sequence="12">
+            <device address="11.11.11" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="1300408116" />
+          </record>
+          <record sequence="13">
+            <device address="22.22.22" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2886580243" />
+          </record>
+          <record sequence="14">
+            <device address="33.33.33" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2991891802" />
+          </record>
+          <record sequence="15">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="3136518840" />
+          </record>
+          <record sequence="16">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2648236443" />
+          </record>
+          <record sequence="17">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="3863712273" />
+          </record>
+          <record sequence="18">
+            <device address="11.11.11" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2485562743" />
+          </record>
+          <record sequence="19">
+            <device address="22.22.22" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2357266610" />
+          </record>
+          <record sequence="20">
+            <device address="33.33.33" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="803637131" />
+          </record>
+          <record sequence="21">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2382884635" />
+          </record>
+          <record sequence="22">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2833786571" />
+          </record>
+          <record sequence="23">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="3171625740" />
+          </record>
+          <record sequence="24">
+            <device address="11.11.11" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2954467900" />
+          </record>
+          <record sequence="25">
+            <device address="22.22.22" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2874317539" />
+          </record>
+          <record sequence="26">
+            <device address="33.33.33" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="3310255723" />
+          </record>
+          <record sequence="27">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="1650458341" />
+          </record>
+          <record sequence="28">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="694198885" />
+          </record>
+          <record sequence="29">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2519761495" />
+          </record>
+          <record sequence="30">
+            <device address="11.11.11" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="3086177025" />
+          </record>
+          <record sequence="31">
+            <device address="22.22.22" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="64173701" />
+          </record>
+          <record sequence="32">
+            <device address="33.33.33" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="4112731679" />
+          </record>
+          <record sequence="33">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="1939613286" />
+          </record>
+          <record sequence="34">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="2039455711" />
+          </record>
+          <record sequence="35">
+            <device address="44.44.44" group="6" recordControl="98" data1="3" data2="28" data3="6" scene="1" syncstatus="changed" uid="667504902" />
+          </record>
+          <record sequence="36">
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="604795073" />
+          </record>
+        </database>
+        <properties lastStatus="Synchronized" />
+      </device>
+      <device insteonID="AA.AA.AA" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Under Cabinet Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" lastStatus="Synchronized" />
+          <channel id="2" lastStatus="Synchronized" />
+          <channel id="3" lastStatus="Synchronized" />
+          <channel id="4" lastStatus="Synchronized" />
+          <channel id="5" lastStatus="Synchronized" />
+          <channel id="6" lastStatus="Synchronized" />
+        </channels>
+        <database sequence="0" lastUpdate="12/19/2024 10:14:55 AM" lastStatus="Synchronized" revision="0" nextRecordToRead="0" />
+        <properties lastStatus="Synchronized" />
+      </device>
+      <device insteonID="BB.BB.BB" category="1" subcategory="66" revision="67" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Nook Ceiling Lights" active="1">
+        <location />
+        <channels>
+          <channel id="1" lastStatus="Synchronized" />
+          <channel id="2" lastStatus="Synchronized" />
+          <channel id="3" lastStatus="Synchronized" />
+          <channel id="4" lastStatus="Synchronized" />
+          <channel id="5" lastStatus="Synchronized" />
+          <channel id="6" lastStatus="Synchronized" />
+        </channels>
+        <database sequence="0" lastUpdate="12/19/2024 10:14:55 AM" lastStatus="Synchronized" revision="0" nextRecordToRead="0" />
+        <properties lastStatus="Synchronized" />
+      </device>
+      <device insteonID="CC.CC.CC" category="1" subcategory="32" revision="65" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="30" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Pantry Lights" active="1">
+        <location />
+        <channels />
+        <database sequence="0" lastUpdate="12/19/2024 10:14:55 AM" lastStatus="Synchronized" revision="0" nextRecordToRead="0" />
+        <properties lastStatus="Synchronized" />
+      </device>
+    </active_devices>
+    <scenes nextSceneID="2">
+      <scene id="1" name="Kitchen" lastTrigger="05/17/2014 11:02:08 AM, On" notes="Turn on kitchen main lights">
+        <members>
+          <member iid="11.11.11" group="2" controller="1" responder="1" data1="255" data2="28" data3="2" status="Done" tag="35" />
+          <member iid="22.22.22" group="1" controller="1" responder="1" data1="76" data2="28" data3="1" status="Done" tag="1" />
+          <member iid="33.33.33" group="1" responder="1" data1="153" data2="28" data3="1" status="Done" tag="1" />
+          <member iid="44.44.44" group="4" responder="1" data1="255" data2="28" data3="4" status="Done" tag="35" />
+          <member iid="55.55.55" group="6" controller="1" data1="255" data2="28" data3="6" status="Done" tag="35" />
+          <member iid="44.44.44" group="5" responder="1" data1="76" data2="28" data3="5" status="Done" tag="33" />
+          <member iid="11.11.11" group="3" controller="1" data1="160" data2="28" data3="3" status="Done" tag="35" />
+        </members>
+      </scene>
+    </scenes>
+  </insteon>
+</settings>

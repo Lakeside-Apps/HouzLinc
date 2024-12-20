@@ -10,10 +10,6 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Models\Changes\Changes2.xml" />
-    <None Remove="Refs\Changes\TestChangeChannels.xml" />
-  </ItemGroup>
   
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -29,6 +25,8 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Models\Scenes\Scene2.xml" />
+    <Content Include="Models\Scenes\Scene2Expanded.xml" />
     <Content Include="Refs\Changes\TestAddDevice.xml" />
     <Content Include="Refs\Changes\TestAddDeviceWithChannels.xml" />
     <Content Include="Refs\Changes\TestAddDuplicateRecordToDatabase.xml" />
@@ -44,6 +42,9 @@
     <Content Include="Refs\Changes\TestReplaceDevice.xml" />
     <Content Include="Refs\Changes\TestReplaceDeviceWithChannels.xml" />
     <Content Include="Refs\Merges\TestAddDeviceLocalAndOther.xml" />
+    <Content Include="Refs\Scenes2\TestExpandScene.xml" />
+    <Content Include="Refs\Scenes2\TestRemoveDuplicateMembers.xml" />
+    <Content Include="Refs\Scenes2\TestRemoveDuplicateMembersOneByOne.xml" />
     <Content Include="Refs\Scenes\TestAddController.xml" />
     <Content Include="Refs\Scenes\TestAddResponder.xml" />
     <Content Include="Refs\Scenes\TestEditControllerData.xml" />

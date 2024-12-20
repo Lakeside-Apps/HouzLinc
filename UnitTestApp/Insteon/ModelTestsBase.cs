@@ -117,4 +117,22 @@ public static class HouseExtensions
         await device.TryReadAllLinkDatabaseAsync();
         await house.Hub.TryReadAllLinkDatabaseAsync();
     }
+
+    // Pretend to sync everything by changing statuses to "Synced"
+    internal static void PretendSync(this House house)
+    {
+        foreach (var device in house.Devices)
+        {
+            device.PropertiesSyncStatus = SyncStatus.Synced;
+            device.AllLinkDatabase.LastStatus = SyncStatus.Synced;
+            for (int seq = 0; seq < device.AllLinkDatabase.Count; seq++)
+            {
+                device.AllLinkDatabase[seq] = new(device.AllLinkDatabase[seq]) { SyncStatus = SyncStatus.Synced };
+            }
+            foreach(var channel in device.Channels)
+            {
+                channel.PropertiesSyncStatus = SyncStatus.Synced;
+            }
+        }
+    }
 }
