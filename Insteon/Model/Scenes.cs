@@ -257,8 +257,8 @@ namespace Insteon.Model
 
                 foreach(var member in membersToRemove)
                 {
-                    // No need to remove the links as we are removing the device entirely 
-                    // and the links will be removed anyway
+                    // No need to remove the links as we are removing the device entirely
+                    // and that will remove all the links to that device.
                     scene.RemoveMember(member, removeLinks: false);
                 }
             }

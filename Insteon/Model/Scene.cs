@@ -212,10 +212,11 @@ public sealed class Scene
     private SceneMembers? members;
 
     /// <summary>
-    /// Expand this scene by making sure all links it generates are present on appropriate devices
-    /// Note: this will not remove links after deleting a scene member, use RemoveSceneMember for that instead
+    /// Expand this scene, i.e., ensure that all links it generates are present on appropriate devices
+    /// Note: this will not remove links when deleting a scene member, use RemoveLinksForXxxRemoval for that instead.
+    /// <param name="allowDuplicateLinks">(For TESTING ONLY) allows generating duplicate links</param>
     /// </summary>
-    public void Expand()
+    public void Expand(bool allowDuplicateLinks = false)
     {
         foreach (SceneMember controllerMember in this.Members)
         {
@@ -225,8 +226,8 @@ public sealed class Scene
                 {
                     if (responderMember.IsResponder)
                     {
-                        EnsureControllerLinkRecord(controllerMember, responderMember);
-                        EnsureResponderLinkRecord(controllerMember, responderMember);
+                        EnsureControllerLinkRecord(controllerMember, responderMember, allowDuplicateLinks);
+                        EnsureResponderLinkRecord(controllerMember, responderMember, allowDuplicateLinks);
                     }
                 }
             }
@@ -262,8 +263,24 @@ public sealed class Scene
 
         if (removeLinks)
         {
-            // Remove appropriate links to reflect member removal
-            RemoveLinksForMemberRemoval(memberToRemove);
+            // Determine whether we have duplicate members among controller or responder members
+            int controllerMatchingCount = 0, responderMatchingCount = 0;
+            if (Members.TryGetMatchingMembers(member.DeviceId, member.Group, out List<SceneMember>? matchingMembers))
+            {
+                foreach (SceneMember matchingMember in matchingMembers)
+                {
+                    if (matchingMember.IsController)
+                        controllerMatchingCount++;
+                    if (matchingMember.IsResponder)
+                        responderMatchingCount++;
+                }
+            }
+
+            // Remove appropriate links to reflect member removal, leaving one link in place when we have duplicates
+            if (memberToRemove.IsController)
+                RemoveLinksForControllerRemoval(memberToRemove, removeOnlyDuplicates: controllerMatchingCount > 1);
+            if (memberToRemove.IsResponder)
+                RemoveLinksForResponderRemoval(memberToRemove, removeOnlyDuplicates: responderMatchingCount > 1);
         }
 
         // Remove member from the scene
@@ -372,8 +389,10 @@ public sealed class Scene
     {
         Members.RemoveDuplicateEntries((SceneMember member) =>
         {
-            Members.Remove(member);
+            // The order of these calls matters, as RemoveLinksForMemberRemoval
+            // needs to be able to detect duplicate members to keep the right links
             RemoveLinksForMemberRemoval(member, removeOnlyDuplicates: true);
+            Members.Remove(member);
         });
     }
 
@@ -381,44 +400,53 @@ public sealed class Scene
     private void RemoveLinksForMemberRemoval(SceneMember member, bool keepController = false, bool keepResponder = false, bool removeOnlyDuplicates = false)
     {
         if (!keepController && member.IsController)
+            RemoveLinksForControllerRemoval(member, removeOnlyDuplicates);
+        if (!keepResponder && member.IsResponder)
+            RemoveLinksForResponderRemoval(member, removeOnlyDuplicates);
+    }
+
+    // Helper to remove links when a controller member is about to be removed
+    private void RemoveLinksForControllerRemoval(SceneMember controllerMember, bool removeOnlyDuplicates)
+    {
+        Debug.Assert(controllerMember.IsController);
+
+        foreach (SceneMember responderMember in this.Members)
         {
-            foreach (SceneMember responderMember in this.Members)
+            if (responderMember.IsResponder)
             {
-                if (responderMember.IsResponder)
-                {
-                    DeleteControllerLinkRecord(member, responderMember, removeOnlyDuplicates);
-                    DeleteResponderLinkRecord(member, responderMember, removeOnlyDuplicates);
-                }
+                RemoveControllerLinkRecord(controllerMember, responderMember, removeOnlyDuplicates);
+                RemoveResponderLinkRecord(controllerMember, responderMember, removeOnlyDuplicates);
             }
         }
+    }
 
-        if (!keepResponder && member.IsResponder)
+    // Helper to remove links when a responder member is about to be removed
+    private void RemoveLinksForResponderRemoval(SceneMember responderMember, bool removeOnlyDuplicates)
+    {
+        Debug.Assert(responderMember.IsResponder);
+
+        // Determine whether we have more responders on the same device than the responder being deleted.
+        // If yes, we will not delete the controller links as they are still needed for this/these other responder(s)
+        bool multipleResponders = false;
+        if (Members.TryGetMatchingResponders(responderMember.DeviceId, out List<SceneMember>? respondersOnSameDevice))
         {
-            // Determine whether we have more responders on the same device than the responder being deleted.
-            // If yes, we will not delete the controller links as they are still needed for this/these other responder(s)
-            bool deleteControllerLink = false;
-            if (Members.TryGetMatchingResponders(member.DeviceId, out List<SceneMember>? respondersOnSameDevice))
-            {
-                Debug.Assert(respondersOnSameDevice != null && respondersOnSameDevice.Count > 0);
-                deleteControllerLink = respondersOnSameDevice.Count == 1;
-            }
+            Debug.Assert(respondersOnSameDevice != null && respondersOnSameDevice.Count > 0);
+            multipleResponders = respondersOnSameDevice.Count > 1;
+        }
 
-            foreach (SceneMember controllerMember in this.Members)
+        foreach (SceneMember controllerMember in this.Members)
+        {
+            if (controllerMember.IsController)
             {
-                if (controllerMember.IsController)
-                {
-                    if (deleteControllerLink)
-                    {
-                        DeleteControllerLinkRecord(controllerMember, member, removeOnlyDuplicates);
-                    }
-                    DeleteResponderLinkRecord(controllerMember, member, removeOnlyDuplicates);
-                }
+                RemoveControllerLinkRecord(controllerMember, responderMember, multipleResponders ? true : removeOnlyDuplicates);
+                RemoveResponderLinkRecord(controllerMember, responderMember, removeOnlyDuplicates);
             }
         }
     }
 
     // Ensure that the controller link from a scene controller to a responder is present and correct
-    private void EnsureControllerLinkRecord(SceneMember controllerMember, SceneMember responderMember)
+    // If allowDuplicates is true, we don't weed out duplicate links (for TESTING ONLY)
+    private void EnsureControllerLinkRecord(SceneMember controllerMember, SceneMember responderMember, bool allowDuplicates = false)
     {
         var controller = House.Devices.GetDeviceByID(controllerMember.DeviceId);
         if (controller == null)
@@ -465,7 +493,8 @@ public sealed class Scene
             SyncStatus = SyncStatus.Changed,
         };
 
-        // Look for a match
+        // Look for a match on deviceId and Group, ignoring the Data fields which are semantically irrelevant
+        // for removal. We also either match on the scene id or on no scene id (i.e., not attributed to any scene)
         if (controller.AllLinkDatabase.TryGetMatchingEntries(controllerRecord, IdGroupTypeComparer.Instance, out List<AllLinkRecord>? matchingRecords))
         {
             foreach (AllLinkRecord record in matchingRecords)
@@ -499,6 +528,11 @@ public sealed class Scene
                 Debug.Assert(updatedRecord.Equals(controllerRecord));
                 controller.AllLinkDatabase.ReplaceRecord(existingRecord, updatedRecord);
             }
+            else if (allowDuplicates)
+            {
+                // For TESTING ONLY: add new record even though it's a duplicate
+                controller.AllLinkDatabase.AddRecord(controllerRecord);
+            }
         }
         else
         {
@@ -508,7 +542,8 @@ public sealed class Scene
     }
 
     // Ensure that the controller link from a scene controller to a responder is present and correct
-    private void EnsureResponderLinkRecord(SceneMember controllerMember, SceneMember responderMember)
+    // If allowDuplicates is true, we don't weed out duplicate links (for TESTING ONLY)
+    private void EnsureResponderLinkRecord(SceneMember controllerMember, SceneMember responderMember, bool allowDuplicates = false)
     {
         var responder = House.Devices.GetDeviceByID(responderMember.DeviceId);
         if (responder == null)
@@ -551,7 +586,8 @@ public sealed class Scene
             SyncStatus = SyncStatus.Changed,
         };
 
-        // Look for a match
+        // Look for a match. This being a responder link, we need to match on data3 (responding channel on a KeypadLinc)
+        // We also either match on the scene id or on no scene id (i.e., the link is not attributed to any scene)
         AllLinkRecord? existingRecord = null;
         if (responder.AllLinkDatabase.TryGetMatchingEntries(responderRecord, IdGroupTypeComparer.Instance, out List<AllLinkRecord>? matchingRecords))
         {
@@ -588,6 +624,11 @@ public sealed class Scene
                 };        
                 Debug.Assert(updatedRecord.Equals(responderRecord));
                 responder.AllLinkDatabase.ReplaceRecord(existingRecord, updatedRecord);
+            }
+            else if (allowDuplicates)
+            {
+                // For TESTING ONLY: add new record even though it's a duplicate
+                responder.AllLinkDatabase.AddRecord(responderRecord);
             }
         }
         else
@@ -646,7 +687,7 @@ public sealed class Scene
     }
 
     // Delete the controller link from a scene controller to a responder
-    private void DeleteControllerLinkRecord(SceneMember controllerMember, SceneMember responderMember, bool removeOnlyDuplicates = false)
+    private void RemoveControllerLinkRecord(SceneMember controllerMember, SceneMember responderMember, bool removeOnlyDuplicates = false)
     {
         var controller = House.Devices.GetDeviceByID(controllerMember.DeviceId);
 
@@ -694,21 +735,22 @@ public sealed class Scene
             }
         }
 
-        // Now delete the matching records, keeping one if removeOnlyDuplicates is true
+        // Now remove the matching records, keeping last one if removeOnlyDuplicates is true
+        // so that it does not get changed or removed by the next sync
         if (recordsToRemove.Count > 0)
         {
-            for (var i = removeOnlyDuplicates ? 1 : 0; i < recordsToRemove.Count; i++)
+            for (var i = 0; i < recordsToRemove.Count; i++)
             {
-                if (removeOnlyDuplicates && i == 0)
+                // TODO: consider using record uid for Replace and Remove record below.
+                if (removeOnlyDuplicates && i == recordsToRemove.Count - 1)
                 {
-                    // Ensure the record we keep has the right scene id and is marked as changed
+                    // Ensure the record we keep matches controllerRecord and is marked changed
                     // so that it does not get changed or removed by the next sync
-                    AllLinkRecord record = new(recordsToRemove[i]) { SceneId = Id, SyncStatus = SyncStatus.Changed };
+                    AllLinkRecord record = new(controllerRecord) { SyncStatus = SyncStatus.Changed };
                     controller.AllLinkDatabase.ReplaceRecord(recordsToRemove[i], record);
                 }
                 else
                 {
-                    // Need to create a new record here as it might not be the same duplicate that we are going to remove
                     AllLinkRecord record = new(recordsToRemove[i]) { SyncStatus = SyncStatus.Changed };
                     controller.AllLinkDatabase.RemoveRecord(record);
                 }
@@ -717,7 +759,7 @@ public sealed class Scene
     }
 
     // Delete the responder link from a scene responder to a controller
-    private void DeleteResponderLinkRecord(SceneMember controllerMember, SceneMember responderMember, bool removeOnlyDuplicates = false)
+    private void RemoveResponderLinkRecord(SceneMember controllerMember, SceneMember responderMember, bool removeOnlyDuplicates = false)
     {
         var responder = House.Devices.GetDeviceByID(responderMember.DeviceId);
 
@@ -761,32 +803,30 @@ public sealed class Scene
         {
             foreach (AllLinkRecord record in matchingRecords)
             {
-                if (record.Data3 == responderRecord.Data3)
+                // Remove only links with the same data3 (local channel) attributed to this scene or not attributed
+                if (record.Data3 == responderRecord.Data3 && (record.SceneId == 0 || record.SceneId == this.Id))
                 {
-                    // Remove only links attributed to this scene or not attributed
-                    if (record.SceneId == 0 || record.SceneId == this.Id)
-                    {
-                        recordsToRemove.Add(record);
-                    }
+                    recordsToRemove.Add(record);
                 }
             }
         }
 
-        // Now delete the matching records, keeping one if removeOnlyDuplicates is true
+        // Now remove the matching records, keeping last one if removeOnlyDuplicates is true
+        // so that it does not get changed or removed by the next sync
         if (recordsToRemove.Count > 0)
         {
             for (var i = 0; i < recordsToRemove.Count; i++)
             {
-                if (removeOnlyDuplicates && i == 0)
+                // TODO: consider using record uid for Replace and Remove record below.
+                if (removeOnlyDuplicates && i == recordsToRemove.Count - 1)
                 {
-                    // Ensure the record we keep has the right scene id and is marked as changed
+                    // Ensure the record we keep matches responderRecord and is  marked changed
                     // so that it does not get changed or removed by the next sync
-                    AllLinkRecord record = new(recordsToRemove[i]) { SceneId = Id, SyncStatus = SyncStatus.Changed };
+                    AllLinkRecord record = new(responderRecord) { SyncStatus = SyncStatus.Changed };
                     responder.AllLinkDatabase.ReplaceRecord(recordsToRemove[i], record);
                 }
                 else
                 {
-                    // Need to create a new record here as it might not be the same duplicate that we are going to remove
                     AllLinkRecord record = new(recordsToRemove[i]) { SyncStatus = SyncStatus.Changed };
                     responder.AllLinkDatabase.RemoveRecord(record);
                 }
