@@ -19,7 +19,12 @@
         <DataTemplate x:DataType="vm:MemberViewModel">
             <StackPanel>
                 <TextBlock Text="Edit Scene Member" Style="{StaticResource TitleTextBlockStyle}"/>
-                <TextBlock Text="{x:Bind DeviceDisplayNameAndId, Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock
+                    Margin="0,10,0,0"
+                    Text="{x:Bind sys:String.Format(x:Null, 'Scene: {0} - {1}', SceneViewModel.DisplayName, SceneViewModel.Room), Mode=OneTime}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    TextWrapping="NoWrap"/>
+                <TextBlock Margin="0,10,0,0" Text="{x:Bind DeviceDisplayNameAndId, Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </StackPanel>
         </DataTemplate>
     </ContentDialog.TitleTemplate>
@@ -28,9 +33,9 @@
         <DataTemplate x:DataType="vm:MemberViewModel">
             <StackPanel Margin="10,0,10,0">
                 <TextBlock Text="{x:Bind DeviceModelName}" TextWrapping="NoWrap"/>
-                <TextBlock Visibility="{x:Bind DeviceHasRoom}" Text="{x:Bind DeviceRoom}" TextWrapping="NoWrap"/>
-                <TextBlock Visibility="{x:Bind DeviceHasLocation}" Text="{x:Bind DeviceLocation}" TextWrapping="NoWrap"/>
-                <StackPanel Orientation="Horizontal" Visibility="{x:Bind DeviceHasChannels, Mode=OneWay}" Margin="0,5,0,0">
+                <TextBlock Margin="0,5,0,0" Visibility="{x:Bind DeviceHasRoom}" Text="{x:Bind DeviceRoom}" TextWrapping="NoWrap"/>
+                <TextBlock Margin="0,5,0,0" Visibility="{x:Bind DeviceHasLocation}" Text="{x:Bind DeviceLocation}" TextWrapping="NoWrap"/>
+                <StackPanel Orientation="Horizontal" Visibility="{x:Bind DeviceHasChannels, Mode=OneWay}" Margin="0,10,0,0">
                     <TextBlock
                         Text="{x:Bind DeviceChannelHeader, Mode=OneWay}"
                         TextWrapping="NoWrap"
@@ -39,7 +44,7 @@
                     <ctl:DeviceChannelsComboBox DeviceId="{x:Bind DeviceId, Mode=OneWay}" ChannelId="{x:Bind Group, Mode=TwoWay}"/>
                 </StackPanel>
                 <TextBlock
-                    Margin="0,5,5,0"
+                    Margin="0,8,5,0"
                     Text="{x:Bind sys:String.Format('Group: {0}', Group), Mode=OneWay}"
                     TextWrapping="NoWrap"
                     Style="{StaticResource BodyTextBlockStyle}"/>
@@ -57,7 +62,8 @@
                         Grid.Column="1"
                         Header="Ramp Rate"
                         SelectedIndex="{x:Bind RampRate, Mode=TwoWay}"
-                        Margin="5,0,5,0"/>
+                        HorizontalAlignment="Right"
+                        Margin="0,0,5,0"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <CheckBox Content="Controller" IsChecked="{x:Bind IsController, Mode=TwoWay}" Margin="0,0,0,0"/>
