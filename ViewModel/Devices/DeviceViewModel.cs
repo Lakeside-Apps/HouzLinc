@@ -556,7 +556,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
         {
             // See above
             Debug.Assert(nameof(OnLevel) == nameof(Device.OnLevel));
-            Device.LEDBrightness = (byte)value;
+            Device.OnLevel = (byte)value;
         }
     }
 
