@@ -23,9 +23,9 @@
             <StackPanel>
                 <TextBlock Text="Button Properties" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 <TextBlock Margin="0,5,0,0"  Text="Click a button to view and edit its properties."/>
-                <TextBlock Margin="0,5,0,0"  Text="Manage its followers by shift clicking them,"/>
+                <TextBlock Margin="0,5,0,0"  Text="Shift click another to make it follow on, follow off or not follow."/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="0,5,0,0" Text="or by pinning it "/>
+                    <TextBlock Margin="0,5,0,0" Text="Or pin a button "/>
                     <ToggleButton
                         Margin="5,0,0,0"
                         IsChecked="{x:Bind IsSetFollowBehaviorMode, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
@@ -33,7 +33,7 @@
                         win:ToolTipService.ToolTip="Pin Selected Button to Configure Followers">
                         <SymbolIcon Symbol="Pin"/>
                     </ToggleButton>
-                    <TextBlock Margin="5,5,0,0" Text="and clicking on followers."/>
+                    <TextBlock Margin="5,5,0,0" Text="and click another to make it follow on, follow off or not follow."/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>

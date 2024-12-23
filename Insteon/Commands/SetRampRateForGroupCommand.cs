@@ -24,7 +24,7 @@ namespace Insteon.Commands;
 public sealed class SetRampRateForGroupCommand : DeviceCommand
 {
     public const string Name = "SetRampRateForGroup";
-    public const string Help = "<DeviceID> <Group> <RampRate>";
+    public const string Help = "<DeviceID> <Group> <RampRate (0-31)>";
     private protected override string GetLogName() { return Name; }
     private protected override string GetLogParams() { return "Group: " + Group.ToString() + ", RampRate: " + RampRate.ToString(); }
 

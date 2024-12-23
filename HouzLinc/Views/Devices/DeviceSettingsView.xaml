@@ -39,7 +39,7 @@
                         OnContent="On"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Header="LED Brightness" Description="Sets the brightness of LED backlight." MinHeight="48">
+                <ctkControls:SettingsCard Header="LED Brightness" Description="Brightness of LED backlight." MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
@@ -50,14 +50,14 @@
                         Level="{x:Bind LEDBrightness, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Header="On Level" Description="Sets level to set the load at when the button is pressed." MinHeight="48">
+                <ctkControls:SettingsCard Header="On Level" Description="Level to set the load at when the switch is turned on." MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <ctl:LevelControl MinWidth="120" AreIconsVisible="False" Level="{x:Bind OnLevel, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Header="Ramp Rate" Description="Sets ramp rate to use when the button is pressed." MinHeight="48">
+                <ctkControls:SettingsCard Header="Ramp Rate" Description="Ramp rate to use when the switch is turned on." MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
