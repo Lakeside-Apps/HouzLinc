@@ -117,7 +117,7 @@ public sealed partial class LevelControl : UserControl, INotifyPropertyChanged
     // TODO: make private when https://github.com/unoplatform/uno/pull/14521 is fixed
     public string stringPercentLevel
     {
-        get => $"{doublePercentLevel:F0}%";
+        get => _stringPercentLevel;
         set
         {
             if (value != _stringPercentLevel)
