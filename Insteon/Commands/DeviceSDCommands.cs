@@ -24,7 +24,7 @@ namespace Insteon.Commands;
 public sealed class LightOnCommand : DeviceCommand
 {
     public const string Name = "LightOn";
-    public const string Help = "<DeviceID> [Level], with Level = 0-255, default 0";
+    public const string Help = "<DeviceID> <Level (0-255, default 255)>";
     public const byte CommandCode = CommandCode_LightON;
     private protected override string GetLogName() { return Name; }
     private protected override string GetLogParams() { return "Level: " + Command2; }

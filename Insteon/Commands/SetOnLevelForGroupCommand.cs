@@ -24,7 +24,7 @@ namespace Insteon.Commands;
 public sealed class SetOnLevelForGroupCommand : DeviceCommand
 {
     public const string Name = "SetOnLevelForGroup";
-    public const string Help = "<DeviceID> <Group> <OnLevel>";
+    public const string Help = "<DeviceID> <Group> <OnLevel (0-255)>";
     private protected override string GetLogName() { return Name; }
     private protected override string GetLogParams() { return "Group: " + Group.ToString() + ", OnLevel: " + OnLevel.ToString(); }
 
