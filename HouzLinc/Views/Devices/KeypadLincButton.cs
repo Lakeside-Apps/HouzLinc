@@ -108,15 +108,15 @@ public partial class KeypadLincButton : ToggleButton
                     }
                 case FollowBehaviorType.Not:
                     {
-                        FollowBehavior = FollowBehaviorType.Off; 
-                        break;
-                    }
-                case FollowBehaviorType.Off:
-                    {
-                        FollowBehavior = FollowBehaviorType.On;
+                        FollowBehavior = FollowBehaviorType.On; 
                         break;
                     }
                 case FollowBehaviorType.On:
+                    {
+                        FollowBehavior = FollowBehaviorType.Off;
+                        break;
+                    }
+                case FollowBehaviorType.Off:
                     {
                         FollowBehavior = FollowBehaviorType.Not;
                         break;
