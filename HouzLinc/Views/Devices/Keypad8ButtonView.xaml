@@ -24,103 +24,104 @@
 
     <ContentControl.ContentTemplate>
         <DataTemplate x:DataType="vm:KeypadLincViewModel">
-            <Grid
-                HorizontalAlignment="Left"
-                Height="250"
-                VerticalAlignment="Top"
-                Width="125">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <StackPanel Width="125">
+                <Grid
+                    Height="250"
+                    VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <local:KeypadLincButton
-                    x:Name="Button1"
-                    IsChecked="{x:Bind Button1Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button1FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton1InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="0"
-                    Grid.Row="0">
-                    <TextBlock Text="{x:Bind Button1Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button2"
-                    IsChecked="{x:Bind Button2Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button2FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton2InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="1"
-                    Grid.Row="0">
-                    <TextBlock Text="{x:Bind Button2Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button3"
-                    IsChecked="{x:Bind Button3Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button3FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton3InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="0"
-                    Grid.Row="1">
-                    <TextBlock Text="{x:Bind Button3Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button4"
-                    IsChecked="{x:Bind Button4Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button4FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton4InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="1"
-                    Grid.Row="1">
-                    <TextBlock Text="{x:Bind Button4Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button5"
-                    IsChecked="{x:Bind Button5Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button5FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton5InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="0"
-                    Grid.Row="2">
-                    <TextBlock Text="{x:Bind Button5Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button6"
-                    IsChecked="{x:Bind Button6Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button6FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton6InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="1"
-                    Grid.Row="2">
-                    <TextBlock Text="{x:Bind Button6Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button7"
-                    IsChecked="{x:Bind Button7Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button7FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton7InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="0"
-                    Grid.Row="3">
-                    <TextBlock Text="{x:Bind Button7Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-                <local:KeypadLincButton
-                    x:Name="Button8"
-                    IsChecked="{x:Bind Button8Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                    FollowBehavior="{x:Bind Button8FollowBehavior, Mode=TwoWay}"
-                    IsCycleFollowBehaviorMode="{x:Bind IsButton8InSetFollowBehaviorMode, Mode=OneWay}"
-                    Style="{StaticResource KeypadLincButtonStyle}"
-                    Grid.Column="1"
-                    Grid.Row="3">
-                    <TextBlock Text="{x:Bind Button8Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
-                </local:KeypadLincButton>
-            </Grid>
+                    <local:KeypadLincButton
+                        x:Name="Button1"
+                        IsChecked="{x:Bind Button1Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button1FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton1InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="0"
+                        Grid.Row="0">
+                        <TextBlock Text="{x:Bind Button1Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button2"
+                        IsChecked="{x:Bind Button2Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button2FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton2InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="1"
+                        Grid.Row="0">
+                        <TextBlock Text="{x:Bind Button2Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button3"
+                        IsChecked="{x:Bind Button3Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button3FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton3InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="0"
+                        Grid.Row="1">
+                        <TextBlock Text="{x:Bind Button3Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button4"
+                        IsChecked="{x:Bind Button4Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button4FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton4InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="1"
+                        Grid.Row="1">
+                        <TextBlock Text="{x:Bind Button4Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button5"
+                        IsChecked="{x:Bind Button5Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button5FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton5InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="0"
+                        Grid.Row="2">
+                        <TextBlock Text="{x:Bind Button5Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button6"
+                        IsChecked="{x:Bind Button6Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button6FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton6InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="1"
+                        Grid.Row="2">
+                        <TextBlock Text="{x:Bind Button6Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button7"
+                        IsChecked="{x:Bind Button7Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button7FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton7InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="0"
+                        Grid.Row="3">
+                        <TextBlock Text="{x:Bind Button7Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                    <local:KeypadLincButton
+                        x:Name="Button8"
+                        IsChecked="{x:Bind Button8Depressed, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        FollowBehavior="{x:Bind Button8FollowBehavior, Mode=TwoWay}"
+                        IsCycleFollowBehaviorMode="{x:Bind IsButton8InSetFollowBehaviorMode, Mode=OneWay}"
+                        Style="{StaticResource KeypadLincButtonStyle}"
+                        Grid.Column="1"
+                        Grid.Row="3">
+                        <TextBlock Text="{x:Bind Button8Text, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </local:KeypadLincButton>
+                </Grid>
+                <TextBlock Margin="0,10,0,0" Text="{x:Bind FollowBehaviorHelpText, Mode=OneWay}" TextWrapping="Wrap"/>
+            </StackPanel>
         </DataTemplate>
     </ContentControl.ContentTemplate>
 

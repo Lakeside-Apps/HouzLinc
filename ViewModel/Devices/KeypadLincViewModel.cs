@@ -380,8 +380,60 @@ public sealed class KeypadLincViewModel : DeviceViewModel
                     }
             }
             OnPropertyChanged($"Button{button}FollowBehavior");
+            SetFollowBehaviorHelpText(button);
             CurrentChannelViewModel.OnIsLoadControllingChanged();
         }
+    }
+
+    /// <summary>
+    /// Compute the help text for the follow behavior of a button
+    /// </summary>
+    public string FollowBehaviorHelpText
+    {
+        get => followBehaviorType;
+        set
+        {
+            if (value != followBehaviorType)
+            {
+                followBehaviorType = value;
+                OnPropertyChanged();
+            }
+
+        }
+    }
+    private string followBehaviorType;
+
+    // Helper to set the followBehaviorText bindable variable
+    // and show the follow behavior help message
+    private void SetFollowBehaviorHelpText(int button)
+    {
+        var behavior = GetFollowBehavior(button);
+        if (behavior == FollowBehaviorType.None)
+        {
+            FollowBehaviorHelpText = string.Empty;
+        }
+        else if (behavior == FollowBehaviorType.Not)
+        {
+            FollowBehaviorHelpText = $"Button '{GetChannelName(button)}' doesn't follow '{CurrentChannelName}'";
+        }
+        else if (behavior == FollowBehaviorType.Off)
+        {
+            FollowBehaviorHelpText = $"Button '{GetChannelName(button)}' follows '{CurrentChannelName}' Off";
+        }
+        else if (behavior == FollowBehaviorType.On)
+        {
+            FollowBehaviorHelpText = $"Button '{GetChannelName(button)}' follows '{CurrentChannelName}' On";
+        }
+
+        // Turn off help message after 5 seconds
+        var timer = new DispatcherTimer();
+        timer.Interval = TimeSpan.FromSeconds(5);
+        timer.Tick += (sender, e) =>
+        {
+            timer.Stop();
+            FollowBehaviorHelpText = string.Empty;
+        };
+        timer.Start();
     }
 
     /// <summary>
