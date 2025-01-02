@@ -30,7 +30,19 @@ public sealed class EnterLinkingModeCommand : DeviceCommand
         ToDeviceID = deviceId;
         Command1 = CommandCode_EnterLinkingMode;
         Command2 = group;
-        ClearData();
+    }
+
+    private protected override async Task<bool> RunAsync()
+    {
+        // Determine the version of the Insteon engine on the device
+        var command = new GetInsteonEngineVersionCommand(gateway, ToDeviceID);
+        if (await command.TryRunAsync(parentCommand: Running) && command.EngineVersion >= 2)
+        {
+            // If version 2 or above, send extended command
+            ClearData();
+        }
+
+        return await base.RunAsync();
     }
 
     /// <summary>
