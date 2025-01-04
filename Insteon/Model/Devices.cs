@@ -866,27 +866,32 @@ public sealed class Devices : OrderedKeyedList<Device>
                     deviceWithIsNew.IsNew = true;
                 }
 
-                // Set properties given by the IMAllLinking command
-                // after adding the device to this Devices list to generate proper change deltas
+                // Set product data given by the IMAllLinking command
+                // (after adding the device to this Devices list to generate proper change deltas)
                 device.CategoryId = cmd.DeviceCategory;
                 device.SubCategory = cmd.DeviceSubCategory;
-                device.Revision = cmd.DeviceFirmwareRevision;
-                device.Status = Device.ConnectionStatus.Connected;
 
-                // Read the properties of the new device
-                // This is relatively cheap so do immediately to update the UI
-                device.ResetPropertiesSyncStatus();
-                await device.TryReadDevicePropertiesAsync(forceSync: true);
+                // Get the rest of the product data
+                // If we fail to acquire product data, we'll run with the information obtained
+                // from the IMAllLinking command, and try again later as part of device synchronization.
+                if (await device.TryReadProductDataAsync())
+                {
+                    // Read the properties of the new device
+                    // This is relatively cheap so do immediately to update the UI
+                    device.ResetPropertiesSyncStatus();
+                    await device.TryReadDevicePropertiesAsync(forceSync: true);
 
-                // Mark link database of the device unknown to force reading from physical device
-                device.AllLinkDatabase.ResetSyncStatus();
+                    // Mark link database of the device unknown to force reading from physical device
+                    device.AllLinkDatabase.ResetSyncStatus();
 
-                // Mark hub database unknown to force reading from physical device
-                // and acquire link just added for the new device
-                var hub = GetDeviceByID(House.Gateway.DeviceId);
-                hub?.AllLinkDatabase.ResetSyncStatus();
+                    // Mark hub database unknown to force reading from physical device
+                    // and acquire link just added for the new device
+                    var hub = GetDeviceByID(House.Gateway.DeviceId);
+                    hub?.AllLinkDatabase.ResetSyncStatus();
 
-                deviceWithIsNew.Device = device;
+                    deviceWithIsNew.Device = device;
+                }
+
                 return deviceWithIsNew;
             }
         }
@@ -938,27 +943,32 @@ public sealed class Devices : OrderedKeyedList<Device>
                     deviceWithIsNew.IsNew = true;
                 }
 
-                // Set properties given by the IMAllLinking command
-                // after adding the device to this Devices list to generate proper change deltas
+                // Set product data given by the IMAllLinking command
+                // (after adding the device to this Devices list to generate proper change deltas)
                 device.CategoryId = cmd.DeviceCategory;
                 device.SubCategory = cmd.DeviceSubCategory;
-                device.Revision = cmd.DeviceFirmwareRevision;
-                device.Status = Device.ConnectionStatus.Connected;
 
-                // Read the other properties of the new device
-                // This is relatively cheap so do immediately to update the UI
-                device.ResetPropertiesSyncStatus();
-                await device.TryReadDevicePropertiesAsync(forceSync: true);
+                // Get the rest of the product data
+                // If we fail to acquire product data, we'll run with the information obtained
+                // from the IMAllLinking command, and try again later as part of device synchronization.
+                if (await device.TryReadProductDataAsync())
+                {
+                    // Read the other properties of the new device
+                    // This is relatively cheap so do immediately to update the UI
+                    device.ResetPropertiesSyncStatus();
+                    await device.TryReadDevicePropertiesAsync(forceSync: true);
 
-                // Mark link database of the device unknown to force reading from physical device
-                device.AllLinkDatabase.ResetSyncStatus();
+                    // Mark link database of the device unknown to force reading from physical device
+                    device.AllLinkDatabase.ResetSyncStatus();
 
-                // Mark hub database unknown to force reading from physical network via background sync
-                // and acquire link just added for the new device
-                var hub = GetDeviceByID(House.Gateway.DeviceId);
-                hub?.AllLinkDatabase.ResetSyncStatus();
+                    // Mark hub database unknown to force reading from physical network via background sync
+                    // and acquire link just added for the new device
+                    var hub = GetDeviceByID(House.Gateway.DeviceId);
+                    hub?.AllLinkDatabase.ResetSyncStatus();
 
-                deviceWithIsNew.Device = device;
+                    deviceWithIsNew.Device = device;
+                }
+
                 return deviceWithIsNew;
             }
         }

@@ -44,6 +44,13 @@
                     <TextBlock Text="{x:Bind Revision}"/>
                 </ctkControls:SettingsCard>
 
+                <ctkControls:SettingsCard Header="Engine Version" MinHeight="48">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <TextBlock Text="{x:Bind EngineVersion, Mode=OneWay}"/>
+                </ctkControls:SettingsCard>
+
               <!--
               <ctkControls:SettingsCard Header="RF Enabled" >
                     <ctkControls:SettingsCard.Resources>

@@ -410,6 +410,12 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     /// </summary>
     public string Revision => this.Device.Revision.ToString();
 
+    /// <summary>
+    /// Engine version (1-3)
+    /// Read only (one-time bindable), obtained from the physical device during linking
+    /// </summary>
+    public string EngineVersion => this.Device.EngineVersion.ToString();
+
     //---------------------------------------------------------------------------
     // Read/write, 2-way bindable properties synced with the physical device
     //---------------------------------------------------------------------------

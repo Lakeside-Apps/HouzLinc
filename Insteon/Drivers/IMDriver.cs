@@ -90,18 +90,6 @@ internal sealed class IMDriver : DeviceDriverBase
     }
 
     /// <summary>
-    /// Check Insteon Engine version
-    /// Always 2 for the IM
-    /// </summary>
-    /// <returns>always true</returns>
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    internal override async Task<bool> TryCheckInsteonEngineVersionAsync()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-    {
-        return true;
-    }
-
-    /// <summary>
     /// Turn light device on at specified level - not implemented for the IM
     /// </summary>
     /// <param name="level"></param>

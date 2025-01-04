@@ -32,12 +32,14 @@ public class ProductData
         SubCategory = productData.SubCategory;
         ProductKey = productData.ProductKey;
         Revision = productData.Revision;
+        EngineVersion = productData.EngineVersion;
     }
 
     public virtual DeviceKind.CategoryId CategoryId { get; set; }
     public virtual int SubCategory { get; set; }
     public virtual int ProductKey { get; set; }
     public virtual int Revision { get; set; }
+    public virtual int EngineVersion { get; set; }
 
     public bool IsHub => DeviceKind.GetModelType(CategoryId, SubCategory) == DeviceKind.ModelType.Hub;
 
@@ -69,16 +71,38 @@ public class ProductData
         var command = new GetProductDataCommand(house.Gateway, deviceId) { MockPhysicalDevice = house.GetMockPhysicalDevice(deviceId) };
         if (await command.TryRunAsync(maxAttempts: 1))
         {
-            var productData = new ProductData()
+            var command2 = new GetInsteonEngineVersionCommand(house.Gateway, deviceId);
+            if (await command2.TryRunAsync(maxAttempts: 1))
             {
-                CategoryId = command.CategoryId,
-                SubCategory = command.SubCategory,
-                ProductKey = command.ProductKey,
-                Revision = command.FirmwareRev
-            };
-            return productData;
+                var productData = new ProductData()
+                {
+                    CategoryId = command.CategoryId,
+                    SubCategory = command.SubCategory,
+                    ProductKey = command.ProductKey,
+                    Revision = command.FirmwareRev,
+                    EngineVersion = command2.EngineVersion
+                };
+                return productData;
+            }
         }
         return null;
+    }
+
+    /// <summary>
+    /// Get the Insteon engine version of a device.
+    /// This command will succeed even if the device is not connected to that hub.
+    /// </summary>
+    /// <param name="house"></param>
+    /// <param name="deviceId"></param>
+    /// <returns></returns>
+    internal static async Task<int> GetInsteonEngineVersionAsync(House house, InsteonID deviceId)
+    {
+        var command = new GetInsteonEngineVersionCommand(house.Gateway, deviceId);
+        if (await command.TryRunAsync())
+        {
+            return command.EngineVersion;
+        }
+        return 0;
     }
 
     /// <summary>
