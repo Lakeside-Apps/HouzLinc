@@ -181,6 +181,7 @@ public sealed class Devices : OrderedKeyedList<Device>
                 device.CategoryId = cmd.CategoryId;
                 device.SubCategory = cmd.Subcategory;
                 device.Revision = cmd.FirmwareRevision;
+                device.IsProductDataRead = true;
             }
 
             device.EnsureChannels();
