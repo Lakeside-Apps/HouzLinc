@@ -56,6 +56,7 @@ public sealed class Device : DeviceBase
         SubCategory = device.SubCategory;
         ProductKey = device.ProductKey;
         Revision = device.Revision;
+        EngineVersion = device.EngineVersion;
         OperatingFlags = device.OperatingFlags;
         LEDBrightness = device.LEDBrightness;
         X10House = device.X10House;
@@ -87,6 +88,7 @@ public sealed class Device : DeviceBase
             SubCategory == device.SubCategory &&
             ProductKey == device.ProductKey &&
             Revision == device.Revision &&
+            EngineVersion == device.EngineVersion &&
             OperatingFlags == device.OperatingFlags &&
             LEDBrightness == device.LEDBrightness &&
             OnLevel == device.OnLevel &&
@@ -117,6 +119,10 @@ public sealed class Device : DeviceBase
     internal void OnDeserialized()
     {
         isDeserialized = true;
+
+        // We assume that product data of a device obtained from the deserialization is correct
+        // since this information is immutable and never change after the device is added to the model.
+        IsProductDataRead = true;
 
         AllLinkDatabase.OnDeserialized();
 
@@ -547,7 +553,6 @@ public sealed class Device : DeviceBase
             if (value != categoryId)
             {
                 categoryId = value;
-                IsProductDataRead = true; // Assume that we set the rest of the product data along with this
                 NotifyObserversOfPropertyChanged();
             }
         }
@@ -562,7 +567,6 @@ public sealed class Device : DeviceBase
             if (value != subCategory)
             {
                 subCategory = value;
-                IsProductDataRead = true; // Assume that we set the rest of the product data along with this
                 NotifyObserversOfPropertyChanged();
             }
         }
@@ -596,6 +600,20 @@ public sealed class Device : DeviceBase
         }
     }
     private int revision;
+
+    public override int EngineVersion
+    {
+        get => engineVersion;
+        set
+        {
+            if (value != engineVersion)
+            {
+                engineVersion = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    int engineVersion;
 
     public string Category => DeviceKind.GetCategoryName(CategoryId);
     public string ModelName => DeviceKind.GetModelName(CategoryId, SubCategory);
@@ -642,9 +660,14 @@ public sealed class Device : DeviceBase
 
     /// <summary>
     /// Driver of the phycial device in the Insteon network.
-    /// When the driver for this device is created, it is initialized with
-    /// ProductData and OperatingFlags from this device to allow it to operate.
-    /// These values need to be correct before calling this getter. We use IsProductDataRead to assert it.
+    /// This creates the device driver if not created yet, using the Product Data
+    /// of this device to determine what driver type to create. The Product Data was
+    /// either loaded from the persisted model or acquired from the physical device
+    /// when adding a new device.
+    /// We use IsProductDataRead to assert that we have correct Product Data.At least 
+    /// Category and SubCategory need to be correct to initialize the proper device driver.
+    /// The Product Data is also copied to the device driver as part of creation to allow 
+    /// it to function properly.
     /// </summary>
     internal DeviceDriverBase DeviceDriver
     {
@@ -1575,15 +1598,6 @@ public sealed class Device : DeviceBase
     }
 
     /// <summary>
-    /// Check Insteon Engine version to be at least 2
-    /// </summary>
-    /// <returns></returns>
-    internal async Task<bool> TryCheckInsteonEngineVersionAsync()
-    {
-        return await DeviceDriver.TryCheckInsteonEngineVersionAsync();
-    }
-
-    /// <summary>
     /// Ensure this device has the proper number of channels allocated 
     /// If we have a physical device already, ensure that the channels match those of the physical device
     /// If not, we go by the product category and model
@@ -1642,36 +1656,33 @@ public sealed class Device : DeviceBase
     private bool isConnectionStatusKnown = false;
 
     /// <summary>
-    /// Acquire the product information data from the device if we don't have it already
-    /// This does NOT use DeviceDriver and should be called BEFORE using it.
-    /// For this method to work if this device is the hub (IM), ProductData data members
-    /// must have been set when discovering the hub, so that IsHub reports correctly.
+    /// Acquire the product information data from the device if we don't have it already.
+    /// This does NOT use DeviceDriver and can therefore be called before creating a DeviceDriver.
+    /// It should be called to acquire this information on a newly added device.
     /// </summary>
     /// <returns>success</returns>
     internal async Task<bool> TryReadProductDataAsync(bool force = false)
     {
-        // See notes above
-        Debug.Assert(!IsHub || IsProductDataRead);
-
-        if (!IsProductDataRead || force)
+        if (!IsProductDataRead || EngineVersion == 0 || force)
         {
-            ProductData? productData;
-            if (IsHub)
-            {
-                productData = await ProductData.GetIMProductDataAsync(House);
-            }
-            else
-            {
-                productData = await ProductData.GetDeviceProductDataAsync(House, Id);
-            }
+            var productData = (Id == House.Gateway.DeviceId) ?
+                await ProductData.GetIMProductDataAsync(House) :
+                await ProductData.GetDeviceProductDataAsync(House, Id);
 
             if (productData == null)
+            {
+                // Try to get just the engine version (which will succeed even if the device
+                // is not connected to the hub) to show that information in the UI.
+                EngineVersion = await ProductData.GetInsteonEngineVersionAsync(House, Id);
                 return false;
+            }
 
             CategoryId = productData.CategoryId;
             SubCategory = productData.SubCategory;
             ProductKey = productData.ProductKey;
             Revision = productData.Revision;
+            EngineVersion = productData.EngineVersion;
+            IsProductDataRead = true;
         }
         return true;
     }

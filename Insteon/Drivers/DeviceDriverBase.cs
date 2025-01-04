@@ -95,12 +95,6 @@ public abstract class DeviceDriverBase : DeviceBase
     internal abstract Task<double> TryGetLightOnLevel();
 
     /// <summary>
-    /// Read Insteon engine version (v1 or v2)
-    /// </summary>
-    /// <returns>success</returns>
-    internal abstract Task<bool> TryCheckInsteonEngineVersionAsync();
-
-    /// <summary>
     /// Whether the physical device has operating flags
     /// </summary>
     internal virtual bool HasOperatingFlags => true;

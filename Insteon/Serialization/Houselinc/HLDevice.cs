@@ -37,6 +37,7 @@ public sealed class HLDevice
         CategoryId = device.CategoryId;
         SubCategory = device.SubCategory;
         Revision = device.Revision;
+        EngineVersion = device.EngineVersion;
         Status = device.Status;
         Powerline = device.Powerline;
         Radio = device.Radio;
@@ -67,6 +68,7 @@ public sealed class HLDevice
             CategoryId = CategoryId,
             SubCategory = SubCategory,
             Revision = Revision,
+            EngineVersion = EngineVersion,
             Status = Status,
             Powerline = Powerline,
             Radio = Radio,
@@ -129,6 +131,11 @@ public sealed class HLDevice
     public int RevisionSerialized { get => Revision; set => Revision = value; }
     [XmlIgnore]
     public int Revision { get; set; }
+
+    [XmlAttribute("engineVersion")]
+    public int EngineVersionSerialized { get => EngineVersion; set => EngineVersion = value; }
+    [XmlIgnore]
+    public int EngineVersion { get; set; }
 
     /// <summary>
     /// Device status

@@ -102,20 +102,6 @@ internal class DeviceDriver : DeviceDriverBase
     }
 
     /// <summary>
-    /// Check that the Insteon Engine version is at least 2
-    /// </summary>
-    /// <returns>whether it is</returns>
-    internal async override Task<bool> TryCheckInsteonEngineVersionAsync()
-    {
-        var command = new GetInsteonEngineVersionCommand(House.Gateway, Id);
-        if (await command.TryRunAsync())
-        {
-            return (command.EngineVersion >= 2);
-        }
-        return false;
-    }
-
-    /// <summary>
     /// Turn light device on at specified level
     /// </summary>
     /// <param name="level"></param>
