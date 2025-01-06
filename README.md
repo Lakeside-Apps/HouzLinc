@@ -14,7 +14,7 @@ HouzLinc also offers the following:
 - Updates to the configuration of scenes and devices are performed asynchronously, allowing users to continue making changes while previous updates are being applied to the devices.
 - In addition to devices and scenes, HouzLinc shows the All-Links between devices to facilitate investigating issues and fixing the links as needed. 
 - HouzLinc includes a Console view which can be used to send commands directly to the hub or to individual devices, providing further investigation capabilities.
-- Some batch operations are provided such as removing or replacing a device, duplicating a device configuration to another, cleaning up after device removal, and so on. I expect more of these handy tasks to be added over time as the need arises.
+- Some batch operations are provided such as removing or replacing a device, duplicating a device configuration to another, cleaning up after device removal, and so on. I expect more of these handy tasks to be added over time as the need arises, for example, creating an off scene for all devices in a scene or multiple scenes. 
 - This project is open source with an Apache license. It is in development and as such, features bugs and limitations. Contributions to fix issues and enhance or add functionality are welcome!
 
 ## Architecture
@@ -114,15 +114,20 @@ Add-AppPackage -AllowUnsigned -path "<path to msix file>"
 ### Building a signed App Package
 TBD
 
+### Limitations
+- Only i2 devices and up are supported (Insteon Engine version 2). This can be checked with GetInsteonEngineVersion command in Console.
+- I have not tested with i3 devices yet.
+- Timers are not supported for lack of public documentation. Will try to reverse engineer, but would welcome Insteon sharing the protocol.
+- To make the Android emulator work acceptably [see here](https://stackoverflow.com/questions/69134922/google-chrome-browser-in-android-12-emulator-doesnt-load-any-webpages-internet#:~:text=It%27s%20caused%20by%20vulkan.%20To%20fix%20it%2C%20you,exist%20already%29%3A%20Vulkan%20%3D%20off%20GLDirectMem%20%3D%20on)
+- Detaching the load on a keypadlinc is not supported. We could support it but it is very limited in that there is no way to control the load from one of the buttons on the keypadlinc itself in that configuration. So I am not sure if it's worth the effort. If you have a use case for this, let me know.
+
+### What I would like to build next
+- Move the app to Microsoft Store and Google Play Store.
+- Support for iOS and the Apple Store.
+- Support for more devices, e.g., i3 devices, and more device types.
+- Support for Google Drive and DropBox as places to store the houzlinc configuration file.
+- Support for schedules.
+- One click batch operations, e.g., create an All-Off scene for all devices in one scene or multiple scenes, or an All-Off-Button scene that turns off the light on an All-Off button when a device on the scene is activated.
+
 ### Contribution
 You are welcome to contribute changes by submitting Pull Requests to the 'main' branch. For the time being, I'll be the sole approver of changes. I am in the process of building a pipeline for building and validating changes. At this time, that process is manual, and has to be done by me.
-
-### Notes
-- Only i2 devices are supported (Insteon Engine vs. 2). Can be checked with GetInsteonEngineVersion command in Console.
-- I have also not tested with i3 devices yet.
-- Timers are not supported for lack of public documentation. Will try to reverse engineer, but would welcome Insteon sharing the protocol.
-- making the Android emulator work acceptably: [see here](https://stackoverflow.com/questions/69134922/google-chrome-browser-in-android-12-emulator-doesnt-load-any-webpages-internet#:~:text=It%27s%20caused%20by%20vulkan.%20To%20fix%20it%2C%20you,exist%20already%29%3A%20Vulkan%20%3D%20off%20GLDirectMem%20%3D%20on)
-- observing model changes are used for two different purposes: 
-  1- to update the UI in the View Model layer
-  2- to update the persisted model in the persistence subsystem of the Model layer
-- Detaching the load on a keypadlinc is not supported. We could support it but it is very limited in that there is no way to control the load from one of the buttons on the keypadlinc in that configuration.
