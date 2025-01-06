@@ -16,6 +16,8 @@
 using HouzLinc.Views.Base;
 using ViewModel.Settings;
 using ViewModel.Base;
+using Microsoft.UI.Xaml.Media.Animation;
+using HouzLinc.Views.Devices;
 
 namespace HouzLinc.Views.Settings;
 
@@ -36,4 +38,9 @@ public sealed partial class HubSettingsPage : PageWithViewModels
     // View Models
     private SettingsViewModel SettingsViewModel => SettingsViewModel.Instance;
     private StatusBarViewModel StatusBarViewModel => StatusBarViewModel.Instance;
+
+    private void NavigateToDevices(object sender, RoutedEventArgs e)
+    {
+        (App.MainWindow.Content as AppShell)?.Navigate(typeof(DeviceListPage), null, new DrillInNavigationTransitionInfo());
+    }
 }

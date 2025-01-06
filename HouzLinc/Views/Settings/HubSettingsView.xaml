@@ -24,7 +24,7 @@
                     See: https://github.com/unoplatform/uno/issues/18219
                 -->
 
-                <ctkControls:SettingsCard Description="" Header="Hub MAC Address">
+                <ctkControls:SettingsCard Description="" Header="Hub MAC Address *">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">300</x:Double>
                         <x:Double x:Key="SettingsCardWrapNoIconThreshold">200</x:Double>
@@ -45,7 +45,7 @@
                         Text="{x:Bind HubMacAddress, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Description="" Header="Hub IP Port">
+                <ctkControls:SettingsCard Description="" Header="Hub IP Port *">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">300</x:Double>
                         <x:Double x:Key="SettingsCardWrapNoIconThreshold">200</x:Double>
@@ -58,7 +58,7 @@
                         TextWrapping="NoWrap"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Description="" Header="Hub Username">
+                <ctkControls:SettingsCard Description="" Header="Hub Username *">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">300</x:Double>
                         <x:Double x:Key="SettingsCardWrapNoIconThreshold">200</x:Double>
@@ -71,7 +71,7 @@
                         TextWrapping="NoWrap"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Description="" Header="Hub Password">
+                <ctkControls:SettingsCard Description="" Header="Hub Password *">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">300</x:Double>
                         <x:Double x:Key="SettingsCardWrapNoIconThreshold">200</x:Double>
