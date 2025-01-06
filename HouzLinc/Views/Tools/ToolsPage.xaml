@@ -28,12 +28,14 @@
 
         <TextBlock Text="{x:Bind PageHeaderProperty}" VerticalAlignment="Top" Style="{StaticResource TitleTextBlockStyle}"/>
 
+        <!--
         <TextBlock
             HorizontalAlignment="Right"
             Margin="5,15,5,15"
             TextWrapping="NoWrap"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind sys:String.Format(x:Null, 'Hub: https//:{0}:{1} - {2}', SettingsViewModel.HubIPAddress, SettingsViewModel.HubIPPort, SettingsViewModel.HubInsteonID), Mode=OneWay}"/>
+        -->
 
         <StackPanel Grid.Row="1" Margin="5,0,0,0">
             <StackPanel Orientation="Vertical" Margin="-12,0,0,0">
