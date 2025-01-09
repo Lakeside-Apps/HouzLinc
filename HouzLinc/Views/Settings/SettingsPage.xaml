@@ -45,12 +45,12 @@
                     Margin="0,10,0,0"
                     TextWrapping="Wrap"
                     Visibility="{x:Bind SettingsViewModel.IsHubFound, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"
-                    Text="Please enter the information marked * below and click 'Find&#160;Hub'. You will find that information on the back of your Insteon Hub."/>
+                    Text="Please enter the information marked * below and tap 'Find&#160;Hub'. You will find that information on the back of your Insteon Hub."/>
                 <TextBlock
                     Margin="0,10,0,0"
                     TextWrapping="Wrap"
                     Visibility="{x:Bind SettingsViewModel.IsHubFound, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"
-                    Text="If the hub is not found, look up its IP address on your local network. You can usually find that information in your router app/portal. Enter the IP address and click 'Find&#160;Hub' again."/>
+                    Text="If the hub is not found, look up its IP address on your local network. You can usually find that information in your router app/portal. Enter the IP address and tap 'Find&#160;Hub' again."/>
 
                 <local:HubSettingsView Margin="0,15,0,15" Content="{x:Bind SettingsViewModel}"/>
 

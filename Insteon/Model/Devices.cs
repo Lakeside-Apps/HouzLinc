@@ -688,7 +688,7 @@ public sealed class Devices : OrderedKeyedList<Device>
             }
             else
             {
-                Logger.Log.RequestUserAction($"To wake up '{device.DisplayNameAndId}', please click 'Play' while holding any button down. Click 'X' to snooze the device.");
+                Logger.Log.RequestUserAction($"To wake up '{device.DisplayNameAndId}', please tap 'Play' while holding any button down. Tap 'X' to snooze the device.");
             }
         },
         force: true);

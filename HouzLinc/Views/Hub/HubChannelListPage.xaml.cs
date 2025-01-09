@@ -13,11 +13,11 @@
    limitations under the License.
 */
 
-using System.Collections.ObjectModel;
 using HouzLinc.Views.Base;
 using ViewModel.Hub;
-using ViewModel.Base;
 using ViewModel.Settings;
+using Microsoft.UI.Xaml.Media.Animation;
+using HouzLinc.Views.Settings;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -49,10 +49,17 @@ public sealed partial class HubChannelListPage : HubChannelListPageBase
     protected override HubChannelListViewModel ItemListViewModel => itemsListViewModel ??= HubChannelListViewModel.Create();
     private HubChannelListViewModel? itemsListViewModel;
     private HubChannelListViewModel hubChannelListViewModel => (ItemListViewModel as HubChannelListViewModel)!;
+    private SettingsViewModel settingsViewModel => SettingsViewModel.Instance;
 
     // Control accessors for base page
     protected override ListView ItemListView => ChannelListView;
     protected override ContentControl ItemDetailsPresenter => HubChannelDetailsPresenter;
     protected override VisualStateGroup PageSizeVisualStateGroup => PageSizeStatesGroup;
     protected override VisualStateGroup MasterDetailVisualStateGroup => MasterDetailsStatesGroup;
+
+    private void NavigateToHubSettings(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+    {
+        (App.MainWindow.Content as AppShell)?.Navigate(typeof(HubSettingsPage), null, new DrillInNavigationTransitionInfo());
+
+    }
 }

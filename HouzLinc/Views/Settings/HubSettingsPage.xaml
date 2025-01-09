@@ -40,12 +40,12 @@
         <ScrollViewer Grid.Row="1" Margin="0,10,0,10">
             <StackPanel Margin="10,0,20,0">
                 <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="HouzLinc needs some information about your Insteon Hub to access your Insteon network."/>
-                <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="Please enter the information marked * below and click 'Find&#160;Hub'. You will find that information on the back of your Insteon Hub."/>
-                <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="If the hub is not found, look up its IP address on your local network. You can usually find that information in your router app/portal. Enter the IP address and click 'Find&#160;Hub' again."/>
+                <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="Please enter the information marked * below and tap 'Find&#160;Hub'. You will find that information on the back of your Insteon Hub."/>
+                <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="If the hub is not found, look up its IP address on your local network. You can usually find that information in your router app/portal. Enter the IP address and tap 'Find&#160;Hub' again."/>
                 <local:HubSettingsView Margin="0,15,0,0" Content="{x:Bind SettingsViewModel}"/>
-                <TextBlock Margin="0,15,0,0" Visibility="{x:Bind SettingsViewModel.IsHubFound, Mode=OneWay}">
+                <TextBlock Margin="0,15,0,0" Visibility="{x:Bind SettingsViewModel.IsHubFound, Mode=OneWay}" TextWrapping="Wrap">
                     Click<Span xml:space="preserve"> <Hyperlink Click="NavigateToDevices">here</Hyperlink></Span>
-                    or select the 'Devices' tab to start adding or discovering devices.</TextBlock>
+                    or the "Devices" tab to start adding or discovering devices.</TextBlock>
             </StackPanel>
         </ScrollViewer>
 

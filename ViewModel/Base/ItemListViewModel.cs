@@ -19,8 +19,39 @@ namespace ViewModel.Base;
 
 public abstract class ItemListViewModel<ItemViewModelType> : PageViewModel where ItemViewModelType : ItemViewModel
 {
-    // List of ItemViewModel items
-    public abstract SortableObservableCollection<ItemViewModelType> Items { get; }
+    /// <summary>
+    /// Item collection
+    /// </summary>
+    public SortableObservableCollection<ItemViewModelType> Items
+    {
+        get
+        {
+            items ??= new();
+            items.CollectionChanged += (sender, e) =>
+            {
+                IsEmpty = items.Count == 0;
+            };
+            return items;
+        }
+    }
+    private SortableObservableCollection<ItemViewModelType>? items;
+
+    /// <summary>
+    /// UI Bindable property indicating whether the Items collection is empty
+    /// </summary>
+    public bool IsEmpty
+    {
+        get => isEmpty;
+        set
+        {
+            if (value != isEmpty)
+            {
+                isEmpty = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    private bool isEmpty;
 
     /// <summary>
     /// Called when the page (view) had loaded

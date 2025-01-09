@@ -13,13 +13,14 @@
    limitations under the License.
 */
 
-using System.Collections.ObjectModel;
 using HouzLinc.Views.Base;
 using HouzLinc.Dialogs;
 using Common;
 using ViewModel.Devices;
 using ViewModel.Settings;
-using ViewModel.Base;
+using ViewModel.Tools;
+using Microsoft.UI.Xaml.Media.Animation;
+using HouzLinc.Views.Settings;
 
 namespace HouzLinc.Views.Devices;
 
@@ -89,6 +90,10 @@ public sealed partial class DeviceListPage : DeviceListPageBase
             .ApplyFilterAndSortOrderFromSettings();
     private DeviceListViewModel? itemsListViewModel;
     private DeviceListViewModel deviceListViewModel => (ItemListViewModel as DeviceListViewModel)!;
+
+    // Additional view models referenced on this page
+    private SettingsViewModel settingsViewModel => SettingsViewModel.Instance;
+    private ToolsViewModel toolsViewModel => ToolsViewModel.Instance;
 
     // Control accessors for base page
     protected override ListView ItemListView => DeviceListView;
@@ -160,5 +165,10 @@ public sealed partial class DeviceListPage : DeviceListPageBase
                 
             }
         }
+    }
+
+    private void NavigateToHubSettings(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+    {
+        (App.MainWindow.Content as AppShell)?.Navigate(typeof(HubSettingsPage), null, new DrillInNavigationTransitionInfo());
     }
 }
