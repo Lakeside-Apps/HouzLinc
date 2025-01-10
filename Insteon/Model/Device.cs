@@ -57,6 +57,7 @@ public sealed class Device : DeviceBase
         ProductKey = device.ProductKey;
         Revision = device.Revision;
         EngineVersion = device.EngineVersion;
+        IsProductDataRead = device.IsProductDataRead;
         OperatingFlags = device.OperatingFlags;
         LEDBrightness = device.LEDBrightness;
         X10House = device.X10House;
@@ -89,6 +90,7 @@ public sealed class Device : DeviceBase
             ProductKey == device.ProductKey &&
             Revision == device.Revision &&
             EngineVersion == device.EngineVersion &&
+            IsProductDataRead == device.IsProductDataRead &&
             OperatingFlags == device.OperatingFlags &&
             LEDBrightness == device.LEDBrightness &&
             OnLevel == device.OnLevel &&
@@ -664,9 +666,9 @@ public sealed class Device : DeviceBase
     /// of this device to determine what driver type to create. The Product Data was
     /// either loaded from the persisted model or acquired from the physical device
     /// when adding a new device.
-    /// We use IsProductDataRead to assert that we have correct Product Data.At least 
+    /// We use IsProductDataRead to assert that we have correct Product Data. At least 
     /// Category and SubCategory need to be correct to initialize the proper device driver.
-    /// The Product Data is also copied to the device driver as part of creation to allow 
+    /// The Product Data is also copied to the device driver during creation to allow 
     /// it to function properly.
     /// </summary>
     internal DeviceDriverBase DeviceDriver

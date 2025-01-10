@@ -17,6 +17,7 @@ using System.Xml.Serialization;
 using Insteon.Base;
 using Common;
 using Insteon.Model;
+using System.ComponentModel;
 
 namespace Insteon.Serialization.Houselinc;
 
@@ -133,6 +134,7 @@ public sealed class HLDevice
     public int Revision { get; set; }
 
     [XmlAttribute("engineVersion")]
+    [DefaultValueAttribute(0)]
     public int EngineVersionSerialized { get => EngineVersion; set => EngineVersion = value; }
     [XmlIgnore]
     public int EngineVersion { get; set; }

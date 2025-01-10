@@ -243,6 +243,19 @@ public sealed class GetInsteonEngineVersionCommand : DeviceCommand
         Command2 = 0;
     }
 
+    private protected override async Task<bool> RunAsync()
+    {
+        if (MockPhysicalDevice != null)
+        {
+            // Mock implementation of this command for testing purposes only
+            // Simulate a response from the device
+            OnStandardResponseReceived(new InsteonStandardMessage(
+                InsteonMessage.BuildHexString(ToDeviceID, InsteonID.Null, (byte)MessageType.Direct | (byte)MessageLength.Standard, command1: CommandCode_GetInsteonEngineVersion, command2: (byte)MockPhysicalDevice.EngineVersion)));
+            return true;
+        }
+        return await base.RunAsync();
+    }
+
     private protected override void Done()
     {
         base.Done();

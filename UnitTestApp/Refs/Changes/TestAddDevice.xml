@@ -368,7 +368,7 @@
             <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="0" data3="4" scene="12" syncstatus="synced" uid="737273190" />
           </record>
           <record sequence="32">
-            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="847873058" />
+            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="552723901" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
@@ -3270,16 +3270,16 @@
           </p>
         </properties>
       </device>
-      <device insteonID="11.22.33" category="1" subcategory="1" revision="63" status="connected" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="" active="1">
-        <notes added="6/17/2024 3:08:17 PM" />
+      <device insteonID="11.22.33" category="1" subcategory="1" revision="63" engineVersion="2" status="connected" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="" active="1">
+        <notes added="1/9/2025 3:47:38 PM" />
         <location />
         <channels />
         <database sequence="0" lastUpdate="1/1/0001 12:00:00 AM" revision="0">
           <record sequence="0">
-            <device address="AA.00.00" group="0" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="3507933181" />
+            <device address="AA.00.00" group="0" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="3147461433" />
           </record>
           <record sequence="1">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="3121294469" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="359475159" />
           </record>
         </database>
         <properties lastStatus="Synchronized" />

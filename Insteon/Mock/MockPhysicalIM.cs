@@ -34,6 +34,10 @@ public sealed class MockPhysicalIM : MockPhysicalDevice
     {
     }
 
+    public MockPhysicalIM(InsteonID Id, ProductData productData, AllLinkDatabase allLinkDatabase) : base(Id, productData, allLinkDatabase)
+    {
+    }
+
     // Index for ManageIMAllLinkRecordCommand findNext
     internal int nextRecordIndex = 0;
 

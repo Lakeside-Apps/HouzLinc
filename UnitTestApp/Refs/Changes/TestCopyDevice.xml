@@ -368,13 +368,13 @@
             <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="0" data3="4" scene="12" syncstatus="synced" uid="737273190" />
           </record>
           <record sequence="32">
-            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="3682929378" />
+            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="2541337946" />
           </record>
           <record sequence="33">
-            <device address="11.22.33" group="0" recordControl="227" data1="1" data2="32" data3="65" scene="0" syncstatus="changed" uid="4246666530" />
+            <device address="11.22.33" group="0" recordControl="227" data1="1" data2="32" data3="65" scene="0" syncstatus="changed" uid="3250610749" />
           </record>
           <record sequence="34">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="337706373" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="4052430333" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
@@ -1345,16 +1345,16 @@
             <device address="BB.22.22" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="20" syncstatus="synced" uid="1161150174" />
           </record>
           <record sequence="44">
-            <device address="11.22.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="2" syncstatus="changed" uid="809502891" />
+            <device address="11.22.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="2" syncstatus="changed" uid="1995779456" />
           </record>
           <record sequence="45">
-            <device address="11.22.33" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="18" syncstatus="changed" uid="2862303463" />
+            <device address="11.22.33" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="18" syncstatus="changed" uid="1105650208" />
           </record>
           <record sequence="46">
-            <device address="11.22.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="17" syncstatus="changed" uid="4098618923" />
+            <device address="11.22.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="17" syncstatus="changed" uid="1336405513" />
           </record>
           <record sequence="47">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="3357359683" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="2798743367" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
@@ -3276,16 +3276,16 @@
             <device address="AA.44.44" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="0" uid="3999223805" />
           </record>
           <record sequence="14">
-            <device address="11.22.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="17" syncstatus="changed" uid="2766176717" />
+            <device address="11.22.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="17" syncstatus="changed" uid="1440911711" />
           </record>
           <record sequence="15">
-            <device address="11.22.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="2" syncstatus="changed" uid="4029150602" />
+            <device address="11.22.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="2" syncstatus="changed" uid="374561109" />
           </record>
           <record sequence="16">
-            <device address="11.22.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="18" syncstatus="changed" uid="960587614" />
+            <device address="11.22.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="18" syncstatus="changed" uid="1250661902" />
           </record>
           <record sequence="17">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="3046245067" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="2116846379" />
           </record>
         </database>
         <properties>
@@ -3330,19 +3330,19 @@
         </database>
         <properties lastStatus="Synchronized">
           <p name="ledDimming">
-            <device value="0x3F" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x3F" lastUpdate="1/9/2025 3:47:42 PM" />
           </p>
           <p name="X10House">
-            <device value="0x20" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x20" lastUpdate="1/9/2025 3:47:42 PM" />
           </p>
           <p name="X10Unit">
-            <device value="0x20" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x20" lastUpdate="1/9/2025 3:47:42 PM" />
           </p>
           <p name="onLevel">
-            <device value="0xFF" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0xFF" lastUpdate="1/9/2025 3:47:42 PM" />
           </p>
           <p name="rampRate">
-            <device value="0x1C" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x1C" lastUpdate="1/9/2025 3:47:42 PM" />
           </p>
         </properties>
       </device>

@@ -34,6 +34,18 @@ public sealed class GetIMInfoCommand : HubCommand
         IMCommandParams = "";
     }
 
+    private protected override async Task<bool> RunAsync()
+    {
+        if (MockPhysicalIM != null)
+        {
+            // Mock implementation of this command for testing purposes only
+            // Simulate a response from the device
+            OnIMResponseReceived(new HexString($"{MockPhysicalIM.Id.ToCommandString()}{(byte)MockPhysicalIM.CategoryId:X2}{(byte)MockPhysicalIM.SubCategory:X2}{(byte)MockPhysicalIM.Revision:X2}"));
+            return true;
+        }
+        return await base.RunAsync();
+    }
+
     private protected override void Done()
     {
         base.Done();
