@@ -105,10 +105,11 @@ public static class HouseExtensions
             SubCategory = subCategory,
             ProductKey = 0,
             Revision = revision,
+            EngineVersion = 2,
             OperatingFlags = operatingFlags
         };
 
-        house.WithMockPhysicalDevice(new MockPhysicalIM(house.Hub!.Id, new AllLinkDatabase(house.Hub.AllLinkDatabase)))
+        house.WithMockPhysicalDevice(new MockPhysicalIM(house.Hub!.Id, house.Hub!, new AllLinkDatabase(house.Hub.AllLinkDatabase)))
              .WithMockPhysicalDevice(mockPhysicalDevice);
 
         await house.Devices.AddOrConnectDeviceAsync(newDeviceId);

@@ -368,9 +368,9 @@ public class TestModelChanges : ModelTestsBase
         await PlayAndCheck();
     }
 
-// Test changing the channel list of a device 
-// (Used in particular when descovering device from physcial network)
-[TestMethod]
+    // Test changing the channel list of a device 
+    // (Used in particular when descovering device from physcial network)
+    [TestMethod]
     public async Task TestChangeChannels()
     {
         await LoadModels("Changes2");
@@ -397,6 +397,7 @@ public class TestModelChanges : ModelTestsBase
             // Simulate acquiring Product Data from the physical device
             device.CategoryId = deviceSpec.CategoryId;
             device.SubCategory = deviceSpec.SubCategory;
+            device.IsProductDataRead = true;
             device.DisplayName = deviceSpec.DisplayName;
         }
 

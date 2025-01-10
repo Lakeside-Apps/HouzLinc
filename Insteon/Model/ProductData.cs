@@ -16,6 +16,7 @@
 using Common;
 using Insteon.Base;
 using Insteon.Commands;
+using Insteon.Mock;
 
 namespace Insteon.Model;
 
@@ -27,6 +28,11 @@ public class ProductData
     internal ProductData() { }
 
     internal ProductData(ProductData productData)
+    {
+        CopyFrom(productData);
+    }
+
+    internal void CopyFrom(ProductData productData)
     {
         CategoryId = productData.CategoryId;
         SubCategory = productData.SubCategory;
@@ -71,7 +77,7 @@ public class ProductData
         var command = new GetProductDataCommand(house.Gateway, deviceId) { MockPhysicalDevice = house.GetMockPhysicalDevice(deviceId) };
         if (await command.TryRunAsync(maxAttempts: 1))
         {
-            var command2 = new GetInsteonEngineVersionCommand(house.Gateway, deviceId);
+            var command2 = new GetInsteonEngineVersionCommand(house.Gateway, deviceId) { MockPhysicalDevice = house.GetMockPhysicalDevice(deviceId) };
             if (await command2.TryRunAsync(maxAttempts: 1))
             {
                 var productData = new ProductData()
@@ -97,7 +103,7 @@ public class ProductData
     /// <returns></returns>
     internal static async Task<int> GetInsteonEngineVersionAsync(House house, InsteonID deviceId)
     {
-        var command = new GetInsteonEngineVersionCommand(house.Gateway, deviceId);
+        var command = new GetInsteonEngineVersionCommand(house.Gateway, deviceId) { MockPhysicalDevice = house.GetMockPhysicalDevice(deviceId) };
         if (await command.TryRunAsync())
         {
             return command.EngineVersion;
@@ -112,7 +118,7 @@ public class ProductData
     /// <returns></returns>
     internal static async Task<ProductData?> GetIMProductDataAsync(House house)
     {
-        var command = new GetIMInfoCommand(house.Gateway);
+        var command = new GetIMInfoCommand(house.Gateway) { MockPhysicalIM = house.GetMockPhysicalDevice(house.Gateway.DeviceId) as MockPhysicalIM };
         if (await command.TryRunAsync(maxAttempts: 1))
         {
             var productData = new ProductData()

@@ -781,10 +781,10 @@
         </database>
         <properties lastStatus="Changed">
           <p name="operatingFlags">
-            <device value="0x04" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x04" lastUpdate="1/9/2025 3:47:43 PM" />
           </p>
           <p name="ledDimming">
-            <device value="0x80" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x80" lastUpdate="1/9/2025 3:47:43 PM" />
           </p>
           <p name="X10House">
             <device value="0x20" lastUpdate="10/26/2013 9:26:00 PM" />
@@ -1040,10 +1040,10 @@
         </database>
         <properties lastStatus="Changed">
           <p name="operatingFlags">
-            <device value="0x20" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x20" lastUpdate="1/9/2025 3:47:43 PM" />
           </p>
           <p name="ledDimming">
-            <device value="0x80" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x80" lastUpdate="1/9/2025 3:47:43 PM" />
           </p>
           <p name="nonToggleMask">
             <device value="0x00" lastUpdate="1/2/2022 2:30:22 PM" />
@@ -1058,10 +1058,10 @@
             <device value="0x20" lastUpdate="1/12/2014 9:33:00 AM" />
           </p>
           <p name="onLevel">
-            <device value="0x80" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x80" lastUpdate="1/9/2025 3:47:43 PM" />
           </p>
           <p name="rampRate">
-            <device value="0x0A" lastUpdate="6/17/2024 3:08:19 PM" />
+            <device value="0x0A" lastUpdate="1/9/2025 3:47:43 PM" />
           </p>
         </properties>
       </device>

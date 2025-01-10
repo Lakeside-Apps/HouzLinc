@@ -34,5 +34,11 @@ public class MockPhysicalDevice : DeviceBase
         this.AllLinkDatabase = allLinkDatabase;
     }
 
+    public MockPhysicalDevice(InsteonID Id, ProductData productData, AllLinkDatabase allLinkDatabase) : base(Id)
+    {
+        CopyFrom(productData);
+        this.AllLinkDatabase = allLinkDatabase;
+    }
+
     internal AllLinkDatabase AllLinkDatabase;
 }
