@@ -13,9 +13,7 @@
    limitations under the License.
 */
 
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 using Insteon.Model;
 using ViewModel.Base;
 using ViewModel.Settings;
@@ -24,6 +22,14 @@ namespace ViewModel.Scenes;
 
 public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObserver, IRoomsObserver
 {
+    // A public default constructor is necessary to make the generated binding code compile
+    // but it should not be called as we always instantiate it with a list of scenes.
+    public SceneListViewModel()
+    {
+        Debug.Assert(false, "SceneListViewModel should always be created with a list of scenes.");
+        this.scenes = null!;
+    }
+
     private SceneListViewModel(Insteon.Model.Scenes scenes)
     {
         this.scenes = scenes;
@@ -50,12 +56,6 @@ public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObse
         RoomFilter = roomFilter;
         return this;
     }
-
-/// <summary>
-/// Item collection
-/// </summary>
-public override SortableObservableCollection<SceneViewModel> Items => items ??= new();
-    private SortableObservableCollection<SceneViewModel>? items;
 
     // To identify items in the SettingsStore
     protected override string ItemTypeName => "Scene";

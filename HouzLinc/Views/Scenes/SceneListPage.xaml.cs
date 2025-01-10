@@ -13,12 +13,12 @@
    limitations under the License.
 */
 
-using System.Collections.ObjectModel;
 using ViewModel.Scenes;
 using HouzLinc.Views.Base;
 using HouzLinc.Dialogs;
 using ViewModel.Settings;
-using ViewModel.Base;
+using Microsoft.UI.Xaml.Media.Animation;
+using HouzLinc.Views.Settings;
 
 namespace HouzLinc.Views.Scenes;
 
@@ -57,6 +57,9 @@ public sealed partial class SceneListPage : SceneListPageBase
     private SceneListViewModel? itemsListViewModel;
     private SceneListViewModel sceneListViewModel => (ItemListViewModel as SceneListViewModel)!;
 
+    // Additional view model referenced on this page
+    private SettingsViewModel settingsViewModel => SettingsViewModel.Instance;
+
     private async void AddSceneBtnClick(object sender, RoutedEventArgs e)
     {
         if (XamlRoot == null)
@@ -85,5 +88,10 @@ public sealed partial class SceneListPage : SceneListPageBase
                 SelectedItem = null;
             }
         }
+    }
+
+    private void NavigateToHubSettings(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+    {
+        (App.MainWindow.Content as AppShell)?.Navigate(typeof(HubSettingsPage), null, new DrillInNavigationTransitionInfo());
     }
 }

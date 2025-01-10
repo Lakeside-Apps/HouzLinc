@@ -13,6 +13,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using Common;
 using Insteon.Model;
 using ViewModel.Base;
@@ -24,6 +25,14 @@ namespace ViewModel.Devices;
 // Also ensure constant time lookup by id
 public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, IDevicesObserver, IRoomsObserver
 {
+    // A public default constructor is necessary to make the generated binding code compile
+    // but it should not be called as we should always instantiate it with a list of devices.
+    public DeviceListViewModel()
+    {
+        Debug.Assert(false, "DeviceListViewModel should always be created with a list of devices.");
+        this.devices = null!;
+    }
+
     private DeviceListViewModel(Insteon.Model.Devices devices, bool includeHub = false)
     {
         this.devices = devices;
@@ -57,12 +66,6 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
         RoomFilter = roomFilter;
         return this;
     }
-
-    /// <summary>
-    /// Item collection
-    /// </summary>
-    public override SortableObservableCollection<DeviceViewModel> Items => items ??= new();
-    private SortableObservableCollection<DeviceViewModel>? items;
 
     // To idenfity items in the SettingsStore
     protected override string ItemTypeName => "Device";

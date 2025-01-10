@@ -24,14 +24,14 @@
             <TextBlock Text="No device with the id that you entered was found on your network. Try another device id, or try to auto-discover the device." TextWrapping="Wrap"/>
         </Border>
 
-        <TextBlock Margin="0,10,0,10" Text="Either enter the device id below and click 'Add'." TextWrapping="Wrap"/>
+        <TextBlock Margin="0,10,0,10" Text="Either enter the device id below and tap 'Add'." TextWrapping="Wrap"/>
         <ctl:DeviceIDBox
             x:Name="DeviceIdBox"
             HorizontalAlignment="Center"
             Margin="0,0,0,0"
             IsEnabled="{x:Bind isAutoDiscovering, Converter={StaticResource BoolNegation}, Mode=OneWay}"/>
 
-        <TextBlock Margin="0,20,0,0" Text="Or auto-discover the device: click below, then walk to the device and press and hold its 'set' button." TextWrapping="Wrap"/>
+        <TextBlock Margin="0,20,0,0" Text="Or auto-discover the device: tap below, then walk to the device and press and hold its 'set' button." TextWrapping="Wrap"/>
         <Button
             Content="Auto-discover device"
             Margin="0,20,0,0"

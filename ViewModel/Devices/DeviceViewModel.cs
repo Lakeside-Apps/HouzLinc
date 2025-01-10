@@ -612,13 +612,24 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     protected virtual void OnDevicePropertyChanged(string propertyName)
     {
         OnPropertyChanged(propertyName);
-        if (propertyName == nameof(Device.Status))
+
+        switch (propertyName)
         {
-            OnPropertyChanged(nameof(DeviceConnectionStatus));
-            OnPropertyChanged(nameof(IsStatusPending));
-            OnPropertyChanged(nameof(IsConnected));
-            OnPropertyChanged(nameof(IsDisconnected));
-            OnPropertyChanged(nameof(IsGatewayError));
+            case nameof(Device.Status):
+                OnPropertyChanged(nameof(DeviceConnectionStatus));
+                OnPropertyChanged(nameof(IsStatusPending));
+                OnPropertyChanged(nameof(IsConnected));
+                OnPropertyChanged(nameof(IsDisconnected));
+                OnPropertyChanged(nameof(IsGatewayError));
+                break;
+
+            case nameof(Device.CategoryId):
+                OnPropertyChanged(nameof(ModelIconPath_72x72));
+                break;
+
+            case nameof(Device.SubCategory):
+                OnPropertyChanged(nameof(ModelIconPath_72x72));
+                break;
         }
     }
 

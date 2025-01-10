@@ -22,7 +22,7 @@
         <DataTemplate x:DataType="vm:KeypadLincViewModel">
             <StackPanel>
                 <TextBlock Text="Button Properties" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <TextBlock Margin="0,5,0,0"  Text="Click a button to view and edit its properties."/>
+                <TextBlock Margin="0,5,0,0"  Text="Select a button to view and edit its properties."/>
                 <TextBlock Margin="0,5,0,0"  Text="Shift click another to make it follow on, follow off or not follow."/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0,5,0,0" Text="Or pin a button "/>
@@ -33,7 +33,7 @@
                         win:ToolTipService.ToolTip="Pin Selected Button to Configure Followers">
                         <SymbolIcon Symbol="Pin"/>
                     </ToggleButton>
-                    <TextBlock Margin="5,5,0,0" Text="and click another to make it follow on, follow off or not follow."/>
+                    <TextBlock Margin="5,5,0,0" Text="and tap another to make it follow on, follow off or not follow."/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>

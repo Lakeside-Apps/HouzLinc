@@ -45,12 +45,6 @@ public sealed class HubChannelListViewModel : ItemListViewModel<HubChannelViewMo
         return new HubChannelListViewModel(hub);
     }
 
-    /// <summary>
-    /// Item collection
-    /// </summary>
-    public override SortableObservableCollection<HubChannelViewModel> Items => items ??= new();
-    private SortableObservableCollection<HubChannelViewModel>? items;
-
     // To identify items in the SettingsStore
     protected override string ItemTypeName => "Scene";
 

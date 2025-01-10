@@ -40,7 +40,7 @@
         <StackPanel Grid.Row="1" Margin="5,0,0,0">
             <StackPanel Orientation="Vertical" Margin="-12,0,0,0">
                 <HyperlinkButton Click="{x:Bind ToolsViewModel.ScheduleImportAllDevices}" FontWeight="SemiBold">
-                    Import house configuration from the Insteon network of devices.
+                    Discover device already in your Insteon network.
                 </HyperlinkButton>
                 <StackPanel Orientation="Horizontal" Visibility="{x:Bind ToolsViewModel.IsImportAllDevicesRunning, Mode=OneWay}">
                     <ProgressBar Width="96" Margin="10,2,10,0" IsIndeterminate="True"/>
