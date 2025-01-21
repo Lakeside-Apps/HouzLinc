@@ -26,12 +26,12 @@
             Padding="10,5,10,7"
             Margin="0,0,0,10"
             Visibility="{x:Bind ShowPreviousError, Mode=OneTime}">
-            <TextBlock TextWrapping="Wrap" Text="An attempt to open the house configuration file failed. Retry or create a new house configuration." />
+            <TextBlock TextWrapping="Wrap" Text="An attempt to open the house configuration file failed. Retry or create a new house configuration."/>
         </StackPanel>
         <StackPanel Grid.Row="1">
             <RadioButton x:Name="File" Checked="Option_Checked">Open house configuration from an existing local file (Houselinc-like format).</RadioButton>
             <RadioButton x:Name="New" Checked="Option_Checked">Create a new house configuration as a local file</RadioButton>
-            <RadioButton x:Name="OneDrive" Checked="Option_Checked">Create or open the house configuration on your OneDrive</RadioButton>
+            <RadioButton x:Name="OneDrive" Checked="Option_Checked">Open or create the house configuration on your OneDrive</RadioButton>
         </StackPanel>
 
     </Grid>
