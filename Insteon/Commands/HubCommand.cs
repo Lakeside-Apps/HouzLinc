@@ -175,7 +175,7 @@ public abstract class HubCommand : Command
                         // /0?09GN=I=0 starts linking for a group number, GN. The group number can be 00 to FF.
                         // /0?0AGN=I=0 starts unlinking for a group number, GN. The group number can be 00 to FF.
                         // Note: none of these "/0" commands are currently implemented
-                        commandString = (IMCommandCode > 0) ? IMCommandCode.ToString("x2") : "" + IMCommandParams;
+                        commandString = (IMCommandCode > 0 ? IMCommandCode.ToString("x2") : "") + IMCommandParams;
                         break;
                     }
                 case IMCommandTypes.Hub:
@@ -194,7 +194,7 @@ public abstract class HubCommand : Command
                 case IMCommandTypes.IM:
                     {
                         // Commands for the IM, a.k.a., PLM. Some targets a specific device, e.g., "/3?02AABBCCxxxx=I=3"
-                        commandString = (IMCommandCode > 0) ? "02" + IMCommandCode.ToString("x2") : "" + IMCommandParams;
+                        commandString = (IMCommandCode > 0 ? "02" + IMCommandCode.ToString("x2") : "") + IMCommandParams;
                         break;
                     }
                 default:
