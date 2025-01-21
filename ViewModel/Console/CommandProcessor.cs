@@ -18,6 +18,7 @@ using Insteon.Base;
 using Insteon.Commands;
 using Insteon.Model;
 using System.Text;
+using static Insteon.Commands.CreateScheduleCommand;
 using static Insteon.Model.AllLinkRecord;
 
 namespace ViewModel.Console;
@@ -36,6 +37,9 @@ public sealed class CommandProcessor : ICommandProcessor
         ( CommandCategory.Console, "Clear", null!, "- Clears the console"),
         ( CommandCategory.Console, "Ouput", null!, "verbose|info|warning|error|critical"),
 
+        // Custom command 
+        ( CommandCategory.IM, CustomHubCommand.Name, ProcessCustomHubCommand, CustomHubCommand.Help ),
+
         // Hub (IM) commands
         ( CommandCategory.IM, GetIMInfoCommand.Name, ProcessCommand<GetIMInfoCommandFactory>, GetIMInfoCommand.Help ),
         ( CommandCategory.IM, SendAllLinkCommand.Name, ProcessSendAllLinkCommand, SendAllLinkCommand.Help ),
@@ -49,6 +53,9 @@ public sealed class CommandProcessor : ICommandProcessor
         ( CommandCategory.IM, StartIMAllLinkingCommand.Name, ProcessStartIMAllLinkingCommand, StartIMAllLinkingCommand.Help ),
         ( CommandCategory.IM, CancelIMAllLinkingCommand.Name, ProcessCancelIMAllLinkingCommand, CancelIMAllLinkingCommand.Help ),
         ( CommandCategory.IM, ManageIMAllLinkRecordCommand.Name, ProcessManageAllLinkRecordCommand, ManageIMAllLinkRecordCommand.Help ),
+
+        // HubConfig commands
+        ( CommandCategory.IM, CreateScheduleCommand.Name, ProcessCreateScheduleCommand, CreateScheduleCommand.Help ),
 
         // Device commands
         ( CommandCategory.Device, LightOnCommand.Name, ProcessLightOnCommand, LightOnCommand.Help),
@@ -900,6 +907,152 @@ public sealed class CommandProcessor : ICommandProcessor
         }
 
         throw new Exception(ManageIMAllLinkRecordCommand.Name + " " + ManageIMAllLinkRecordCommand.Help);
+    }
+
+    private static async Task ProcessCreateScheduleCommand(string[] tokens)
+    {
+        int idx = 0;
+        byte group = 0;
+        TimeEventType startTimeType = TimeEventType.Time;
+        DateTime startTime = DateTime.Parse("00:00");
+        bool amStart = false;
+        bool pmStart = false;
+        TimeEventType endTimeType = TimeEventType.Time;
+        DateTime endTime = DateTime.Parse("00:00");
+        bool amEnd = false;
+        bool pmEnd = false;
+        bool monday = false;
+        bool tuesday = false;
+        bool wednesday = false;
+        bool thursday = false;
+        bool friday = false;
+        bool saturday = false;
+        bool sunday = false;
+
+        if (++idx < tokens.Length)
+        {
+            group = ParseByteNumber(tokens[idx]);
+        }
+
+        if (++idx < tokens.Length)
+        {
+            if (tokens[idx].Equals("sunrise", StringComparison.OrdinalIgnoreCase))
+            {
+                startTimeType = TimeEventType.Sunrise;
+            }
+            else if (tokens[idx].Equals("sunset", StringComparison.OrdinalIgnoreCase))
+            {
+                startTimeType = TimeEventType.Sunset;
+            }
+            else
+            {
+                startTimeType = TimeEventType.Time;
+                startTime = DateTime.Parse(tokens[idx]);
+                if (startTime < DateTime.Parse("12:00pm"))
+                {
+                    amStart = true;
+                    pmStart = false;
+                }
+                else
+                {
+                    amStart = false;
+                    pmStart = true;
+                }
+            }
+        }
+
+        if (++idx < tokens.Length)
+        {
+            if (tokens[idx].Equals("sunrise", StringComparison.OrdinalIgnoreCase))
+            {
+                endTimeType = TimeEventType.Sunrise;
+            }
+            else if (tokens[idx].Equals("sunset", StringComparison.OrdinalIgnoreCase))
+            {
+                endTimeType = TimeEventType.Sunset;
+
+            }
+            else
+            {
+                endTimeType = TimeEventType.Time;
+                endTime = DateTime.Parse(tokens[idx]);
+                if (endTime < DateTime.Parse("12:00pm"))
+                {
+                    amEnd = true;
+                    pmEnd = false;
+                }
+                else
+                {
+                    amEnd = false;
+                    pmEnd = true;
+                }
+            }
+        }
+
+        bool isWeekday = true;
+        while (isWeekday && ++idx < tokens.Length)
+        {
+            switch (tokens[idx].ToLowerInvariant())
+            {
+                case "mon":
+                    monday = true;
+                    break;
+
+                case "tues":
+                    tuesday = true;
+                    break;
+
+                case "wed":
+                    wednesday = true;
+                    break;
+
+                case "thurs":
+                    thursday = true;
+                    break;
+
+                case "fri":
+                    friday = true;
+                    break;
+
+                case "sat":
+                    saturday = true;
+                    break;
+
+                case "sunday":
+                    sunday = true;
+                    break;
+
+                default:
+                    isWeekday = false;
+                    break;
+            }
+        }
+
+        var command = new CreateScheduleCommand(Settings.Holder.House.Gateway,
+            group: group, name: $"Sch{group}", show: true,
+            startTimeType, startTime, amStart, pmStart, 
+            endTimeType, endTime, amEnd, pmEnd,
+            monday, tuesday, wednesday, thursday, friday, saturday, sunday);
+
+        await command.TryRunAsync();
+    }
+
+    private static async Task ProcessCustomHubCommand(string[] tokens)
+    {
+        if (tokens.Length >= 3)
+        {
+            int commandType = int.Parse(tokens[1]);
+            if (commandType < 0 || commandType > 3)
+                throw new FormatException($"'First parameter should be between 0 and 3");
+
+            string commandString = tokens[2];
+
+            var command = new CustomHubCommand(Settings.Holder.House.Gateway, commandType, commandString);
+            await command.TryRunAsync(maxAttempts: 1);
+            return;
+        }
+
+        throw new Exception(CustomHubCommand.Name + " " + CustomHubCommand.Help);
     }
 
     public static byte ParseByteNumber(string input)
