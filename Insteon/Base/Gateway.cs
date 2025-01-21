@@ -127,7 +127,17 @@ public sealed class Gateway
         {
             if (httpClient == null)
             {
-                httpClient = new HttpClient();
+                var handler = new SocketsHttpHandler
+                {
+                    // the Insteon Hub supports few sockets
+                    MaxConnectionsPerServer = 1,
+
+                    // Keep alive but the socket back quickly so that other client (e.g., instances of this app) can use it
+                    KeepAlivePingPolicy = HttpKeepAlivePingPolicy.Always,
+                    KeepAlivePingTimeout = TimeSpan.FromSeconds(5),
+                };
+
+                httpClient = new HttpClient(handler);
                 httpClient.BaseAddress = new Uri("http://" + IPAddress + ":" + Port);
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
