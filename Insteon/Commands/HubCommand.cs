@@ -86,7 +86,7 @@ public abstract class HubCommand : Command
     /// <summary>
     ///  To be set by derived classes before calling RunAsync
     /// </summary>
-    protected enum IMCommandTypes { Short, Hub, IM };
+    protected enum IMCommandTypes { Short, Hub, HubConfig, IM };
     protected IMCommandTypes IMCommandType;
     protected byte IMCommandCode;
     protected string IMCommandParams = string.Empty;
@@ -167,25 +167,40 @@ public abstract class HubCommand : Command
             string commandString;
             switch (IMCommandType)
             {
-                case IMCommandTypes.IM:
-                    {
-                        // Commands for the IM
-                        commandString = "02" + IMCommandCode.ToString("x2") + IMCommandParams;
-                        break;
-                    }
                 case IMCommandTypes.Short:
                     {
-                        // Short form command: <command><group>
-                        commandString = IMCommandCode.ToString("x2") + IMCommandParams;
+                        // Short form command: <command><group> ("/0?CCGN=I=0")
+                        // where CC is command code, GN group number (00 to FF), e.g.,
+                        // /0?08=I=0 stops linking on the PLM. This can also be done with the generic PLM command resource.
+                        // /0?09GN=I=0 starts linking for a group number, GN. The group number can be 00 to FF.
+                        // /0?0AGN=I=0 starts unlinking for a group number, GN. The group number can be 00 to FF.
+                        // Note: none of these "/0" commands are currently implemented
+                        commandString = (IMCommandCode > 0) ? IMCommandCode.ToString("x2") : "" + IMCommandParams;
                         break;
                     }
                 case IMCommandTypes.Hub:
-                default:
                     {
-                        // Commands for the Hub itself
+                        // Commands for the Hub (e.g., Clear: "/1?XB=M=1", IMCommandParam)
                         commandString = IMCommandParams;
                         break;
                     }
+                case IMCommandTypes.HubConfig:
+                    {
+                        // Commands for the Hub channel configuration, e.g.,
+                        // "/2?S215=Hall_Lights=2=t=00:00=ff=00:00=ff=f=f=f=f=f=f=f=f=f=f=t=AABBCC01=t=f22" Creates a new schedule.
+                        commandString = IMCommandParams;
+                        break;
+                    }
+                case IMCommandTypes.IM:
+                    {
+                        // Commands for the IM, a.k.a., PLM. Some targets a specific device, e.g., "/3?02AABBCCxxxx=I=3"
+                        commandString = (IMCommandCode > 0) ? "02" + IMCommandCode.ToString("x2") : "" + IMCommandParams;
+                        break;
+                    }
+                default:
+                    // Litteral mode for debugging, send IMCommandParams verbatim
+                    commandString = IMCommandParams;
+                    break;
             }
 
             return commandString;
@@ -199,7 +214,23 @@ public abstract class HubCommand : Command
     private async Task<bool> SendCommandAsync()
     {
         // Assemble the request string to send to the hub
-        string requestString = GetCommandTypeToken() + "?" + CommandString + "=I=" + GetCommandTypeToken();
+        string requestString = string.Empty;
+        requestString = GetCommandTypeToken() + "?" + CommandString;
+        switch (IMCommandType)
+        {
+            case IMCommandTypes.Short:
+            case IMCommandTypes.IM:
+                requestString += "=I=" + GetCommandTypeToken();
+                break;
+
+            case IMCommandTypes.Hub:
+                requestString += "=M=" + GetCommandTypeToken();
+                break;
+
+            case IMCommandTypes.HubConfig:
+            default:
+                break;
+        }
         Logger.Log.Debug("Sending command (" + GetLogName() + "): " + requestString);
 
         HttpResponseMessage httpResponse;
@@ -239,6 +270,8 @@ public abstract class HubCommand : Command
                 return "0";
             case IMCommandTypes.Hub:
                 return "1";
+            case IMCommandTypes.HubConfig:
+                return "2";
             case IMCommandTypes.IM:
                 return "3";
         }
