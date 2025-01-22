@@ -61,9 +61,11 @@ public sealed class CreateScheduleCommand: HubCommand
         this.group = group;
         this.name = name;
         this.show = show;
+        this.startTimeType = startTimeType;
         this.startTime = startTime;
         this.amStart = amStart;
         this.pmStart = pmStart;
+        this.endTimeType = endTimeType;
         this.endTime = endTime;
         this.amEnd = amEnd;
         this.pmEnd = pmEnd;
