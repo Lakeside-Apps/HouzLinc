@@ -31,7 +31,7 @@ internal class GatewayChangedChange : ModelChange
 
     internal override void Apply(House house)
     {
-        house.PushNewGateway(new Gateway(macAddress, hostName, ipAddress, port) { DeviceId = deviceId });
+        house.PushNewGateway(new Gateway(house, macAddress, hostName, ipAddress, port) { DeviceId = deviceId });
     }
 
     string macAddress;

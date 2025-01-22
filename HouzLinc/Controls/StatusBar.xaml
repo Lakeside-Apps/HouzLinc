@@ -18,6 +18,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock
             Margin="10,3,10,3"
@@ -47,8 +48,17 @@
             Click="DeclineUserAction">
             <FontIcon Glyph="&#xEF2C;"/>
         </Button>
-        <Button
+        <ProgressRing
             Grid.Column="3"
+            Tag="SyncHouse"
+            win:ToolTipService.ToolTip="Sync House Configuration Progress"
+            Margin="0,3,2,3"
+            Width="24"
+            Height="24"
+            Background="LightGray"
+            IsActive="{x:Bind HasGatewayTraffic, Mode=OneWay}"/>
+        <Button
+            Grid.Column="4"
             Tag="SyncHouse"
             win:ToolTipService.ToolTip="Sync House Configuration"
             Margin="0,3,2,3"
@@ -58,7 +68,7 @@
             <SymbolIcon Symbol="Sync"/>
         </Button>
         <Button
-            Grid.Column="4"
+            Grid.Column="5"
             x:Name="SaveHouse"
             win:ToolTipService.ToolTip="Save House Configuration"
             Margin="2,3,5,3"

@@ -44,6 +44,7 @@ public class SettingsViewModel : PageViewModel
         // and make StatusBar bind directly to the holder properties
         Holder.OnHouseSaveStatusChanged += () => OnPropertyChanged(nameof(DoesHouseConfigNeedSave));
         Holder.OnHouseSyncStatusChanged += () => OnPropertyChanged(nameof(DoesHouseConfigNeedSync));
+        Holder.HasGatewayTrafficChanged += () => OnPropertyChanged(nameof(HasGatewayTraffic));
     }
 
     public static SettingsViewModel Instance => instance ??= new SettingsViewModel();
@@ -83,14 +84,19 @@ public class SettingsViewModel : PageViewModel
     }
 
     /// <summary>
-    /// Exposes whether house config needs saving to the UI
+    /// Whether house config needs saving
     /// </summary>
     public bool DoesHouseConfigNeedSave => Holder.DoesHouseNeedSave;
 
     /// <summary>
-    /// Exposes whether house config needs syncing to the UI
+    /// Whether house config needs syncing
     /// </summary>
     public bool DoesHouseConfigNeedSync => Holder.DoesHouseNeedSync;
+
+    /// <summary>
+    /// Whether house configuration is currently syncing
+    /// </summary>
+    public bool HasGatewayTraffic => Holder.HasGatewayTraffic;
 
     /// <summary>
     /// Load the house config from storage or create a new one

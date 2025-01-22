@@ -235,6 +235,7 @@ public abstract class Command
     public async Task<bool> TryRunAsync(int maxAttempts = DefaultMaxAttempts, Command? parentCommand = null)
     {
         bool success = false;
+        gateway.OnGatewayTraffic(true);
 
         for (int attempt = 1; attempt <= maxAttempts; attempt++)
         {
@@ -280,6 +281,7 @@ public abstract class Command
             await Task.Delay(wait);
         }
 
+        gateway.OnGatewayTraffic(false);
         return success;
     }
 

@@ -34,7 +34,7 @@ public sealed class Gateways : List<Gateway>
         }
     }
 
-    public House House { get; init; }
+    private House House { get; init; }
 
     internal bool IsIdenticalTo(Gateways gateways)
     {
@@ -66,7 +66,7 @@ public sealed class Gateways : List<Gateway>
 
     internal Gateways Ensure()
     {
-        Add(new Gateway());
+        Add(new Gateway(House));
         return this;
     }
 

@@ -216,7 +216,7 @@ public sealed class House
     private async Task<bool> TryPushNewGatewayAsync(string macAddress, string hostName, string ipAddress, string port, string username, string password)
     {
         // Try to ping the new gateway and if found, create the new hub device in the model if it does not already exist
-        Gateway newGateway = new Gateway(hostName, macAddress, ipAddress, port, username, password);
+        Gateway newGateway = new Gateway(this, hostName, macAddress, ipAddress, port, username, password);
         var hub = await Devices.CheckHubAsync(newGateway);
         if (hub != null)
         {
@@ -329,6 +329,15 @@ public sealed class House
     public static object ScheduleGroupJob(string description, InsteonScheduler.JobCompletionCallback<bool> jobCompletionCallback, object? parentGroupJob = null)
     {
         return InsteonScheduler.Instance.AddGroup(description, jobCompletionCallback, parentGroupJob);
+    }
+
+    /// <summary>
+    /// Event fired when we are pushing network traffic through the gateway
+    /// </summary>
+    public event Action<bool>? OnGatewayTraffic;
+    internal void NotifyGatewayTraffic(bool hasTraffic)
+    {
+        OnGatewayTraffic?.Invoke(hasTraffic);
     }
 
     /// <summary>

@@ -14,6 +14,7 @@
 */
 
 using Common;
+using Insteon.Model;
 using System.Net.Http.Headers;
 
 namespace Insteon.Base;
@@ -25,8 +26,9 @@ namespace Insteon.Base;
 // - stores and retrieves credentials from the credential store
 public sealed class Gateway
 {
-    internal Gateway()
+    internal Gateway(House house)
     {
+        this.house = house;
         MacAddress = string.Empty;
         HostName = string.Empty;
         IPAddress = string.Empty;
@@ -35,16 +37,18 @@ public sealed class Gateway
         Password = string.Empty;
     }
 
-    internal Gateway(string hostName, string macAddress, string ipAddress, string port)
+    internal Gateway(House house, string hostName, string macAddress, string ipAddress, string port)
     {
+        this.house = house;
         MacAddress = macAddress;
         HostName = hostName;
         IPAddress = ipAddress;
         Port = port;
     }
 
-    public Gateway(string hostName, string macAddress, string ipAddress, string port, string username, string password)
+    public Gateway(House house, string hostName, string macAddress, string ipAddress, string port, string username, string password)
     {
+        this.house = house;
         MacAddress = macAddress;
         HostName = hostName;
         IPAddress = ipAddress;
@@ -55,6 +59,7 @@ public sealed class Gateway
 
     internal Gateway(Gateway gateway)
     {
+        house = gateway.house;
         DeviceId = gateway.DeviceId;
         MacAddress = gateway.MacAddress;
         HostName = gateway.HostName;
@@ -104,6 +109,14 @@ public sealed class Gateway
     {
         RetrieveCredentials();
     }
+
+    // Called when a command is running
+    internal void OnGatewayTraffic(bool hasTraffic)
+    {
+        house.NotifyGatewayTraffic(hasTraffic);
+    }
+
+    private House house;
 
     public InsteonID DeviceId { get; init; } = InsteonID.Null;
 

@@ -34,7 +34,7 @@ public sealed class HLGateways : List<HLGateway>
         var gateways = new Gateways(house);
         foreach(var hlGateway in this)
         {
-            gateways.Add(hlGateway.BuildModel());
+            gateways.Add(hlGateway.BuildModel(house));
         }
         return gateways;
     }
