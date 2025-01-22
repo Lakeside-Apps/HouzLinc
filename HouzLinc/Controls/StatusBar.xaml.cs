@@ -80,6 +80,11 @@ public sealed partial class StatusBar : ContentControl, INotifyPropertyChanged
     /// </summary>
     public bool DoesHouseConfigNeedSync => SettingsViewModel.Instance.DoesHouseConfigNeedSync;
 
+    /// <summary>
+    /// One way bindable to UI to indicate we are pushing traffic through the gateway
+    /// </summary>
+    public bool HasGatewayTraffic => SettingsViewModel.Instance.HasGatewayTraffic;
+
     // Property changed notifications for properties above
     private void OnViewModelPropertyChanged(string? propertyName)
     {
@@ -91,6 +96,10 @@ public sealed partial class StatusBar : ContentControl, INotifyPropertyChanged
 
             case nameof(SettingsViewModel.DoesHouseConfigNeedSync):
                 OnPropertyChanged(nameof(DoesHouseConfigNeedSync));
+                break;
+
+            case nameof(SettingsViewModel.HasGatewayTraffic):
+                OnPropertyChanged(nameof(HasGatewayTraffic));
                 break;
         }
     }

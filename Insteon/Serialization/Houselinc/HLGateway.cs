@@ -16,6 +16,7 @@
 using System.Xml.Serialization;
 using Common;
 using Insteon.Base;
+using Insteon.Model;
 
 namespace Insteon.Serialization.Houselinc;
 
@@ -40,9 +41,9 @@ public sealed class HLGateway
         InsteonID = gateway.DeviceId;
     }
 
-    public Gateway BuildModel()
+    public Gateway BuildModel(House house)
     {
-        var gateway = new Gateway()
+        var gateway = new Gateway(house)
         {
             MacAddress = IP.Mac,
             HostName = IP.HostName,

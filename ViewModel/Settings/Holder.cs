@@ -55,13 +55,16 @@ public static class Holder
     {
         Debug.Assert(House != null);
 
-        // Start listening for changes in the house model
+        // Listen for changes in the house model
         // Indicating that it needs to be saved
         House.ModelObserver.OnModelChanged += () => { DoesHouseNeedSave = true; };
 
-        // Start listneing for change in the synchronization of the model with the physical network of devices
+        // Listen for changes in the synchronization of the model with the physical network of devices
         // Indicating that we can kick a sync pass
         House.ModelObserver.OnModelNeedsSync += () => { DoesHouseNeedSync = true; };
+
+        // Listen for whether we are pushing network traffic through the gateway
+        House.OnGatewayTraffic += (bool hasTraffic) => { HasGatewayTraffic = hasTraffic; };
 
         // Start backgrounf sync of physical devices
         House.Start();
@@ -110,6 +113,28 @@ public static class Holder
     /// Notify house model sync state change to listneners
     /// </summary>
     public static event Action? OnHouseSyncStatusChanged;
+
+    /// <summary>
+    /// Does the house model need to be synced with the physical devices?
+    /// </summary>
+    public static bool HasGatewayTraffic
+    {
+        get => hasGatewayTraffic;
+        private set
+        {
+            if (value != hasGatewayTraffic)
+            {
+                hasGatewayTraffic = value;
+                HasGatewayTrafficChanged?.Invoke();
+            }
+        }
+    }
+    private static bool hasGatewayTraffic = false;
+
+    /// <summary>
+    /// Notify house model sync state change to listneners
+    /// </summary>
+    public static event Action ? HasGatewayTrafficChanged;
 
     /// <summary>
     /// Synchronize the house model with the physical devices
