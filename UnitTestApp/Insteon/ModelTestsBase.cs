@@ -34,6 +34,7 @@ public class ModelTestsBase
         var h = await ModelHolderForTest.LoadFromFile("Changes", filename);
         Assert.IsNotNull(h);
         house = h!;
+        house.StartRecordingChanges();
 
         // set this to true to save the model if an update is needed
 #if false
@@ -49,7 +50,7 @@ public class ModelTestsBase
     private protected async Task PlayAndCheck()
     {
         // Play the changes recorded while modifying model house against yet unmodified targetHouse
-        house.PlayModel(targetHouse);
+        house.PlayChanges(targetHouse);
 
         // Save the model that was modified directly
         // If this is different from the ref file stored in the ms-appx:///Refs folder,
@@ -70,7 +71,7 @@ public class ModelTestsBase
         // Play the changes recorded while modifying model house locally
         // against targetHouse in which we simulated changes from another instance of this app
         // This gives us the merged model with all changes
-        house.PlayModel(targetHouse);
+        house.PlayChanges(targetHouse);
 
         // Save the merged model
         // We can't use this as ref as it might be different than the ultimate working model

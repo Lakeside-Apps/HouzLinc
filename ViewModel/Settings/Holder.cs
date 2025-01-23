@@ -66,8 +66,11 @@ public static class Holder
         // Listen for whether we are pushing network traffic through the gateway
         House.OnGatewayTraffic += (bool hasTraffic) => { HasGatewayTraffic = hasTraffic; };
 
-        // Start backgrounf sync of physical devices
-        House.Start();
+        // Start recording changes to the model
+        House.StartRecordingChanges();
+
+        // Start background sync between house model and physical devices
+        House.StartBackgroundDeviceSync();
     }
 
     /// <summary>

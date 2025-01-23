@@ -21,7 +21,7 @@ internal class ModelRecorder
     {
         lock (changes)
         {
-            if (!isRecordingDisabled)
+            if (isRecording)
             {
                 changes.Add(change);
             }
@@ -42,16 +42,18 @@ internal class ModelRecorder
         }
     }
 
-    internal void DisableRecording()
+    internal bool StopRecording()
     {
-        isRecordingDisabled = true;
+        var wasRecording = isRecording;
+        isRecording = false;
+        return wasRecording;
     }
 
-    internal void EnableRecording()
+    internal void StartRecording()
     {
-        isRecordingDisabled = false;
+        isRecording = true;
     }
 
     List<ModelChange> changes = new List<ModelChange>();
-    bool isRecordingDisabled;
+    bool isRecording;
 }
