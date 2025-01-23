@@ -104,7 +104,7 @@ public class FileStorageProvider : StorageProvider
         if (lastSavedHouse != null)
         {
             // Merge in our local changes since we last saved the model
-            house.PlayModel(lastSavedHouse);
+            house.PlayChanges(lastSavedHouse);
 
             // The result is a new model that is a merge of the last saved model and our local changes
             // We copy it back to our working house model, allowing UI notificaitons for what may have changed

@@ -48,7 +48,7 @@ public sealed class House
     {
         // The model we are copying from is already the result of applying these changes
         // and we have no need to re-record them.
-        ModelRecorder.DisableRecording();
+        var wasRecording = ModelRecorder.StopRecording();
 
         Name = house.Name;
         Version = house.Version;
@@ -58,7 +58,7 @@ public sealed class House
         Scenes.CopyFrom(house.Scenes);
         Rooms ??= new Rooms(this);
 
-        ModelRecorder.EnableRecording();
+        if (wasRecording) ModelRecorder.StartRecording();
     }
 
     public bool IsIdenticalTo(House house)
@@ -96,7 +96,7 @@ public sealed class House
     /// <summary>
     /// Play recorded but yet unplayed changes to this model against a target model
     /// </summary>
-    public void PlayModel(House targetHouse)
+    public void PlayChanges(House targetHouse)
     {
         ModelRecorder.Play(targetHouse);
     }
@@ -130,9 +130,17 @@ public sealed class House
     }
 
     /// <summary>
-    /// Starts background sync of physical devices
+    /// Starts change recording changes to the model
     /// </summary>
-    public void Start()
+    public void StartRecordingChanges()
+    {
+        ModelRecorder.StartRecording();
+    }
+
+    /// <summary>
+    /// Start background sync of physical devices
+    /// </summary>
+    public void StartBackgroundDeviceSync()
     {
         Devices.StartBackgroundDeviceSync();
     }
