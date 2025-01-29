@@ -345,9 +345,7 @@ public sealed class Channel : ChannelBase
         get => propertiesSyncStatus;
         set
         {
-            // If the new value is "Changed", notifies observers even if it was the same before
-            // to give them a chance to catch SyncStatus changes of individual properties
-            if (value != propertiesSyncStatus || value == SyncStatus.Changed)
+            if (value != propertiesSyncStatus)
             {
                 propertiesSyncStatus = value;
                 observers.ForEach(o => o.ChannelSyncStatusChanged(this));
@@ -357,27 +355,21 @@ public sealed class Channel : ChannelBase
     private SyncStatus propertiesSyncStatus;
 
     // Helper to update the overall sync status for the channel
-    private void UpdatePropertiesSyncStatus()
+    // See same method in Device for additional information
+    private void UpdatePropertiesSyncStatus(bool afterSync = false)
     {
-        // No action before this device is deserialized, as we want to track only user changes here
-        if (!isDeserialized)
+        if (!isDeserialized || deferPropertiesSyncStatusUpdate)
         {
             return;
         }
 
         if (!ArePropertiesRead)
         {
-            // If we don't yet have the physical device property values, but the model is reporting properties as synced
-            // we take the pessimistic view that any/all properties could be different from the physical device.
-            // and that model property values should be written to the device (if different), even though this could
-            // potentially write stale values to the device.
-            // If the model is reporting not knowing if up to date (PropertiesSyncStatus is "Unknown"), we leave it as is,
-            // which will force a sync, but not a write, and will potentially undo the change for which this method was called.
-            // TODO: Consider maintaining a status per property to fix these issues.
             if (PropertiesSyncStatus == SyncStatus.Synced)
                 PropertiesSyncStatus = SyncStatus.Changed;
         }
-        else if (this.FollowMaskSyncStatus == SyncStatus.Synced &&
+        else if (
+            this.FollowMaskSyncStatus == SyncStatus.Synced &&
             this.FollowOffMaskSyncStatus == SyncStatus.Synced &&
             this.OnLevelSyncStatus == SyncStatus.Synced &&
             this.RampRateSyncStatus == SyncStatus.Synced &&
@@ -388,9 +380,11 @@ public sealed class Channel : ChannelBase
         }
         else
         {
-            PropertiesSyncStatus = SyncStatus.Changed;
+            PropertiesSyncStatus = afterSync ? SyncStatus.Unknown : SyncStatus.Changed;
         }
     }
+
+    private bool deferPropertiesSyncStatusUpdate = false;
 
     /// <summary>
     /// Sends a LightOn command to all responders on this channel
@@ -434,22 +428,18 @@ public sealed class Channel : ChannelBase
         bool success = await DeviceDriver.TryReadChannelPropertiesAsync(Id);
         if (success)
         {
-            if (forceSync && ChannelDriver != null)
+            using (new Common.DeferredExecution<bool>(UpdatePropertiesSyncStatus, param: true,
+                deferExecutionCallback: (bool defer) => deferPropertiesSyncStatusUpdate = defer))
             {
-                this.FollowMask = ChannelDriver.FollowMask;
-                this.FollowOffMask = ChannelDriver.FollowOffMask;
-                this.OnLevel = ChannelDriver.OnLevel;
-                this.RampRate = ChannelDriver.RampRate;
-                this.ToggleMode = ChannelDriver.ToggleMode;
-                this.LEDOn = ChannelDriver.LEDOn;
-
-                // Don't set if already set to Synced to avoid unnecessary notifications
-                if (PropertiesSyncStatus != SyncStatus.Synced)
-                    PropertiesSyncStatus = SyncStatus.Synced;
-            }
-            else 
-            {
-                UpdatePropertiesSyncStatus();
+                if (forceSync && ChannelDriver != null)
+                {
+                    this.FollowMask = ChannelDriver.FollowMask;
+                    this.FollowOffMask = ChannelDriver.FollowOffMask;
+                    this.OnLevel = ChannelDriver.OnLevel;
+                    this.RampRate = ChannelDriver.RampRate;
+                    this.ToggleMode = ChannelDriver.ToggleMode;
+                    this.LEDOn = ChannelDriver.LEDOn;
+                }
             }
         }
 

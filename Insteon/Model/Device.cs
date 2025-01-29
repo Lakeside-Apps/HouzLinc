@@ -81,7 +81,7 @@ public sealed class Device : DeviceBase
     }
 
     // Whether this device is indentical to another device
-    // Used primarily for testing and check state in DEBUG
+    // Used only for testing and check state in DEBUG
     internal bool IsIdenticalTo(Device device)
     {
         return Id == device.Id &&
@@ -400,7 +400,8 @@ public sealed class Device : DeviceBase
             if (PropertyBag.SetValue(SnoozedName, (byte)(value ? 1 : 0)))
             {
                 NotifyObserversOfPropertyChanged();
-                UpdatePropertiesSyncStatus();
+                // Not syncable
+                //UpdatePropertiesSyncStatus();
             }
         }
     }
@@ -454,7 +455,8 @@ public sealed class Device : DeviceBase
             if (PropertyBag.SetValue(NonToggleMaskName, value))
             {
                 NotifyObserversOfPropertyChanged();
-                UpdatePropertiesSyncStatus();
+                // Synced via channel ToggleMode
+                //UpdatePropertiesSyncStatus();
             }
         }
     }
@@ -472,7 +474,8 @@ public sealed class Device : DeviceBase
             if (PropertyBag.SetValue(NonToggleOnOffMaskName, value))
             {
                 NotifyObserversOfPropertyChanged();
-                UpdatePropertiesSyncStatus();
+                // Synced via channel ToggleMode
+                //UpdatePropertiesSyncStatus();
             }
         }
     }
@@ -489,7 +492,8 @@ public sealed class Device : DeviceBase
             if (PropertyBag.SetValue(X10HouseName, value))
             {
                 NotifyObserversOfPropertyChanged();
-                UpdatePropertiesSyncStatus();
+                // If implementing, update UpdatePropertiesSyncStatus and uncomment
+                //UpdatePropertiesSyncStatus();
             }
         }
     } 
@@ -506,7 +510,8 @@ public sealed class Device : DeviceBase
             if (PropertyBag.SetValue(X10UnitName, value))
             {
                 NotifyObserversOfPropertyChanged();
-                UpdatePropertiesSyncStatus();
+                // If implementing, update UpdatePropertiesSyncStatus and uncomment
+                //UpdatePropertiesSyncStatus();
             }
         }
     }
@@ -985,11 +990,9 @@ public sealed class Device : DeviceBase
         get => propertiesSyncStatus;
         set
         {
-            if (value != SyncStatus.Synced || propertiesSyncStatus != SyncStatus.Synced)
+            if (value != propertiesSyncStatus)
             {
                 propertiesSyncStatus = value;
-                // If setting to Changed, notifies observers even if there is no change in the value of LastSyncStatus
-                // itself to give them a chance to catch SyncStatus changes of individual properties
                 observers.ForEach(o => o.DevicePropertiesSyncStatusChanged(this));
             }
         }
@@ -998,31 +1001,35 @@ public sealed class Device : DeviceBase
 
     // Helper to update the overal sync status for the device
     // Called when one of the read/write properties changes
-    private void UpdatePropertiesSyncStatus()
+    // Parameter afterSync indicates that this called as the result of reading or writing the physical device,
+    // as opposed to the result of a change in the model
+    private void UpdatePropertiesSyncStatus(bool afterSync = false)
     {
-        // No action before this device is deserialized, as we want to track only user changes here
-        if (!isDeserialized)
+        // No action before this device is deserialized, as we want to track only user changes here.
+        // No action if updating sync status is deferred (because we are setting multiple properties in a row).
+        if (!isDeserialized || deferPropertiesSyncStatusUpdate)
         {
             return;
         }
 
+        // Determine if we have read the properties from the device.
+        // We avoid creating a deviceDriver if we don't have one yet,
+        // we know we have not read properties from the device if we don't have a driver yet.
         if (deviceDriver == null || !((DeviceDriver as DeviceDriver)?.ArePropertiesRead ?? true))
         {
-            // We avoid creating a deviceDriver if we don't have one yet,
-            // If we don't have a device, we have not read properties from the device.
+            // We don't yet have the physical device property values
+            // That should only happen if we were called as the result of a change in the model
+            Debug.Assert(!afterSync);
 
-            // If we don't yet have the physical device property values, but the model is reporting properties as synced
-            // we take the pessimistic view that any/all properties could be different from the physical device,
-            // and that model values should be written to the device (if different), even though this could
-            // potentially write stale values to the device.
-
-            // If the model is reporting not knowing if up to date (PropertiesSyncStatus is "Unknown"), we leave it as is,
-            // which will force a sync, but not a write, and will potentially undo the change for which this method was called.
-            // TODO: Consider maintaining a status per property to fix these issues.
+            // If the model is reporting properties as synced, we mark them "Changed" to reflect the change in the model.
+            // If the model is already reporting "Unknown" or "Changed", we leave it as is. Values will either be read
+            // from the physical device ("Unknown") or written to it ("Changed") in the next sync pass.
             if (PropertiesSyncStatus == SyncStatus.Synced)
                 PropertiesSyncStatus = SyncStatus.Changed;
         }
         else if (
+            // If we have read the properties from the device, we determine sync status
+            // by comparing values between model and device
             OperatingFlags == DeviceDriver.OperatingFlags &&
             OpFlags2 == DeviceDriver.OpFlags2 &&
             LEDBrightness == DeviceDriver.LEDBrightness &&
@@ -1033,9 +1040,14 @@ public sealed class Device : DeviceBase
         }
         else
         {
-            PropertiesSyncStatus = SyncStatus.Changed;
+            // If model values are different from the device
+            // we mark them as either "Changed" if we were called following a property change in the model
+            // or "Unknown" if we were called following a read or write of the device (afterSync = true).
+            PropertiesSyncStatus = afterSync ? SyncStatus.Unknown : SyncStatus.Changed;
         }
     }
+
+    private bool deferPropertiesSyncStatusUpdate = false;
 
     /// <summary>
     /// Set the device properties SyncStatus to "Unknown" to force reading from physical device
@@ -1702,75 +1714,78 @@ public sealed class Device : DeviceBase
         // Fail silently if device is disconnected so as to not trigger a retry
         if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
         {
-            // Read operating flags
-            if (DeviceDriver.HasOperatingFlags)
+            // We defer the sync status updates until we have read all the properties
+            // and indicate that properties were modified by syncing with the physical device, not by the user.
+            using (new Common.DeferredExecution<bool>(UpdatePropertiesSyncStatus, param: true,
+                deferExecutionCallback: (bool defer) => deferPropertiesSyncStatusUpdate = defer))
             {
-                if (await DeviceDriver.TryReadOperatingFlagsAsync())
+                // Read operating flags
+                if (DeviceDriver.HasOperatingFlags)
                 {
-                    // If we had no operatingFlags or opflag2 property persisted with the model,
-                    // initialize with set flags in the physical device 
-                    if (forceSync || !PropertyBag.Exists(OperatingFlagsName))
+                    if (await DeviceDriver.TryReadOperatingFlagsAsync())
                     {
-                        this.OperatingFlags |= DeviceDriver.OperatingFlags;
-                    }
+                        // If we had no operatingFlags or opflag2 property persisted with the model,
+                        // initialize with set flags in the physical device 
+                        if (forceSync || !PropertyBag.Exists(OperatingFlagsName))
+                        {
+                            this.OperatingFlags |= DeviceDriver.OperatingFlags;
+                        }
 
-                    if (forceSync || !PropertyBag.Exists(OpFlags2Name))
+                        if (forceSync || !PropertyBag.Exists(OpFlags2Name))
+                        {
+                            this.OpFlags2 |= DeviceDriver.OpFlags2;
+                        }
+
+                        // Channels may have changed as operating flags control the number of channels
+                        // on a certain devices such as KeypadLinc for example
+                        EnsureChannels();
+                    }
+                    else
                     {
-                        this.OpFlags2 |= DeviceDriver.OpFlags2;
+                        success = false;
                     }
-
-                    // Channels may have changed as operating flags control the number of channels
-                    // on a certain devices such as KeypadLinc for example
-                    EnsureChannels();
                 }
-                else
+
+                // Read other properties
+                if (DeviceDriver.HasOtherProperties)
                 {
-                    success = false;
+                    if (await DeviceDriver.TryReadLEDBrightnessAsync())
+                    {
+                        if (forceSync)
+                        {
+                            this.LEDBrightness = DeviceDriver.LEDBrightness;
+                        }
+                    }
+                    else
+                    {
+                        success = false;
+                    }
+
+                    if (await DeviceDriver.TryReadOnLevelAsync())
+                    {
+                        if (forceSync)
+                        {
+                            this.OnLevel = DeviceDriver.OnLevel;
+                        }
+                    }
+                    else
+                    {
+                        success = false;
+                    }
+
+                    if (await DeviceDriver.TryReadRampRateAsync())
+                    {
+                        if (forceSync)
+                        {
+                            this.RampRate = DeviceDriver.RampRate;
+                        }
+                    }
+                    else
+                    {
+                        success = false;
+                    }
                 }
             }
-
-            // Read other properties
-            if (DeviceDriver.HasOtherProperties)
-            {
-                if (await DeviceDriver.TryReadLEDBrightnessAsync())
-                {
-                    if (forceSync)
-                    {
-                        this.LEDBrightness = DeviceDriver.LEDBrightness;
-                    }
-                }
-                else
-                {
-                    success = false;
-                }
-
-                if (await DeviceDriver.TryReadOnLevelAsync())
-                {
-                    if (forceSync)
-                    {
-                        this.OnLevel = DeviceDriver.OnLevel;
-                    }
-                }
-                else
-                {
-                    success = false;
-                }
-
-                if (await DeviceDriver.TryReadRampRateAsync())
-                {
-                    if (forceSync)
-                    {
-                        this.RampRate = DeviceDriver.RampRate;
-                    }
-                }
-                else
-                {
-                    success = false;
-                }
-            }
-
-            // Reflect property changes in the sync status
-            UpdatePropertiesSyncStatus();
         }
 
         return success;
@@ -1813,7 +1828,7 @@ public sealed class Device : DeviceBase
             }
 
             // Reflect property changes in the sync status
-            UpdatePropertiesSyncStatus();
+            UpdatePropertiesSyncStatus(afterSync: true);
         }
 
         return success;

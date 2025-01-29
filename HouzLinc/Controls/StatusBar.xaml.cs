@@ -66,56 +66,7 @@ public sealed partial class StatusBar : ContentControl, INotifyPropertyChanged
     public static readonly DependencyProperty IsUserActionRequestProperty =
         DependencyProperty.Register(nameof(IsUserActionRequest), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
 
-    /// <summary>
-    /// One way bindable to UI to indicate the house config needs saving
-    /// TODO: this is temporary to allow user control over saving to model file
-    /// Should be automatic in the future
-    /// </summary>
-    public bool DoesHouseConfigNeedSave => SettingsViewModel.Instance.DoesHouseConfigNeedSave;
-
-    /// <summary>
-    /// One way bindable to UI to indicate the house config needs syncing
-    /// TODO: this is temporary to allow user control over the sync process
-    /// Should be automatic in the future
-    /// </summary>
-    public bool DoesHouseConfigNeedSync => SettingsViewModel.Instance.DoesHouseConfigNeedSync;
-
-    /// <summary>
-    /// One way bindable to UI to indicate we are pushing traffic through the gateway
-    /// </summary>
-    public bool HasGatewayTraffic => SettingsViewModel.Instance.HasGatewayTraffic;
-
-    // Property changed notifications for properties above
-    private void OnViewModelPropertyChanged(string? propertyName)
-    {
-        switch (propertyName)
-        {
-            case nameof(SettingsViewModel.DoesHouseConfigNeedSave):
-                OnPropertyChanged(nameof(DoesHouseConfigNeedSave));
-                break;
-
-            case nameof(SettingsViewModel.DoesHouseConfigNeedSync):
-                OnPropertyChanged(nameof(DoesHouseConfigNeedSync));
-                break;
-
-            case nameof(SettingsViewModel.HasGatewayTraffic):
-                OnPropertyChanged(nameof(HasGatewayTraffic));
-                break;
-        }
-    }
-
-    // Actions from the buttons in the status bar.
-    // TODO: these should really be events fired by this StatusBar control
-    // and handled by the parent page
-    private async void SaveHouseConfig(object sender, RoutedEventArgs e)
-    {
-        await SettingsViewModel.Instance.SaveHouse();
-    }
-
-    private void SyncHouseConfig(object sender, RoutedEventArgs e)
-    {
-        SettingsViewModel.Instance.SyncHouse();
-    }
+    private SettingsViewModel settingsViewModel = SettingsViewModel.Instance;
 
     private void ConfirmUserAction(object sender, RoutedEventArgs e)
     {
