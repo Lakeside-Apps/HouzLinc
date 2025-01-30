@@ -33,21 +33,31 @@ public partial class App : Application
                         // Load configuration information from appsettings.json
                         .EmbeddedSource<App>()
                         .Section<Msal>()
+                        .Section<FeatureFlags>()
                 );
                 // Register a service to get the configuration
                 host.ConfigureServices((context, services) => 
                     // Register view model
-                    services.AddTransient<MsalConfiguration>()
+                    services
+                        .AddTransient<MsalConfiguration>()
+                        .AddTransient<FeatureFlagsConfiguration>()
                 );
             });
 
         var host = appBuilder.Build();
 
-        // Get MSAL configuration using the Configuration service registered above
+        // Get MSAL configuration using the service registered above
         var msalConfiguration = host.Services.GetRequiredService<MsalConfiguration>();
         if (msalConfiguration != null)
         {
             OneDrive.Instance.SetMsalConfiguration(msalConfiguration);
+        }
+
+        // Get the feature flags configuration using the service registered above
+        var featureFlagsConfiguration = host.Services.GetRequiredService<FeatureFlagsConfiguration>();
+        if (featureFlagsConfiguration != null)
+        {
+            SettingsViewModel.Instance.SetFeatureFlagsConfiguration(featureFlagsConfiguration);
         }
 
         MainWindow = appBuilder.Window;

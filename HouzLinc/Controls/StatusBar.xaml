@@ -18,7 +18,6 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock
             Margin="10,3,10,3"
@@ -52,29 +51,31 @@
             Grid.Column="3"
             Tag="SyncHouse"
             win:ToolTipService.ToolTip="Sync House Configuration Progress"
-            Margin="0,3,2,3"
+            Margin="0,3,5,3"
             Width="24"
             Height="24"
             Background="LightGray"
-            IsActive="{x:Bind HasGatewayTraffic, Mode=OneWay}"/>
+            IsActive="{x:Bind settingsViewModel.HasGatewayTraffic, Mode=OneWay}"/>
         <Button
-            Grid.Column="4"
+            Grid.Column="3"
             Tag="SyncHouse"
             win:ToolTipService.ToolTip="Sync House Configuration"
-            Margin="0,3,2,3"
+            Margin="0,3,5,3"
             Style="{ThemeResource SplitViewPaneButtonStyle}"
-            IsEnabled="{x:Bind DoesHouseConfigNeedSync, Mode=OneWay}"
-            Click="SyncHouseConfig">
+            Visibility="{x:Bind settingsViewModel.ShowHouseSyncButton, Mode=OneWay}"
+            IsEnabled="{x:Bind settingsViewModel.DoesHouseConfigNeedSync, Mode=OneWay}"
+            Click="{x:Bind settingsViewModel.SyncHouse}">
             <SymbolIcon Symbol="Sync"/>
         </Button>
         <Button
-            Grid.Column="5"
+            Grid.Column="4"
             x:Name="SaveHouse"
             win:ToolTipService.ToolTip="Save House Configuration"
-            Margin="2,3,5,3"
+            Margin="0,3,5,3"
             Style="{ThemeResource SplitViewPaneButtonStyle}"
-            IsEnabled="{x:Bind DoesHouseConfigNeedSave, Mode=OneWay}"
-            Click="SaveHouseConfig">
+            Visibility="{x:Bind settingsViewModel.ShowHouseSaveButton}"
+            IsEnabled="{x:Bind settingsViewModel.DoesHouseConfigNeedSave, Mode=OneWay}"
+            Click="{x:Bind settingsViewModel.SaveHouse}">
             <SymbolIcon Symbol="Save"/>
         </Button>
     </Grid>

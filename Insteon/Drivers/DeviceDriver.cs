@@ -360,10 +360,10 @@ internal class DeviceDriver : DeviceDriverBase
     internal async override Task<bool> TryWriteRampRateAsync(byte rampRate)
     {
         bool success = true;
-        if (!await TryReadOnLevelAsync() || rampRate != RampRate)
+        if (!await TryReadRampRateAsync() || rampRate != RampRate)
         {
             success = false;
-            var command = new SetOnLevelForGroupCommand(House.Gateway, Id, group: 1, rampRate) { MockPhysicalDevice = House.GetMockPhysicalDevice(Id) };
+            var command = new SetRampRateForGroupCommand(House.Gateway, Id, group: 1, rampRate) { MockPhysicalDevice = House.GetMockPhysicalDevice(Id) };
             if (await command.TryRunAsync(maxAttempts: 15))
             {
                 this.RampRate = rampRate;

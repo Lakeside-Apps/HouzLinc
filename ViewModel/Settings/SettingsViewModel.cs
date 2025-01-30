@@ -21,8 +21,32 @@ using HouzLinc.Utils;
 using System.Text.RegularExpressions;
 using ViewModel.Base;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Options;
 
 namespace ViewModel.Settings;
+
+/// <summary>
+/// Feature flags configured in appsettings.json
+/// </summary>
+public sealed record FeatureFlags
+{
+    public bool EnableHouseSaveButton { get; init; }
+    public bool EnableHouseSyncButton { get; init; }
+}
+
+/// <summary>
+/// Features configuration service registered with the host.
+/// We grab the option values from the parameter passed to the constructor.
+/// </summary>
+public sealed class FeatureFlagsConfiguration
+{
+    internal readonly FeatureFlags FeatureFlagsOptions;
+
+    public FeatureFlagsConfiguration(IOptions<FeatureFlags> options)
+    {
+        this.FeatureFlagsOptions = options.Value;
+    }
+}
 
 /// <summary>
 /// This class is the view model for the Settings page
@@ -40,11 +64,33 @@ public class SettingsViewModel : PageViewModel
             Gateway.CredentialLocker = new GatewayCredentialLocker();
         }
 
-        // TODO: make holder fire the property changed events
-        // and make StatusBar bind directly to the holder properties
-        Holder.OnHouseSaveStatusChanged += () => OnPropertyChanged(nameof(DoesHouseConfigNeedSave));
-        Holder.OnHouseSyncStatusChanged += () => OnPropertyChanged(nameof(DoesHouseConfigNeedSync));
-        Holder.HasGatewayTrafficChanged += () => OnPropertyChanged(nameof(HasGatewayTraffic));
+        Holder.OnHouseSaveStatusChanged += () =>
+        {
+            OnPropertyChanged(nameof(DoesHouseConfigNeedSave));
+
+            // If the "Save" button is not shown, schedule a save.
+            if (!ShowHouseSaveButton && DoesHouseConfigNeedSave)
+            {
+                ScheduleSaveHouse();
+            }
+        };
+
+        Holder.OnHouseSyncStatusChanged += () =>
+        {
+            OnPropertyChanged(nameof(DoesHouseConfigNeedSync));
+
+            // if the "Sync" button is not shown, start a sync pass.
+            if (!ShowHouseSyncButton && DoesHouseConfigNeedSync)
+            {
+                SyncHouse();
+            }
+        };
+
+        Holder.HasGatewayTrafficChanged += () =>
+        {
+            OnPropertyChanged(nameof(HasGatewayTraffic));
+            OnPropertyChanged(nameof(ShowHouseSyncButton));
+        };
     }
 
     public static SettingsViewModel Instance => instance ??= new SettingsViewModel();
@@ -73,15 +119,28 @@ public class SettingsViewModel : PageViewModel
 
     public InsteonID GatewayInsteonID => Holder.House.Gateway.DeviceId;
 
-    private void InitializeHubProperties()
+    /// <summary>
+    /// Called from the UI to pass the values read from the configuration file (appsettings.json)
+    /// </summary>
+    /// <param name="featureFlagsConfiguration"></param>
+    public void SetFeatureFlagsConfiguration(FeatureFlagsConfiguration featureFlagsConfiguration)
     {
-        HubMacAddress = Holder.House.Gateway.MacAddress;
-        HubIPHostName = Holder.House.Gateway.HostName;
-        HubIPAddress = Holder.House.Gateway.IPAddress;
-        HubIPPort = Holder.House.Gateway.Port.ToString();
-        HubUsername = Holder.House.Gateway.Username ?? string.Empty;
-        HubPassword = Holder.House.Gateway.Password ?? string.Empty;
+        featureFlags = featureFlagsConfiguration.FeatureFlagsOptions;
     }
+
+    private FeatureFlags featureFlags = null!;
+
+    /// <summary>
+    /// Whether the House Save button should be shown
+    /// Bindable one-time from the UI
+    /// </summary>
+    public bool ShowHouseSaveButton => featureFlags.EnableHouseSaveButton;
+
+    /// <summary>
+    /// Whether the House Sync button should be shown
+    /// Bindable one-time from the UI
+    /// </summary>
+    public bool ShowHouseSyncButton => featureFlags.EnableHouseSyncButton && !Holder.HasGatewayTraffic;
 
     /// <summary>
     /// Whether house config needs saving
@@ -186,11 +245,32 @@ public class SettingsViewModel : PageViewModel
     }
 
     /// <summary>
+    /// Schedule saving the house configuration to file
+    /// with a delay to reduce the number of saves
+    /// </summary>
+    public void ScheduleSaveHouse()
+    {
+        if (saveHouseJob == null)
+        {
+            saveHouseJob = UIScheduler.Instance.AddAsyncJob("Saving house configuration",
+                handlerAsync: async () => 
+                { 
+                    saveHouseJob = null; 
+                    return await SaveHouse(); 
+                },
+                delay: TimeSpan.FromSeconds(5)
+            );
+        }
+    }
+    private object? saveHouseJob;
+
+    /// <summary>
     /// Save house config to file
     /// This also keeps the previous version of the file around
+    /// TODO: consider saving n previous versions of the file.
     /// </summary>
     /// <returns></returns>
-    public async Task SaveHouse()
+    public async Task<bool> SaveHouse()
     {
         bool success = false;
 
@@ -214,6 +294,8 @@ public class SettingsViewModel : PageViewModel
         {
             Holder.DoesHouseNeedSave = false;
         }
+
+        return success;
     }
 
     /// <summary>
@@ -560,6 +642,17 @@ public class SettingsViewModel : PageViewModel
     }
     private InsteonID hubInsteonID = InsteonID.Null;
 
+    // Helper to initialize the properties declared above
+    private void InitializeHubProperties()
+    {
+        HubMacAddress = Holder.House.Gateway.MacAddress;
+        HubIPHostName = Holder.House.Gateway.HostName;
+        HubIPAddress = Holder.House.Gateway.IPAddress;
+        HubIPPort = Holder.House.Gateway.Port.ToString();
+        HubUsername = Holder.House.Gateway.Username ?? string.Empty;
+        HubPassword = Holder.House.Gateway.Password ?? string.Empty;
+    }
+
     // Helper to find the hub on the local network, based on infomration in this Settings page
     public async Task<bool> FindHub()
     {
@@ -792,10 +885,10 @@ public class SettingsViewModel : PageViewModel
 #endif
 }
 
-/// <summary>
-/// Clear the credentials of the current gateway
-/// </summary>
-public static void ClearGatewayCredentials()
+    /// <summary>
+    /// Clear the credentials of the current gateway
+    /// </summary>
+    public static void ClearGatewayCredentials()
     {
         Holder.House.Gateway.ClearCredentials();
     }
