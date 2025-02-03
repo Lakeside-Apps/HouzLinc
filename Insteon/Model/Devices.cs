@@ -890,6 +890,9 @@ public sealed class Devices : OrderedKeyedList<Device>
                     var hub = GetDeviceByID(House.Gateway.DeviceId);
                     hub?.AllLinkDatabase.ResetSyncStatus();
 
+                    // Record that this device is known to be connected
+                    device.SetKnownConnectionStatus(Device.ConnectionStatus.Connected);
+
                     deviceWithIsNew.Device = device;
                 }
 
@@ -966,6 +969,9 @@ public sealed class Devices : OrderedKeyedList<Device>
                     // and acquire link just added for the new device
                     var hub = GetDeviceByID(House.Gateway.DeviceId);
                     hub?.AllLinkDatabase.ResetSyncStatus();
+
+                    // Record that this device is known to be connected
+                    device.SetKnownConnectionStatus(Device.ConnectionStatus.Connected);
 
                     deviceWithIsNew.Device = device;
                 }

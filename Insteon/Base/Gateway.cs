@@ -158,7 +158,7 @@ public sealed class Gateway
                 string base64 = Base64Encode(Username + ":" + Password);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64);
                 //httpClient.DefaultRequestHeaders.IfModifiedSince = new DateTimeOffset(DateTime.Now.AddDays(-1));
-                httpClient.DefaultRequestHeaders.ConnectionClose = true;
+                //httpClient.DefaultRequestHeaders.ConnectionClose = true;
                 httpClient.Timeout = TimeSpan.FromSeconds(5);
             }
             return httpClient;

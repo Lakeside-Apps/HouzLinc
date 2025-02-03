@@ -1147,8 +1147,7 @@ public sealed class Device : DeviceBase
                     {
                         // And run all callbacks on success
                         pingJob = null;
-                        isConnectionStatusKnown = true;
-                        Status = status;
+                        SetKnownConnectionStatus(status);
                         var callbacks = new List<ConnectionStatusCallback>(connectionStatusCallbacks);
                         connectionStatusCallbacks.Clear();
                         callbacks.ForEach(c => c.Invoke(Status));
@@ -1662,12 +1661,21 @@ public sealed class Device : DeviceBase
         // And ping the device if we have not already
         if (!isConnectionStatusKnown)
         {
-            Status = await TryPingAsync();
-            isConnectionStatusKnown = true;
+            SetKnownConnectionStatus(await TryPingAsync());
         }
         return Status;
     }
     private bool isConnectionStatusKnown = false;
+
+    /// <summary>
+    /// Helper to set a known (just acquired) connection status
+    /// </summary>
+    /// <param name="status">Connection status to set</param>
+    internal void SetKnownConnectionStatus(ConnectionStatus status)
+    {
+        Status = status;
+        isConnectionStatusKnown = true;
+    }
 
     /// <summary>
     /// Acquire the product information data from the device if we don't have it already.
