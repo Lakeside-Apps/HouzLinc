@@ -18,12 +18,7 @@
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
   <PropertyGroup>
-    <UnoExtensionsVersion>4.1.17</UnoExtensionsVersion>
-    <UnoToolkitVersion>6.0.18</UnoToolkitVersion>
-    <UnoThemesVersion>5.0.13</UnoThemesVersion>
-    <UnoCSharpMarkupVersion>5.2.13</UnoCSharpMarkupVersion>
     <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
-    <WinAppSdkVersion>1.5.240607001</WinAppSdkVersion>
   </PropertyGroup>
 </Project>
 
