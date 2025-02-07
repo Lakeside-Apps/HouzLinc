@@ -63,7 +63,7 @@ public partial class App : Application
         MainWindow = appBuilder.Window;
 
 #if DEBUG
-        MainWindow.EnableHotReload();
+        MainWindow.UseStudio();
 #endif
 
 #if WINDOWS
