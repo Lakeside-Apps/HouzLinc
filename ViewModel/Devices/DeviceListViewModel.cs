@@ -417,7 +417,10 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
 
     void IDevicesObserver.DeviceInserted(int seq, Device device)
     {
-        throw new NotImplementedException("Devices should be added at end of device list, inserting is not supported");
+        // At the moment this only works for inserting the hub at the begining of the list
+        // which has no impact on the view.
+        if (seq != 0 || !device.IsHub)
+            throw new NotImplementedException("Devices should be added at end of device list, inserting is not supported");
     }
 
     void IDevicesObserver.DeviceRemoved(Device device)
