@@ -29,7 +29,7 @@ public abstract class ItemListViewModel<ItemViewModelType> : PageViewModel where
             items ??= new();
             items.CollectionChanged += (sender, e) =>
             {
-                IsEmpty = items.Count == 0;
+                IsViewEmpty = items.Count == 0;
             };
             return items;
         }
@@ -37,21 +37,22 @@ public abstract class ItemListViewModel<ItemViewModelType> : PageViewModel where
     private SortableObservableCollection<ItemViewModelType>? items;
 
     /// <summary>
-    /// UI Bindable property indicating whether the Items collection is empty
+    /// One-way UI bindable property 
+    /// Whether this view is empty, either because there are no item in the model or none matches the filtering
     /// </summary>
-    public bool IsEmpty
+    public bool IsViewEmpty
     {
-        get => isEmpty;
+        get => isViewEmpty;
         set
         {
-            if (value != isEmpty)
+            if (value != isViewEmpty)
             {
-                isEmpty = value;
+                isViewEmpty = value;
                 OnPropertyChanged();
             }
         }
     }
-    private bool isEmpty;
+    private bool isViewEmpty;
 
     /// <summary>
     /// Called when the page (view) had loaded

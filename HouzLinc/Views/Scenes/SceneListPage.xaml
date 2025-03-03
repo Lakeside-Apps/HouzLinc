@@ -106,16 +106,11 @@
         <!-- No scene to show -->
         <StackPanel
             x:Name="EmptyListView"
-            x:Load="{x:Bind sceneListViewModel.IsEmpty, Mode=OneWay}"
+            x:Load="{x:Bind sceneListViewModel.IsViewEmpty, Mode=OneWay}"
             Grid.Row="2"
             Margin="10,15,10,0">
-            <StackPanel x:Name="HubNotFound" x:Load="{x:Bind settingsViewModel.IsHubNotFound}">
-                <TextBlock TextWrapping="Wrap" Text="The hub was not found on your local network!"/>
-                <TextBlock Margin="0,15,0,0">
-                    <Span xml:space="preserve">Please <Hyperlink Click="NavigateToHubSettings">review the hub information</Hyperlink></Span>
-                    .</TextBlock>
-            </StackPanel>
-            <StackPanel x:Name="HubFound" x:Load="{x:Bind settingsViewModel.IsHubFound}">
+            <!-- No device at all in the model -->
+            <StackPanel x:Name="NoDevice" x:Load="{x:Bind sceneListViewModel.HasNoScene, Mode=OneWay}">
                 <TextBlock TextWrapping="Wrap" Text="There is no scene to show here yet! "/>
                 <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="You can create a new scene by tapping:"/>
                 <Button
@@ -128,12 +123,16 @@
                 </Button>
                 <TextBlock TextWrapping="Wrap">either here or at top right of this page.</TextBlock>
             </StackPanel>
+            <!-- No device matching current filtering -->
+            <StackPanel x:Name="NoMatchingDevice" x:Load="{x:Bind sceneListViewModel.HasNoScene, Converter={StaticResource BoolNegation}, Mode=OneWay}">
+                <TextBlock TextWrapping="Wrap" Text="No scene were found in that room!"/>
+            </StackPanel>
         </StackPanel>
 
         <!-- List of scenes -->
         <ListView
             x:Name="SceneListView"
-            Visibility="{x:Bind sceneListViewModel.IsEmpty, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"
+            Visibility="{x:Bind sceneListViewModel.IsViewEmpty, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"
             Grid.Row="2"
             Margin="5,0,5,2"
             EntranceNavigationTransitionInfo.IsTargetElement="True"

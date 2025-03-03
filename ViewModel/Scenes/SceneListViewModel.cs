@@ -23,7 +23,7 @@ namespace ViewModel.Scenes;
 public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObserver, IRoomsObserver
 {
     // A public default constructor is necessary to make the generated binding code compile
-    // but it should not be called as we always instantiate it with a list of scenes.
+    // but it should never be called as we always instantiate it with a list of scenes.
     public SceneListViewModel()
     {
         Debug.Assert(false, "SceneListViewModel should always be created with a list of scenes.");
@@ -33,6 +33,7 @@ public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObse
     private SceneListViewModel(Insteon.Model.Scenes scenes)
     {
         this.scenes = scenes;
+        HasNoScene = scenes.Count == 0;
         RebuildList();
     }
 
@@ -59,6 +60,24 @@ public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObse
 
     // To identify items in the SettingsStore
     protected override string ItemTypeName => "Scene";
+
+    /// <summary>
+    /// One-way UI bindable property 
+    /// Whether the underlying scene collection is empty
+    /// </summary>
+    public bool HasNoScene
+    {
+        get => hasNoScene;
+        set
+        {
+            if (value != hasNoScene)
+            {
+                hasNoScene = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    private bool hasNoScene;
 
     /// <summary>
     /// The page using this has loaded
