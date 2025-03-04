@@ -26,7 +26,7 @@ namespace ViewModel.Devices;
 public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, IDevicesObserver, IRoomsObserver
 {
     // A public default constructor is necessary to make the generated binding code compile
-    // but it should not be called as we should always instantiate it with a list of devices.
+    // but it should never be called as we should always instantiate it with a list of devices.
     public DeviceListViewModel()
     {
         Debug.Assert(false, "DeviceListViewModel should always be created with a list of devices.");
@@ -36,6 +36,7 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
     private DeviceListViewModel(Insteon.Model.Devices devices, bool includeHub = false)
     {
         this.devices = devices;
+        hasNoDevice = devices.Count == 0;
         RebuildList(includeHub);
     }
 
@@ -69,6 +70,24 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
 
     // To idenfity items in the SettingsStore
     protected override string ItemTypeName => "Device";
+    
+    /// <summary>
+    /// One-way bindable property 
+    /// Whether the underlying device collection is empty
+    /// </summary>
+    public bool HasNoDevice
+    {
+        get => hasNoDevice;
+        set
+        {
+            if (value != hasNoDevice)
+            {
+                hasNoDevice = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    private bool hasNoDevice;
 
     /// <summary>
     /// The page using this has loaded
