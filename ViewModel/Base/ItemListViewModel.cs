@@ -37,7 +37,7 @@ public abstract class ItemListViewModel<ItemViewModelType> : PageViewModel where
     private SortableObservableCollection<ItemViewModelType>? items;
 
     /// <summary>
-    /// One-way UI bindable property 
+    /// One-way bindable property 
     /// Whether this view is empty, either because there are no item in the model or none matches the filtering
     /// </summary>
     public bool IsViewEmpty

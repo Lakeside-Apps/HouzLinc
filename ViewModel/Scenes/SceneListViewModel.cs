@@ -62,7 +62,7 @@ public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObse
     protected override string ItemTypeName => "Scene";
 
     /// <summary>
-    /// One-way UI bindable property 
+    /// One-way bindable property 
     /// Whether the underlying scene collection is empty
     /// </summary>
     public bool HasNoScene

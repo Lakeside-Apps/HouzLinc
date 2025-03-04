@@ -72,7 +72,7 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
     protected override string ItemTypeName => "Device";
     
     /// <summary>
-    /// One-way UI bindable property 
+    /// One-way bindable property 
     /// Whether the underlying device collection is empty
     /// </summary>
     public bool HasNoDevice
