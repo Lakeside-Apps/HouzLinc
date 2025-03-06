@@ -38,12 +38,15 @@ public sealed class LinkListViewTemplateSelector : DataTemplateSelector
     {
         if (item != null)
         {
-#if !DESKTOP
+#if DESKTOP || __WASM__
+            // On Desktop or WASM, "container" is the ContentPresenter.
+            // Either its TemplatedParent or Parent contains the LinkHostView with the template resource.
+            // Note that TemplatedParent and Parent can sometimes be null (not sure exactly when).
+            // We ignore the call and return null in that case. We will get called back.
+            var lhv = (container is ContentPresenter cp) ? (cp.TemplatedParent ?? cp.Parent) as LinkHostViews : null;
+#else
             // On WindowsAppSDK, WASM, Android, iOS, "container" is the LinkHostViews content control
             var lhv = container as LinkHostViews;
-#else
-            // On Desktop, "container" is the ContentPresenter
-            var lhv = (container is ContentPresenter cp) ? cp.TemplatedParent as LinkHostViews : null;
 #endif
             if (lhv != null)
             {
@@ -62,8 +65,6 @@ public sealed class LinkListViewTemplateSelector : DataTemplateSelector
                 }
                 return (DataTemplate)lhv.Resources[resourceName];
             }
-
-            Debug.Assert(false, "Unexpected container type in SelectTemplateCore");
         }
         return null;
     }
