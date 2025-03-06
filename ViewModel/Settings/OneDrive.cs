@@ -88,7 +88,7 @@ public sealed class OneDrive
     // TODO: use #if DESKTOP once this code is moved to the main project
     private const string redirectUri1 = "http://localhost:44321/";
 #elif __WASM__
-    private const string redirectUri1 = "http://localhost:5000/";
+    private const string redirectUri1 = "http://localhost:5000/authentication/login-callback.htm";
 #elif WINDOWS
     // Sometimes Microsoft requires the localhost URL instead of the nativeclient one.
     // I am not sure when and why and in any case both are registered with the app on Azure.
