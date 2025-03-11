@@ -17,7 +17,7 @@
             </Grid.RowDefinitions>
             <local:DeviceHeaderView/>
             <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch">
-                <StackPanel Margin="0,0,20,0">
+                <StackPanel>
                     <local:DeviceStatusView Content="{x:Bind}"/>
                     <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
                         <local:DeviceInformationView Margin="0,10,0,20"/>
@@ -26,30 +26,15 @@
                         <local:DevicePropertyView Margin="0,10,0,0"/>
                     </Border>
                     <local:KeypadLincSettingsView Margin="0,0,0,0"/>
-                    <Grid
-                        Margin="10,20,0,10"
+                    <StackPanel
+                        Margin="0,20,0,10"
                         Padding="0,20,0,20"
                         BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}"
                         BorderThickness="0,1,0,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <local:KeypadButtonPropertyHeaderView Grid.ColumnSpan="2" Margin="0,0,0,20"/>
-                        <local:Keypad6ButtonView Grid.Row="1" Grid.Column="0"/>
-                        <local:KeypadButtonPropertyView
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="20,0,0,0"
-                            x:Name="ButtonPropertyView"
-                            x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}"
-                            Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
-                    </Grid>
-
+                        <local:KeypadButtonPropertyHeaderView Margin="0,0,0,20"/>
+                        <local:Keypad6ButtonView HorizontalAlignment="Center"/>
+                        <local:KeypadButtonPropertyView x:Name="ButtonPropertyView" x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}" Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
+                    </StackPanel>
                     <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
                         <local:ScenesWithThisDeviceView Margin="0,0,0,20"/>
                     </Border>
@@ -72,7 +57,7 @@
             </Grid.RowDefinitions>
             <local:DeviceHeaderView/>
             <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch">
-                <StackPanel Margin="0,0,20,0">
+                <StackPanel>
                     <local:DeviceStatusView Content="{x:Bind}"/>
                     <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
                         <local:DeviceInformationView Margin="0,10,0,20"/>
@@ -81,29 +66,15 @@
                         <local:DevicePropertyView Margin="0,10,0,0"/>
                     </Border>
                     <local:KeypadLincSettingsView Margin="0,0,0,0"/>
-                    <Grid
-                        Margin="10,20,0,10"
+                    <StackPanel
+                        Margin="0,20,0,10"
                         Padding="0,20,0,20"
                         BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}"
                         BorderThickness="0,1,0,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <local:KeypadButtonPropertyHeaderView Grid.ColumnSpan="2" Margin="0,0,0,20"/>
-                        <local:Keypad8ButtonView Grid.Row="1" Grid.Column="0"/>
-                        <local:KeypadButtonPropertyView
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="20,0,0,0"
-                            x:Name="ButtonPropertyView"
-                            x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}"
-                            Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
-                    </Grid>
+                        <local:KeypadButtonPropertyHeaderView Margin="0,0,0,20"/>
+                        <local:Keypad8ButtonView HorizontalAlignment="Center"/>
+                        <local:KeypadButtonPropertyView x:Name="ButtonPropertyView" x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}" Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
+                    </StackPanel>
                     <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
                         <local:ScenesWithThisDeviceView Margin="0,0,0,20"/>
                     </Border>

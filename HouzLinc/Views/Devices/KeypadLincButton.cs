@@ -75,13 +75,13 @@ public partial class KeypadLincButton : ToggleButton
     // Helper
     private static bool IsShiftOn()
     {
-        return  (InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.LeftShift) & CoreVirtualKeyStates.Down) != 0 ||
-                (InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.RightShift) & CoreVirtualKeyStates.Down) != 0 ||
-                (InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) != 0;
+        return (InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.LeftShift) & CoreVirtualKeyStates.Down) != 0 ||
+               (InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.RightShift) & CoreVirtualKeyStates.Down) != 0 ||
+               (InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Shift) & CoreVirtualKeyStates.Down) != 0;
     }
 
     // Checked handler
-    // Block checking the button in Cycle Follow Behavior mode
+    // Block checking the button in Cycle Follow Behaviors mode
     void OnChecked(object sender, RoutedEventArgs args)
     {
         if (IsCycleFollowBehaviorMode || IsShiftOn())
@@ -90,7 +90,7 @@ public partial class KeypadLincButton : ToggleButton
         }
         else
         {
-            FollowBehavior = FollowBehaviorType.None;
+            System.Diagnostics.Debug.Assert(IsChecked == true);
         }
     }
 
