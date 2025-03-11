@@ -21,14 +21,14 @@
             <StackPanel>
                 <ctkControls:SettingsCard Header="Button Name" MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
-                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                        <x:Double x:Key="SettingsCardWrapThreshold">250</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <TextBox MinWidth="150" Text="{x:Bind Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="NoWrap"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Header="Button Type" MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
-                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                        <x:Double x:Key="SettingsCardWrapThreshold">250</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <ComboBox MinWidth="0" SelectedIndex="{x:Bind ToggleModeAsInt, Mode=TwoWay}">
                         <ComboBoxItem>Toggle</ComboBoxItem>
@@ -39,28 +39,28 @@
 
                 <ctkControls:SettingsCard Visibility="{x:Bind IsLoadControlling, Mode=OneWay}" Header="Level" Description="Level at which to set the load when pressed.">
                     <ctkControls:SettingsCard.Resources>
-                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                        <x:Double x:Key="SettingsCardWrapThreshold">250</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <ctl:LevelControl MinWidth="100" AreIconsVisible="False" Level="{x:Bind OnLevel, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Visibility="{x:Bind IsLoadControlling, Mode=OneWay}" Header="Ramp Rate" Description="Ramp rate with which to set the load when pressed.">
                     <ctkControls:SettingsCard.Resources>
-                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                        <x:Double x:Key="SettingsCardWrapThreshold">250</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <ctl:RampRatesComboBox SelectedIndex="{x:Bind RampRate, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Visibility="{x:Bind IsLoadControlling, Converter={StaticResource VisibilityNegation}, Mode=OneWay}" Header="Level" Description="No action unless the load button is following this button.">
                     <ctkControls:SettingsCard.Resources>
-                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                        <x:Double x:Key="SettingsCardWrapThreshold">250</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <ctl:LevelControl MinWidth="100" AreIconsVisible="False" Level="{x:Bind OnLevel, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Visibility="{x:Bind IsLoadControlling, Converter={StaticResource VisibilityNegation}, Mode=OneWay}" Header="Ramp Rate" Description="No action unless the load button is following this button.">
                     <ctkControls:SettingsCard.Resources>
-                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                        <x:Double x:Key="SettingsCardWrapThreshold">250</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <ctl:RampRatesComboBox SelectedIndex="{x:Bind RampRate, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
