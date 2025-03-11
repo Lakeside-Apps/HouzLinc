@@ -16,13 +16,15 @@
     <ContentControl.ContentTemplate>
         <DataTemplate x:DataType="vm:DeviceViewModel">
             <StackPanel>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,5" Text="Device Properties"/>
+                <TextBlock
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Margin="0,0,0,5"
+                    Text="Device Properties"/>
                 <ctkControls:SettingsCard Header="Name" MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <TextBox
-                        TextAlignment="Right"
                         MinWidth="150"
                         MaxWidth="200"
                         Text="{x:Bind DisplayName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
@@ -35,12 +37,11 @@
                     <ctl:RoomControl Room="{x:Bind Room, Mode=TwoWay}" Rooms="{x:Bind Rooms, Mode=OneWay}"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Header="Location"  MinHeight="48">
+                <ctkControls:SettingsCard Header="Location" MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
                     <TextBox
-                        HorizontalAlignment="Right"
                         MinWidth="120"
                         MaxWidth="200"
                         Text="{x:Bind Location, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>

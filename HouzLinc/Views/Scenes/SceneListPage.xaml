@@ -170,7 +170,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Style="{StaticResource BodyTextBlockStyle}"/>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0">
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
                             <TextBlock
                                 Text="{x:Bind DisplayName, Mode=OneWay}"
                                 Style="{StaticResource BodyTextBlockStyle}"

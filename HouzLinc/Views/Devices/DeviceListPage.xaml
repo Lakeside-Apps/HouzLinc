@@ -147,7 +147,7 @@
             x:Name="DeviceListView"
             Visibility="{x:Bind deviceListViewModel.IsViewEmpty, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"
             Grid.Row="2"
-            Margin="5,0,5,2"
+            Margin="0,0,0,2"
             EntranceNavigationTransitionInfo.IsTargetElement="True"
             IsItemClickEnabled="True"
             ItemClick="OnItemClick"
@@ -199,7 +199,7 @@
                             FontWeight="Bold"
                             TextWrapping="NoWrap"
                             VerticalAlignment="Center"
-                            Margin="12,12,0,0"/>
+                            Margin="6,0,0,0"/>
                         <TextBlock
                             Grid.Column="1"
                             Grid.Row="1"
@@ -207,7 +207,7 @@
                             Style="{StaticResource BodyTextBlockStyle}"
                             TextWrapping="NoWrap"
                             VerticalAlignment="Center"
-                            Margin="12,0,0,12"/>
+                            Margin="6,0,0,18"/>
                         <TextBlock
                             Grid.Column="1"
                             Grid.Row="2"
@@ -215,7 +215,7 @@
                             Style="{StaticResource CaptionTextBlockStyle}"
                             TextWrapping="NoWrap"
                             VerticalAlignment="Center"
-                            Margin="12,0,0,8"/>
+                            Margin="6,0,0,8"/>
                         <ctl:LoadController
                             x:Name="LoadController"
                             Grid.Column="0"
