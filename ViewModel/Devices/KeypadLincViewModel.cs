@@ -298,7 +298,7 @@ public sealed class KeypadLincViewModel : DeviceViewModel
 
     /// <summary>
     /// Following buttons
-    /// Returns whether a button is following the depressed one or not
+    /// Get/set whether a button is following the depressed one or not
     /// For 6-button keypads, button #2 is button #1 off
     /// </summary>
     public FollowBehaviorType Button1FollowBehavior { get => GetFollowBehavior(1); set => SetFollowBehavior(1, value); }
@@ -317,7 +317,7 @@ public sealed class KeypadLincViewModel : DeviceViewModel
         if (depressedButton > 0)
         {
             // In a 6 keypad 1 and 2 follow each other as on/off buttons
-            if (Is6ButtonKeypadDevCat && ((depressedButton == 1 && button == 2) || (depressedButton == 2 && button == 1)))
+            if (!Is8Button && ((depressedButton == 1 && button == 2) || (depressedButton == 2 && button == 1)))
             {
                 return FollowBehaviorType.Off;
             }
@@ -390,18 +390,18 @@ public sealed class KeypadLincViewModel : DeviceViewModel
     /// </summary>
     public string FollowBehaviorHelpText
     {
-        get => followBehaviorType;
+        get => followBehaviorHelpText;
         set
         {
-            if (value != followBehaviorType)
+            if (value != followBehaviorHelpText)
             {
-                followBehaviorType = value;
+                followBehaviorHelpText = value;
                 OnPropertyChanged();
             }
 
         }
     }
-    private string followBehaviorType;
+    private string followBehaviorHelpText;
 
     // Helper to set the followBehaviorText bindable variable
     // and show the follow behavior help message
@@ -426,15 +426,20 @@ public sealed class KeypadLincViewModel : DeviceViewModel
         }
 
         // Turn off help message after 5 seconds
-        var timer = new DispatcherTimer();
-        timer.Interval = TimeSpan.FromSeconds(5);
-        timer.Tick += (sender, e) =>
+        if (timer == null)
         {
-            timer.Stop();
-            FollowBehaviorHelpText = string.Empty;
-        };
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(5);
+            timer.Tick += (sender, e) =>
+            {
+                timer.Stop();
+                FollowBehaviorHelpText = string.Empty;
+            };
+        }
         timer.Start();
     }
+
+    DispatcherTimer timer;
 
     /// <summary>
     /// Filter the list of links to the current channel (button)

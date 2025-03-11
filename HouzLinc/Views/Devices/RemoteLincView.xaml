@@ -26,33 +26,21 @@
                         <local:DevicePropertyView Margin="0,10,0,0"/>
                     </Border>
                     <local:RemoteLincSettingsView Margin="0,0,0,0"/>
-                    <Grid
-                        Margin="10,20,0,10"
+                    <StackPanel
+                        Margin="0,20,0,10"
                         Padding="0,20,0,20"
                         BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}"
                         BorderThickness="0,1,0,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
                         <TextBlock
-                            Grid.ColumnSpan="2"
                             Text="Channel Properties"
                             Style="{StaticResource SubtitleTextBlockStyle}"
                             Margin="0,0,0,20"/>
-                        <local:RemoteLincChannelView Grid.Row="1" Grid.Column="0"/>
+                        <local:RemoteLincChannelView HorizontalAlignment="Center"/>
                         <local:RemoteLincButtonPropertyView
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="20,0,0,0"
                             x:Name="ButtonPropertyView"
                             x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}"
                             Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
-                    </Grid>
+                    </StackPanel>
 
                     <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
                         <local:ScenesWithThisDeviceView Margin="0,0,0,20"/>
