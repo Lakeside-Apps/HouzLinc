@@ -4,20 +4,20 @@
 
         <ResourceDictionary x:Key="Light">
             <!-- Device/scene ListView -->
-            <SolidColorBrush x:Key="ListViewItemBackground" Color="#FFF0F2F4"/>
-            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#FFE0E3E6"/>
-            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#FFE8EAEC"/>
-            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#FFE8EAEC"/>
-            <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="#FFF0EDF0"/>
-            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="#FFEAE8EA"/>
+            <SolidColorBrush x:Key="ListViewItemBackground" Color="#FFF0F0F0"/>
+            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#FFE0E0E0"/>
+            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#FFE8E8E8"/>
+            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#FFE8E8E8"/>
+            <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="#FFF0F0F0"/>
+            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="#FFEAEAEA"/>
 
             <!-- Link/scene member GridView -->
-            <SolidColorBrush x:Key="GridViewItemBackground" Color="#FFF0F2F4"/>
-            <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="#FFE0E3E6"/>
-            <SolidColorBrush x:Key="GridViewItemBackgroundPointerOver" Color="#FFE8EAEC"/>
-            <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="#FFE8EAEC"/>
-            <SolidColorBrush x:Key="GridViewItemBackgroundPressed" Color="#FFF0EDF0"/>
-            <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPressed" Color="#FFEAE8EA"/>
+            <SolidColorBrush x:Key="GridViewItemBackground" Color="#FFF0F0F0"/>
+            <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="#FFE0E0E0"/>
+            <SolidColorBrush x:Key="GridViewItemBackgroundPointerOver" Color="#FFE8E8E8"/>
+            <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="#FFE8E8E8"/>
+            <SolidColorBrush x:Key="GridViewItemBackgroundPressed" Color="#FFF0F0F0"/>
+            <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPressed" Color="#FFEAEAEA"/>
 
             <!-- For these GridView resources that are not present in generic.xaml: use the ListView values -->
             <StaticResource x:Key="GridViewItemBorderBackground" ResourceKey="ListViewItemBorderBackground"/>
@@ -28,6 +28,7 @@
             <StaticResource x:Key="GridViewItemForegroundSelectedPressed" ResourceKey="ListViewItemForegroundSelectedPressed"/>
 
             <!-- Item Stamp Colors -->
+            <!--<StaticResource x:Key="DeviceStampColor" ResourceKey="AccentFillColorDefaultBrush"/>-->
             <SolidColorBrush x:Key="DeviceStampColor" Color="#FFC0C8D0"/>
             <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FFB0D0C8"/>
             <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FFA0C0D0"/>
@@ -185,12 +186,12 @@
         <Setter Property="BorderBrush" Value="{x:Null}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CornerRadius" Value="10"/>
-        <Setter Property="Background" Value="{ThemeResource GridViewItemBackground}"/>
+        <Setter Property="Background" Value="{ThemeResource ListViewItemBackground}"/>
         <Setter Property="Foreground" Value="{ThemeResource ListViewItemForeground}"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="12,0,12,0"/>
-        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="6"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="MinWidth" Value="50"/>
@@ -362,11 +363,11 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="Background" Value="{ThemeResource GridViewItemBackground}"/>
-        <Setter Property="Foreground" Value="{ThemeResource ListViewItemForeground}"/>
+        <Setter Property="Foreground" Value="{ThemeResource GridViewItemForeground}"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="12,0,12,0"/>
-        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0,6,12,6"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="MinWidth" Value="230"/>
@@ -693,12 +694,12 @@
     <Style x:Key="BaseEditableTextBlockStyle" TargetType="ctl:EditableTextBlock">
         <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
 
     <Style x:Key="TitleEditableTextBlockStyle" TargetType="ctl:EditableTextBlock" BasedOn="{StaticResource BaseEditableTextBlockStyle}">
         <Setter Property="FontWeight" Value="SemiLight"/>
-        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontSize" Value="20"/>
     </Style>
 
     <Style x:Key="PageTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlockStyle}">

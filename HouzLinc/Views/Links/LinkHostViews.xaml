@@ -175,7 +175,7 @@
                         Grid.Column="0"
                         Width="96"
                         Height="96"
-                        Margin="10"
+                        Margin="6"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Fill="{ThemeResource ControllerLinkStampColor}"/>
@@ -187,7 +187,11 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Source="{x:Bind DestDeviceModelIconPath_72x72, Mode=OneWay}"/>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="400">
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MinWidth="400"
+                        Margin="6,0,0,0">
                         <TextBlock Text="{x:Bind DestDeviceDisplayNameAndId}" FontWeight="Bold" TextWrapping="NoWrap"/>
                         <TextBlock Visibility="{x:Bind DestDeviceHasRoom}" Text="{x:Bind DestDeviceRoom}" TextWrapping="NoWrap"/>
                         <TextBlock Visibility="{x:Bind DestDeviceHasChannels, Mode=OneWay}" Text="{x:Bind ResponderDestDeviceChannelTypeIdsAndNames}" TextWrapping="NoWrap"/>
@@ -260,7 +264,7 @@
                         Grid.Column="0"
                         Width="96"
                         Height="96"
-                        Margin="10"
+                        Margin="6"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Fill="{ThemeResource ResponderLinkStampColor}"/>
@@ -272,7 +276,11 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Source="{x:Bind DestDeviceModelIconPath_72x72, Mode=OneWay}"/>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="400">
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MinWidth="400"
+                        Margin="6,0,0,0">
                         <TextBlock Text="{x:Bind DestDeviceDisplayNameAndId}" FontWeight="Bold" TextWrapping="NoWrap"/>
                         <TextBlock Visibility="{x:Bind DestDeviceHasRoom}" Text="{x:Bind DestDeviceRoom}" TextWrapping="NoWrap"/>
                         <TextBlock Visibility="{x:Bind DestDeviceHasChannels, Mode=OneWay}" Text="{x:Bind ControllerDestDeviceChannelTypeIdAndName}" TextWrapping="NoWrap"/>
