@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HouzLinc.Views.Settings"
     xmlns:extensions="using:CommunityToolkit.WinUI"
-    xmlns:ctkControls="[ctkControls ]using:CommunityToolkit.WinUI.Controls"
+    xmlns:ctkControls="using:CommunityToolkit.WinUI.Controls"
     xmlns:vm="using:ViewModel.Settings"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:not_win="http://uno.ui/not_win"
