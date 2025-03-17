@@ -14,6 +14,10 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <StackPanel>
-        <ctl:ScenesComboBox x:Name="ScenesComboBox" Margin="0,20,0,0" HorizontalAlignment="Stretch" SelectedSceneId="{x:Bind SceneId, Mode=TwoWay}"/>
+        <ctl:ScenesComboBox
+            x:Name="ScenesComboBox"
+            Margin="0,20,0,0"
+            HorizontalAlignment="Stretch"
+            SelectedSceneId="{x:Bind SceneId, Mode=TwoWay}"/>
     </StackPanel>
 </ContentDialog>

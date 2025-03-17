@@ -15,6 +15,10 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <StackPanel>
-        <ctl:DevicesComboBox x:Name="DeviceIdBox" Margin="0,20,0,0" HorizontalAlignment="Stretch" SelectedDeviceID="{x:Bind DeviceId, Mode=TwoWay}"/>
+        <ctl:DevicesComboBox
+            x:Name="DeviceIdBox"
+            Margin="0,20,0,0"
+            HorizontalAlignment="Stretch"
+            SelectedDeviceID="{x:Bind DeviceId, Mode=TwoWay}"/>
     </StackPanel>
 </ContentDialog>

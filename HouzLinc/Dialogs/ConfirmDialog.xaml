@@ -9,5 +9,4 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     PrimaryButtonText="Yes"
-    CloseButtonText="No">
-</ContentDialog>
+    CloseButtonText="No"/>

@@ -51,7 +51,7 @@
                     <TextBlock Text="{x:Bind EngineVersion, Mode=OneWay}"/>
                 </ctkControls:SettingsCard>
 
-              <!--
+                <!--
               <ctkControls:SettingsCard Header="RF Enabled" >
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
@@ -68,7 +68,7 @@
                         OffContent="No"
                         OnContent="Yes"/>
                 </ctkControls:SettingsCard>
-              -->
+                -->
             </StackPanel>
         </DataTemplate>
     </ContentControl.ContentTemplate>

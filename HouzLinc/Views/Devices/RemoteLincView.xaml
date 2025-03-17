@@ -31,15 +31,9 @@
                         Padding="0,20,0,20"
                         BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}"
                         BorderThickness="0,1,0,0">
-                        <TextBlock
-                            Text="Channel Properties"
-                            Style="{StaticResource SubtitleTextBlockStyle}"
-                            Margin="0,0,0,20"/>
+                        <TextBlock Text="Channel Properties" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,20"/>
                         <local:RemoteLincChannelView HorizontalAlignment="Center"/>
-                        <local:RemoteLincButtonPropertyView
-                            x:Name="ButtonPropertyView"
-                            x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}"
-                            Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
+                        <local:RemoteLincButtonPropertyView x:Name="ButtonPropertyView" x:Load="{x:Bind HasCurrentChannelViewModel, Mode=OneWay}" Content="{x:Bind CurrentChannelViewModel, Mode=OneWay}"/>
                     </StackPanel>
 
                     <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">

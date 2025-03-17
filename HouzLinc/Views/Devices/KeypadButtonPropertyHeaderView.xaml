@@ -22,14 +22,8 @@
         <DataTemplate x:DataType="vm:KeypadLincViewModel">
             <StackPanel>
                 <TextBlock Text="Button Properties" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <TextBlock
-                    Margin="0,5,0,0"
-                    Text="Select a button to view and edit its properties."
-                    TextWrapping="Wrap"/>
-                <TextBlock
-                    Margin="0,5,0,0"
-                    Text="Shift click another to make it follow the selected one, click again to follow off, and again to stop following."
-                    TextWrapping="Wrap"/>
+                <TextBlock Margin="0,5,0,0" Text="Select a button to view and edit its properties." TextWrapping="Wrap"/>
+                <TextBlock Margin="0,5,0,0" Text="Shift click another to make it follow the selected one, click again to follow off, and again to stop following." TextWrapping="Wrap"/>
                 <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                     <TextBlock Margin="0,5,0,0" Text="Or pin the selected button by tapping: "/>
                     <ToggleButton
@@ -40,10 +34,7 @@
                         <SymbolIcon Symbol="Pin"/>
                     </ToggleButton>
                 </StackPanel>
-                <TextBlock
-                    Margin="5,5,0,0"
-                    Text="and tap another to make it follow on, tab again to follow off and again to stop following."
-                    TextWrapping="Wrap"/>
+                <TextBlock Margin="5,5,0,0" Text="and tap another to make it follow on, tab again to follow off and again to stop following." TextWrapping="Wrap"/>
             </StackPanel>
         </DataTemplate>
     </ContentControl.ContentTemplate>
