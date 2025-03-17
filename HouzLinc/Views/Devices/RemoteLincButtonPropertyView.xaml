@@ -19,7 +19,7 @@
     <ContentControl.ContentTemplate>
         <DataTemplate x:DataType="vm:ChannelViewModel">
             <StackPanel>
-                <ctkControls:SettingsCard Header="Button Name"  MinHeight="48">
+                <ctkControls:SettingsCard Header="Button Name" MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>

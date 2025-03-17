@@ -33,8 +33,16 @@
         <DataTemplate x:DataType="vm:MemberViewModel">
             <StackPanel Margin="10,0,10,0">
                 <TextBlock Text="{x:Bind DeviceModelName}" TextWrapping="NoWrap"/>
-                <TextBlock Margin="0,5,0,0" Visibility="{x:Bind DeviceHasRoom}" Text="{x:Bind DeviceRoom}" TextWrapping="NoWrap"/>
-                <TextBlock Margin="0,5,0,0" Visibility="{x:Bind DeviceHasLocation}" Text="{x:Bind DeviceLocation}" TextWrapping="NoWrap"/>
+                <TextBlock
+                    Margin="0,5,0,0"
+                    Visibility="{x:Bind DeviceHasRoom}"
+                    Text="{x:Bind DeviceRoom}"
+                    TextWrapping="NoWrap"/>
+                <TextBlock
+                    Margin="0,5,0,0"
+                    Visibility="{x:Bind DeviceHasLocation}"
+                    Text="{x:Bind DeviceLocation}"
+                    TextWrapping="NoWrap"/>
                 <StackPanel Orientation="Horizontal" Visibility="{x:Bind DeviceHasChannels, Mode=OneWay}" Margin="0,10,0,0">
                     <TextBlock
                         Text="{x:Bind DeviceChannelHeader, Mode=OneWay}"

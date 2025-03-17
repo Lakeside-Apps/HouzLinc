@@ -16,10 +16,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ComboBox
-            MinWidth="120"
-            ItemsSource="{x:Bind Rooms, Mode=OneWay}"
-            SelectedItem="{x:Bind RoomDisplayText, Mode=TwoWay}"/>
+        <ComboBox MinWidth="120" ItemsSource="{x:Bind Rooms, Mode=OneWay}" SelectedItem="{x:Bind RoomDisplayText, Mode=TwoWay}"/>
         <Button
             Tag="AddRoom"
             Grid.Column="1"

@@ -21,26 +21,17 @@
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
-                    <ToggleSwitch
-                        IsOn="{x:Bind ProgramLock, Mode=TwoWay}"
-                        OffContent="Unlocked"
-                        OnContent="Locked"/>
+                    <ToggleSwitch IsOn="{x:Bind ProgramLock, Mode=TwoWay}" OffContent="Unlocked" OnContent="Locked"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Header="LED Backlight" Description="Turn all LED backlight on or off.">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
-                    <ToggleSwitch
-                        IsOn="{x:Bind LEDOn, Mode=TwoWay}"
-                        OffContent="Off"
-                        OnContent="On"/>
+                    <ToggleSwitch IsOn="{x:Bind LEDOn, Mode=TwoWay}" OffContent="Off" OnContent="On"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard
-                    Header="LED Brightness"
-                    Description="Sets the brightness of LED backlight."
-                    MinHeight="48">
+                <ctkControls:SettingsCard Header="LED Brightness" Description="Sets the brightness of LED backlight." MinHeight="48">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
@@ -55,30 +46,21 @@
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
-                    <ToggleSwitch
-                        IsOn="{x:Bind ResumeDim, Mode=TwoWay}"
-                        OffContent="No"
-                        OnContent="Yes"/>
+                    <ToggleSwitch IsOn="{x:Bind ResumeDim, Mode=TwoWay}" OffContent="No" OnContent="Yes"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Header="Beep on Key Press" Description="Beeps on every key press.">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
-                    <ToggleSwitch
-                        IsOn="{x:Bind KeyBeep, Mode=TwoWay}"
-                        OffContent="No"
-                        OnContent="Yes"/>
+                    <ToggleSwitch IsOn="{x:Bind KeyBeep, Mode=TwoWay}" OffContent="No" OnContent="Yes"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Header="Number of Buttons" Description="Allows to set 6 or 8 buttons on any KeypadLinc.">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
-                    <ToggleSwitch
-                        IsOn="{x:Bind Is8Button, Mode=TwoWay}"
-                        OffContent="6"
-                        OnContent="8"/>
+                    <ToggleSwitch IsOn="{x:Bind Is8Button, Mode=TwoWay}" OffContent="6" OnContent="8"/>
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Header="Detached Load" Description="Load is operated by group 9">
