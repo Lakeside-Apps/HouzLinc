@@ -336,12 +336,12 @@ public sealed class Scene
         }
         else if (replacedMember.IsController && !newMember.IsController)
         {
-            // Loosing the controller, remove only links associated to the controller
+            // Losing the controller, remove only links associated to the controller
             RemoveLinksForMemberRemoval(replacedMember, keepResponder: true);
         }
         else if (replacedMember.IsResponder && !newMember.IsResponder)
         {
-            // Loosing the responder, remove only links associated to the responder
+            // Losing the responder, remove only links associated to the responder
             RemoveLinksForMemberRemoval(replacedMember, keepController: true);
         }
         else
