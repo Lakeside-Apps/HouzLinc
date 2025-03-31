@@ -70,31 +70,21 @@ git clone https://github.com/christianfo/houzlinc.git
 Look for Visual Studio solution file `HouzLinc.sln` at the root of the repo.
 
 ### Building and Running the App for Development on Windows
-Building in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)` as the profile. Press F5 to build and debug the app, Ctrl F5 to run without the debugger. Once built, Visual Studio will install the package locally and run it. Once installed, you can run that build directly from the Start menu.
 
-It is also possible to build the app from the command line. The following will build the app and install it on the local machine. From the HouzLinc folder at the top of the repo (where the app project file `HouzLinc.csproj` is) run the following:
-```
-dotnet build --framework net8.0-windows10.0.22621 -c Debug|Release
-```
-In theory, you should be able to run the app from the command line as well, but a package identity issue currently causes the app to crash immediately.
-```
-dotnet run --framework net8.0-windows10.0.22621 -c Debug|Release
-```
+#### Building in Visual Studio
+Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)` as the profile. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger. Once built, Visual Studio will deploy the app locally and run it. Once deployed, you can run that build directly from the Start menu.
 
-### Building and Running the App for Development on Android
-Again, building in Visual Studio is easy: set the configuration, select `Any CPU` for the architecture and select 
-
-### Building an Unsigned App Package for Sideloading on Windows
+#### Building an Unsigned App Package for Sideloading on Windows
 Using Visual Studio `msbuild`, you can create an MSIX installer package that can be sideloaded on any Windows machine with developer mode turned on. Proceed as follows (see [here](https://platform.uno/docs/articles/uno-publishing-windows-packaged-unsigned.html) for more details):
 
 1. In a Developer Powershell window (either View|Terminal or Tools|Command Line|Developer Powershell), navigate to the `HouzLinc` folder where the `HouzLinc.csproj` project file is located.
 2. Run the following command to restore the correct dependency packages:
 ```
-msbuild /r /t:Restore /p:Configuration=Release
+msbuild /r /t:Restore /p:Configuration=Release /v:minimal
 ```
 3. Then run the following to build the package:
 ```
-msbuild /p:TargetFramework=net8.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>"
+msbuild /p:TargetFramework=net8.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
 ```
 4. This creates an `.msix` file in the specificed `<output directory>`, (e.g., `c:\temp\output\`), which you can install on your machine or any other machine with developer mode turned on. To install, open a vanilla Powershell window **running as administrator** and run the following:
 ```
@@ -102,8 +92,20 @@ Add-AppPackage -AllowUnsigned -path "<path to msix file>"
 ```
 5. Then run HouzLinc by searching for it in the Start menu.
 
-### Building a Signed App Package
+#### Building a Signed App Package
 TBD
+
+### Building and Running the App for Development on Android
+
+#### Android Emulator
+To build and deply on the Android Emulator on in Visual Studio:
+1. First make sure that you have the `.Net Multi-Platform App UI Development` workload installed in Visual Studio. If not, run the Visual Studio installer and modify the installation to include this workload.
+1. Access the Device Manager in Visual Studio with Tools|Android|Android Device Manager. Once there, create a new Android Virtual Device (AVD).
+1. In Visual Studio, select `Any CPU` for the architecture, Release or Debug for the configuration, and select the virtual device you created under `Android Emulator` for the profile.
+1. Hit F5 to build, deploy and run the app on the emulator.
+
+#### Android Physical Device
+To build and deploy on an Android physical device, select the device under `Android Local Devices` for the profile. Make sure that USB debugging is enabled on the device. Connect the device to the computer with a USB cable. Hit F5 to build, deploy and run the app on the device.
 
 ### App Configuration
 #### Enabling OneDrive sign-in
@@ -144,16 +146,25 @@ To enable these buttons, add the following section to the appsettings.json file:
 
 Rebuild and relaunch the app. The buttons will appear on the bottom right of the window.
 
+### Unit Tests
+The project currently contains some non-UI unit tests for the Insteon layer. These tests are written using the MSTest framework. They can be run in Visual Studio by selecting the `Test` menu and then `Run All Tests`. The tests are located in the `HouzLinc.UnitTestApp` project.
+
+Tests can also be built from the command line using msbuild. Navigate to UnitTestApp folder under the root of the repo and run the following command:
+```
+msbuild /p:TargetFramework=net8.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
+```
+
 ### Contribution
 You are welcome to submit pull requests to the 'main' branch. For now, I will be the sole approver of changes. I am in the process of building a pipeline for building and validating changes. Currently, this process is manual, and must be handled by me.
 
 ### Notes and Limitations
+Includes but not limited to:
 - Only i2 devices are supported (Insteon Engine vs. 2). i1 can be discovered but synchronization has a number of issues. I have not tested with i3 devices yet.
 - Schedules are not supported for lack of public documentation on how to create them in the Hub. Would welcome Insteon sharing the protocol.
 - Making the Android emulator work acceptably: [see here](https://stackoverflow.com/questions/69134922/google-chrome-browser-in-android-12-emulator-doesnt-load-any-webpages-internet#:~:text=It%27s%20caused%20by%20vulkan.%20To%20fix%20it%2C%20you,exist%20already%29%3A%20Vulkan%20%3D%20off%20GLDirectMem%20%3D%20on).
 - Detaching the load on a keypadlinc is not supported. We could support it but it is very limited because there is no way to control the load from one of the buttons on the keypadlinc in that configuration.
 
-### Future Work
+### Possible Future Work
 - Make HouzLinc available on Microsoft Store and Google Play Store.
 - Build for iOS and make available on Apple Store.
 - Support i1 and i3 Insteon devices.

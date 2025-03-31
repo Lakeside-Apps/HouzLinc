@@ -41,7 +41,6 @@
       Configuration;
       Material;
     </UnoFeatures>
-    <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 
 <!-- 
@@ -73,10 +72,7 @@
   </PropertyGroup>
 
   <Target Name="UpdateAppxManifest" BeforeTargets="GenerateManifests" Outputs=".\Package.appmanifest">
-    <XmlPoke XmlInputPath=".\Package.appxmanifest" 
-             Query="/dn:Package/dn:Identity/@Publisher"
-             Namespaces="$(Namespace)"
-             Value="$(Publisher)" />
+    <XmlPoke XmlInputPath=".\Package.appxmanifest" Query="/dn:Package/dn:Identity/@Publisher" Namespaces="$(Namespace)" Value="$(Publisher)" />
     <Message Importance="High" Text="Setting Package.appxmanifest/Package/Identity/Publisher to: $(Publisher)" />
   </Target>
 
