@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap rescap">
-  <!-- IMPORTANT: The value of "Publisher" is set by HouzLinc.csproj. See that file for details. -->
+  <!-- IMPORTANT: The value of "Publisher" is set by UnoApp.csproj. See that file for details. -->
   <Identity Name="HouzLinc" Publisher="CN=eHouz" Version="1.0.0.0" />
   <Properties>
     <DisplayName>HouzLinc</DisplayName>
