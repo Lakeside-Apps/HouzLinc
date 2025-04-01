@@ -13,9 +13,9 @@
    limitations under the License.
 */
 
-using HouzLinc.Utils;
+using UnoApp.Utils;
 
-namespace HouzLinc.Views.Scenes;
+namespace UnoApp.Views.Scenes;
 
 public sealed partial class SceneHeaderView: ContentControl
 {

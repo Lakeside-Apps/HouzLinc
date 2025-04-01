@@ -2,7 +2,7 @@ using Microsoft.Identity.Client;
 using Android.App;
 using Android.Content;
 
-namespace HouzLinc.Droid;
+namespace UnoApp.Droid;
 
 // This class is used by Android to intercept the callback from the browser and call OnActivityResult in the MainActivity.
 // However, the redirect URI configured in the Azure portal is different from what the doc above states.

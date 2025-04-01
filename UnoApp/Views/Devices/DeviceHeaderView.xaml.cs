@@ -13,11 +13,11 @@
    limitations under the License.
 */
 
-using HouzLinc.Utils;
+using UnoApp.Utils;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 public sealed partial class DeviceHeaderView : ContentControl
 {

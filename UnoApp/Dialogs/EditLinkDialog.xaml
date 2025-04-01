@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentDialog
-    x:Class="HouzLinc.Dialogs.EditLinkDialog"
+    x:Class="UnoApp.Dialogs.EditLinkDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HouzLinc.Dialogs"
+    xmlns:local="using:UnoApp.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:ctl="using:UnoApp.Controls"
     xmlns:vm="using:ViewModel.Links"
-    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:utils="using:UnoApp.Utils"
     xmlns:sys="using:System"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d"

@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

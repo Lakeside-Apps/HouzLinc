@@ -13,12 +13,12 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Base;
-using HouzLinc.Dialogs;
+using UnoApp.Views.Base;
+using UnoApp.Dialogs;
 using ViewModel.Devices;
 using ViewModel.Settings;
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 /// <summary>
 /// Base class for the link details page 

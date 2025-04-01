@@ -1,4 +1,4 @@
-namespace HouzLinc;
+namespace UnoApp;
 
 public class Program
 {

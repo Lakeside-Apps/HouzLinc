@@ -1,12 +1,12 @@
 ﻿<local:SceneDetailsPageBase
-    x:Class="HouzLinc.Views.Scenes.SceneDetailsPage"
+    x:Class="UnoApp.Views.Scenes.SceneDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ctl="using:HouzLinc.Controls"
+    xmlns:ctl="using:UnoApp.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:HouzLinc.Views.Scenes"
-    xmlns:dlg="using:HouzLinc.Dialogs"
-    xmlns:utils="using:HouzLinc.Utils"
+    xmlns:local="using:UnoApp.Views.Scenes"
+    xmlns:dlg="using:UnoApp.Dialogs"
+    xmlns:utils="using:UnoApp.Utils"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">

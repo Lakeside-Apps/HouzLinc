@@ -17,11 +17,11 @@ using ViewModel.Settings;
 using ViewModel.Tools;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using HouzLinc.Dialogs;
+using UnoApp.Dialogs;
 using ViewModel.Base;
-using HouzLinc.Views.Base;
+using UnoApp.Views.Base;
 
-namespace HouzLinc.Views.Tools;
+namespace UnoApp.Views.Tools;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

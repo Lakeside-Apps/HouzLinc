@@ -18,7 +18,7 @@ using ViewModel.Devices;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace HouzLinc.Dialogs;
+namespace UnoApp.Dialogs;
 
 public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChanged
 {

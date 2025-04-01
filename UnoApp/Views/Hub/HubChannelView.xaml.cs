@@ -13,9 +13,9 @@
    limitations under the License.
 */
 
-using HouzLinc.Utils;
+using UnoApp.Utils;
 
-namespace HouzLinc.Views.Hub;
+namespace UnoApp.Views.Hub;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

@@ -16,7 +16,7 @@
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI;
 
-namespace HouzLinc.Utils;
+namespace UnoApp.Utils;
 
 public sealed class BoolToColor : IValueConverter
 {

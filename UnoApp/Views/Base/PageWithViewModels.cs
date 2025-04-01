@@ -15,7 +15,7 @@
 
 using ViewModel.Base;
 
-namespace HouzLinc.Views.Base;
+namespace UnoApp.Views.Base;
 
 /// <summary>
 /// Base class for pages that use one or more view models.

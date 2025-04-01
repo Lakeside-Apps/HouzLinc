@@ -15,7 +15,7 @@
 
 using Microsoft.UI.Xaml.Data;
 
-namespace HouzLinc.Utils;
+namespace UnoApp.Utils;
 
 internal class VisibilityNegation : IValueConverter
 {

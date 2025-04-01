@@ -13,12 +13,12 @@
    limitations under the License.
 */
 
-using HouzLinc.Utils;
-using HouzLinc.Views.Scenes;
+using UnoApp.Utils;
+using UnoApp.Views.Scenes;
 using Microsoft.UI.Xaml.Media.Animation;
 using ViewModel.Scenes;
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 public sealed partial class ScenesWithThisDeviceView : ContentControl
 {

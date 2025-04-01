@@ -13,10 +13,10 @@
    limitations under the License.
 */
 
-using HouzLinc.Dialogs;
+using UnoApp.Dialogs;
 using ViewModel.Scenes;
 
-namespace HouzLinc.Views.Scenes;
+namespace UnoApp.Views.Scenes;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

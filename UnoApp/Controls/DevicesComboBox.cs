@@ -19,7 +19,7 @@ using ViewModel.Base;
 using ViewModel.Settings;
 
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 /// <summary>
 /// Combobox to select a device

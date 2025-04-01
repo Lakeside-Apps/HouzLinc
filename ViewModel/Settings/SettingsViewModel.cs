@@ -17,7 +17,7 @@ using Common;
 using Insteon.Base;
 using System.Diagnostics;
 using System.ComponentModel;
-using HouzLinc.Utils;
+using UnoApp.Utils;
 using System.Text.RegularExpressions;
 using ViewModel.Base;
 using System.Diagnostics.CodeAnalysis;

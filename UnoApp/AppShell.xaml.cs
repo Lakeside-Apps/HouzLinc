@@ -4,22 +4,22 @@
 using Windows.UI.Core;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Input;
-using HouzLinc.Views.Devices;
-using HouzLinc.Views.Scenes;
-using HouzLinc.Views.Hub;
-using HouzLinc.Views.Console;
-using HouzLinc.Views.Settings;
-using HouzLinc.Views.Tools;
+using UnoApp.Views.Devices;
+using UnoApp.Views.Scenes;
+using UnoApp.Views.Hub;
+using UnoApp.Views.Console;
+using UnoApp.Views.Settings;
+using UnoApp.Views.Tools;
 using ViewModel.Settings;
 using Windows.Storage.Pickers;
-using HouzLinc.Dialogs;
+using UnoApp.Dialogs;
 using System.Collections.ObjectModel;
 using Windows.System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common;
 
-namespace HouzLinc;
+namespace UnoApp;
 
 #pragma warning disable CS8618
 // Members of these classes are initialized when creating a list of them in BuildNavItems

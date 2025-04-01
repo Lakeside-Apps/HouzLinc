@@ -14,13 +14,13 @@
 */
 
 using System.Diagnostics;
-using HouzLinc.Dialogs;
-using HouzLinc.Views.Devices;
-using HouzLinc.Views.Hub;
+using UnoApp.Dialogs;
+using UnoApp.Views.Devices;
+using UnoApp.Views.Hub;
 using Microsoft.UI.Xaml.Media.Animation;
 using ViewModel.Links;
 
-namespace HouzLinc.Views.Links;
+namespace UnoApp.Views.Links;
 
 // Kinds of links this view can present
 public enum LinkType 

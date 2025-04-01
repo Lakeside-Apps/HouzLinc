@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-namespace HouzLinc.Dialogs;
+namespace UnoApp.Dialogs;
 public sealed partial class PickSceneDialog : ContentDialog
 {
     public PickSceneDialog(XamlRoot xamlRoot)

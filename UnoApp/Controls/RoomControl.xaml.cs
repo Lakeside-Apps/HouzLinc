@@ -15,10 +15,10 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using HouzLinc.Dialogs;
+using UnoApp.Dialogs;
 using ViewModel.Base;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 public sealed partial class RoomControl : ContentControl, INotifyPropertyChanged
 {

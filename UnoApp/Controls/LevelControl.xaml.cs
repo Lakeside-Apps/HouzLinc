@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 public sealed partial class LevelControl : UserControl, INotifyPropertyChanged
 {

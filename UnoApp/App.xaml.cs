@@ -6,7 +6,7 @@ using ViewModel.Settings;
 using ViewModel.Console;
 using Microsoft.Extensions.Hosting;
 
-namespace HouzLinc;
+namespace UnoApp;
 
 public partial class App : Application
 {

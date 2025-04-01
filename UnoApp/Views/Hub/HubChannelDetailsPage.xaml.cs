@@ -13,12 +13,12 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Base;
+using UnoApp.Views.Base;
 using System.ComponentModel;
 using ViewModel.Hub;
 using ViewModel.Settings;
 
-namespace HouzLinc.Views.Hub;
+namespace UnoApp.Views.Hub;
 
 /// <summary>
 /// Base class for the hub scene details page 

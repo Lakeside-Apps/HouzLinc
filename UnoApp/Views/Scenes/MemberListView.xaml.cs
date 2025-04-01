@@ -13,14 +13,14 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Devices;
-using HouzLinc.Dialogs;
+using UnoApp.Views.Devices;
+using UnoApp.Dialogs;
 using ViewModel.Scenes;
 using Microsoft.UI.Xaml.Media.Animation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace HouzLinc.Views.Scenes;
+namespace UnoApp.Views.Scenes;
 
 public sealed partial class MemberListView : ContentControl
 {

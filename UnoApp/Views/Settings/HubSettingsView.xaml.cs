@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-namespace HouzLinc.Views.Settings;
+namespace UnoApp.Views.Settings;
 public sealed partial class HubSettingsView : ContentControl
 {
     public HubSettingsView()

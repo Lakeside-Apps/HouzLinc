@@ -13,13 +13,13 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Base;
+using UnoApp.Views.Base;
 using ViewModel.Settings;
 using ViewModel.Base;
 using Microsoft.UI.Xaml.Media.Animation;
-using HouzLinc.Views.Devices;
+using UnoApp.Views.Devices;
 
-namespace HouzLinc.Views.Settings;
+namespace UnoApp.Views.Settings;
 
 public sealed partial class HubSettingsPage : PageWithViewModels
 {

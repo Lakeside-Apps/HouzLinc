@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using ViewModel.Base;
 using ViewModel.Settings;
 
-namespace HouzLinc.Views.Base;
+namespace UnoApp.Views.Base;
 
 /// <summary>
 /// Item list page

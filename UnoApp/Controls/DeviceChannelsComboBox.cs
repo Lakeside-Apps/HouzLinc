@@ -17,7 +17,7 @@ using Common;
 using ViewModel.Devices;
 using ViewModel.Settings;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 public partial class DeviceChannelsComboBox : ComboBox
 {

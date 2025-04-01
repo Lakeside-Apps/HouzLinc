@@ -22,7 +22,7 @@ using ViewModel.Devices;
 using Windows.UI.Core;
 using System.Diagnostics;
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 /// <summary>
 /// This class implements a ToggleButton for the RemoteLinc / Mini-Remote devices.

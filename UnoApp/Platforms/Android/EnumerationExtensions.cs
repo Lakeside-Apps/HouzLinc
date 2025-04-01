@@ -1,6 +1,6 @@
 using Java.Util;
 
-namespace HouzLinc.Droid;
+namespace UnoApp.Droid;
 
 /// <summary>
 /// Extensions to convert a Java.Util.Enumeration to a .NET IEnumerable

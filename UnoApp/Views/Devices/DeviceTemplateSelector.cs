@@ -16,7 +16,7 @@
 using System.Diagnostics;
 using ViewModel.Devices;
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 public sealed class DeviceTemplateSelector : DataTemplateSelector
 {

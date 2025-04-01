@@ -13,12 +13,12 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Base;
-using HouzLinc.Dialogs;
+using UnoApp.Views.Base;
+using UnoApp.Dialogs;
 using ViewModel.Scenes;
 using ViewModel.Settings;
 
-namespace HouzLinc.Views.Scenes;
+namespace UnoApp.Views.Scenes;
 
 /// <summary>
 /// Base class for the scene details page 

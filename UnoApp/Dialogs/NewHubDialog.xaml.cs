@@ -17,7 +17,7 @@ using Common;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace HouzLinc.Dialogs;
+namespace UnoApp.Dialogs;
 
 public sealed partial class NewHubDialog : ContentDialog
 {

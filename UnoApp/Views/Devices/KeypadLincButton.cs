@@ -19,7 +19,7 @@ using ViewModel.Devices;
 using Windows.UI.Core;
 using System.Diagnostics;
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 public sealed class KeypadLincButtonVisualStateManager : VisualStateManager
 {

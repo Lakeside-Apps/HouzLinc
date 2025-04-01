@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 /// <summary>
 /// A ComboBox and a Value reflecting the selected item and maintained across changes in the list of items.

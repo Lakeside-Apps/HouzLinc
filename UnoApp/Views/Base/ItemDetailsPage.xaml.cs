@@ -20,7 +20,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml.Controls;
 
-namespace HouzLinc.Views.Base;
+namespace UnoApp.Views.Base;
 
 /// <summary>
 /// Item details page.

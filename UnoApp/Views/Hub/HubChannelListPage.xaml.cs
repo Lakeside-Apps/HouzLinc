@@ -13,15 +13,15 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Base;
+using UnoApp.Views.Base;
 using ViewModel.Hub;
 using ViewModel.Settings;
 using Microsoft.UI.Xaml.Media.Animation;
-using HouzLinc.Views.Settings;
+using UnoApp.Views.Settings;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace HouzLinc.Views.Hub;
+namespace UnoApp.Views.Hub;
 
 /// <summary>
 /// Base class for the Hub scene master detail page 

@@ -3,7 +3,7 @@ using Android.OS;
 using Android.Views;
 using Microsoft.Identity.Client;
 
-namespace HouzLinc.Droid;
+namespace UnoApp.Droid;
 
 [Activity(
     MainLauncher = true,

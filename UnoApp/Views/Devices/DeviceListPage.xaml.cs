@@ -13,16 +13,16 @@
    limitations under the License.
 */
 
-using HouzLinc.Views.Base;
-using HouzLinc.Dialogs;
+using UnoApp.Views.Base;
+using UnoApp.Dialogs;
 using Common;
 using ViewModel.Devices;
 using ViewModel.Settings;
 using ViewModel.Tools;
 using Microsoft.UI.Xaml.Media.Animation;
-using HouzLinc.Views.Settings;
+using UnoApp.Views.Settings;
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 
 /// <summary>
 /// Base class for the link master detail page 

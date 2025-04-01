@@ -15,7 +15,7 @@
 
 using Uno.UI.Runtime.Skia;
 
-namespace HouzLinc;
+namespace UnoApp;
 public class Program
 {
     [STAThread]

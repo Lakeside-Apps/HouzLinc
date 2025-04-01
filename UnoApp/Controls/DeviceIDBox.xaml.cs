@@ -17,7 +17,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 sealed partial class DeviceIDBox : UserControl, INotifyPropertyChanged
 {

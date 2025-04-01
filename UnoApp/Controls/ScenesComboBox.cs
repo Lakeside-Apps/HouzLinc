@@ -19,7 +19,7 @@ using ViewModel.Settings;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 internal partial class ScenesComboBox : ComboBox, INotifyPropertyChanged
 {
     public ScenesComboBox()

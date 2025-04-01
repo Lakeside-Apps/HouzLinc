@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-namespace HouzLinc.Dialogs;
+namespace UnoApp.Dialogs;
 
 public sealed partial class NewRoomDialog : ContentDialog
 {

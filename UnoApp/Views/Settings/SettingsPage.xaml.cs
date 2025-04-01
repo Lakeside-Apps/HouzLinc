@@ -17,9 +17,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using ViewModel.Settings;
 using ViewModel.Base;
-using HouzLinc.Views.Base;
+using UnoApp.Views.Base;
 
-namespace HouzLinc.Views.Settings;
+namespace UnoApp.Views.Settings;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

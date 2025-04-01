@@ -19,11 +19,11 @@ using System.ComponentModel;
 using Common;
 using System.Runtime.CompilerServices;
 using ViewModel.Settings;
-using HouzLinc.Views.Base;
+using UnoApp.Views.Base;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace HouzLinc.Views.Console;
+namespace UnoApp.Views.Console;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

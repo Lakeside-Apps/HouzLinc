@@ -1,4 +1,4 @@
-﻿/* Copyright 2022 Christian Fortini
+/* Copyright 2022 Christian Fortini
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
-namespace HouzLinc.Controls
+namespace UnoApp.Controls
 {
     public partial class TextBoxWithKeyPreview : TextBox
     {

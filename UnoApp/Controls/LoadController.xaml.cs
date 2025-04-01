@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 /// <summary>
 /// A control to turn the load on and off on a load controlling device

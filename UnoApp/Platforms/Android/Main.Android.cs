@@ -1,7 +1,7 @@
 using Android.Runtime;
 using Com.Nostra13.Universalimageloader.Core;
 
-namespace HouzLinc.Droid;
+namespace UnoApp.Droid;
 
 [global::Android.App.ApplicationAttribute(
     Label = "@string/ApplicationName",

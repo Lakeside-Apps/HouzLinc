@@ -15,7 +15,7 @@
 
 using Microsoft.UI.Xaml.Data;
 
-namespace HouzLinc.Utils;
+namespace UnoApp.Utils;
 
 public sealed class BoolToNullableBool: IValueConverter
 {

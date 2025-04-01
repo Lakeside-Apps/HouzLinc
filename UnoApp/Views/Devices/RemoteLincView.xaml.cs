@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-namespace HouzLinc.Views.Devices;
+namespace UnoApp.Views.Devices;
 public sealed partial class RemoteLincView : ResourceDictionary
 {
     public RemoteLincView()

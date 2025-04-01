@@ -1,6 +1,6 @@
 using UIKit;
 
-namespace HouzLinc.MacCatalyst;
+namespace UnoApp.MacCatalyst;
 public class EntryPoint
 {
     // This is the main entry point of the application.

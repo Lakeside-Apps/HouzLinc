@@ -17,7 +17,7 @@ using ViewModel.Settings;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace HouzLinc.Controls;
+namespace UnoApp.Controls;
 
 /// <summary>
 /// A ContentControl to hold the status bar which displays log messages

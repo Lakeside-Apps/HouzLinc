@@ -15,7 +15,7 @@
 
 using Common;
 
-namespace HouzLinc.Dialogs;
+namespace UnoApp.Dialogs;
 
 public sealed partial class ManualDeviceIdDialog : ContentDialog
 {

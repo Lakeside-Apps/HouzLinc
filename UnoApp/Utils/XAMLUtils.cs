@@ -13,10 +13,10 @@
    limitations under the License.
 */
 
-using HouzLinc.Controls;
+using UnoApp.Controls;
 using Microsoft.UI.Dispatching;
 
-namespace HouzLinc.Utils;
+namespace UnoApp.Utils;
 
 public static class XAMLUtils
 {

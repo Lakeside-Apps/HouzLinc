@@ -1,6 +1,6 @@
 using UIKit;
 
-namespace HouzLinc.iOS;
+namespace UnoApp.iOS;
 public class EntryPoint
 {
     // This is the main entry point of the application.
