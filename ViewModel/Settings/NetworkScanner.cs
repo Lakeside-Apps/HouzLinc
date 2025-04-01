@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using Microsoft.UI.Dispatching;
 
-namespace HouzLinc.Utils;
+namespace UnoApp.Utils;
 
 public class NetworkScanner
 {

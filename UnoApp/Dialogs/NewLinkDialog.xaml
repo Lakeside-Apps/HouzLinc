@@ -1,0 +1,77 @@
+﻿<ContentDialog
+    x:Class="UnoApp.Dialogs.NewLinkDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UnoApp.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ViewModel.Links"
+    xmlns:ctl="using:UnoApp.Controls"
+    xmlns:utils="using:UnoApp.Utils"
+    xmlns:sys="using:System"
+    MinWidth="0"
+    MinHeight="0"
+    PrimaryButtonText="Add"
+    CloseButtonText="Cancel">
+
+    <ContentDialog.TitleTemplate>
+        <DataTemplate x:DataType="vm:LinkViewModel">
+            <StackPanel>
+                <TextBlock Visibility="{x:Bind IsController}" Text="Add New Responder"/>
+                <TextBlock Visibility="{x:Bind IsResponder}" Text="Add New Controller"/>
+            </StackPanel>
+        </DataTemplate>
+    </ContentDialog.TitleTemplate>
+
+    <ContentDialog.Resources>
+        <DataTemplate x:Key="ChannelComboBoxHeaderTemplate" x:DataType="vm:LinkViewModel">
+            <TextBlock Text="{x:Bind sys:String.Format(x:Null, '{0}:', DestDeviceChannelType)}" TextWrapping="NoWrap"/>
+        </DataTemplate>
+    </ContentDialog.Resources>
+
+    <ContentDialog.ContentTemplate>
+        <DataTemplate x:DataType="vm:LinkViewModel">
+            <StackPanel>
+                <ctl:DevicesComboBox
+                    HorizontalAlignment="Stretch"
+                    IncludeHub="True"
+                    PlaceholderText="Choose Device"
+                    SelectedDeviceID="{x:Bind DestDeviceId, Mode=TwoWay}"/>
+                <TextBlock
+                    Margin="0,15,0,0"
+                    Visibility="{x:Bind HasDestDevice, Mode=OneWay}"
+                    Text="{x:Bind DestDeviceModelName, Mode=OneWay}"
+                    TextWrapping="NoWrap"/>
+                <TextBlock
+                    Margin="0,15,0,0"
+                    Visibility="{x:Bind DestDeviceHasRoom, Mode=OneWay}"
+                    Text="{x:Bind sys:String.Format(x:Null, 'Room: {0}', DestDeviceRoom), Mode=OneWay}"
+                    TextWrapping="NoWrap"/>
+                <TextBlock Margin="0,15,0,0" Text="{x:Bind Group, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='Group: {0}'}" TextWrapping="NoWrap"/>
+                <ctl:DeviceChannelsComboBox
+                    x:Name="ChannelComboBox"
+                    Margin="0,15,0,0"
+                    HorizontalAlignment="Stretch"
+                    DeviceId="{x:Bind DestDeviceId, Mode=OneWay}"
+                    HeaderTemplate="{StaticResource ChannelComboBoxHeaderTemplate}"
+                    ChannelId="{x:Bind Group, Mode=TwoWay}"
+                    x:Load="{x:Bind ControllerDestDeviceHasChannels, Mode=OneWay}"/>
+                <Grid Margin="0,20,0,0" HorizontalAlignment="Stretch" Visibility="{x:Bind IsResponder, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ctl:LevelControl
+                        Grid.Column="0"
+                        Header="Level"
+                        MinWidth="120"
+                        Level="{x:Bind OnLevel, Mode=TwoWay}"/>
+                    <ctl:RampRatesComboBox
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Header="Ramp Rate"
+                        SelectedIndex="{x:Bind RampRate, Mode=TwoWay}"/>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+    </ContentDialog.ContentTemplate>
+</ContentDialog>

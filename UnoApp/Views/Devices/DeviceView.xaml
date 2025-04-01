@@ -1,0 +1,61 @@
+﻿<ContentControl
+    x:Class="UnoApp.Views.Devices.DeviceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UnoApp.Views.Devices"
+    xmlns:vm="using:ViewModel.Devices"
+    xmlns:scenesvm="using:ViewModel.Scenes"
+    xmlns:links="using:UnoApp.Views.Links"
+    xmlns:ctl="using:UnoApp.Controls"
+    xmlns:utils="using:UnoApp.Utils"
+    xmlns:dialogs="using:UnoApp.Dialogs"
+    HorizontalContentAlignment="Stretch"
+    IsTabStop="False">
+
+    <ContentControl.ContentTemplateSelector>
+        <local:DeviceTemplateSelector/>
+    </ContentControl.ContentTemplateSelector>
+
+    <ContentControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Import the keypad view templates -->
+                <local:KeypadLincView/>
+                <local:RemoteLincView/>
+                <!-- Add other specialized device views here to import their templates -->
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="SimpleDeviceView" x:DataType="vm:DeviceViewModel">
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <local:DeviceHeaderView/>
+                    <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch">
+                        <StackPanel Margin="0,0,15,0">
+                            <local:DeviceStatusView x:Name="DeviceStatusView" Content="{x:Bind}"/>
+                            <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
+                                <local:DeviceInformationView Margin="0,10,0,20"/>
+                            </Border>
+                            <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
+                                <local:DevicePropertyView Margin="0,10,0,0"/>
+                            </Border>
+                            <local:DeviceSettingsView Margin="0,0,0,20"/>
+                            <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
+                                <local:ScenesWithThisDeviceView Margin="0,0,0,10"/>
+                            </Border>
+                            <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
+                                <links:LinkHostViews LinkType="Responder" Content="{x:Bind}" Margin="0,10,0,20"/>
+                            </Border>
+                            <Border BorderBrush="{ThemeResource MenuFlyoutSeparatorThemeBrush}" BorderThickness="0,1,0,0">
+                                <links:LinkHostViews LinkType="Controller" Content="{x:Bind}" Margin="0,10,0,20"/>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </ContentControl.Resources>
+</ContentControl>

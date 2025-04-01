@@ -1,0 +1,83 @@
+﻿<local:DeviceDetailsPageBase
+    x:Class="UnoApp.Views.Devices.DeviceDetailsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UnoApp.Views.Devices"
+    xmlns:links="using:UnoApp.Views.Links"
+    xmlns:ctl="using:UnoApp.Controls"
+    xmlns:dlg="using:UnoApp.Dialogs"
+    xmlns:utils="using:UnoApp.Utils"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    HorizontalAlignment="Stretch">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Navigation header -->
+        <Grid ColumnSpan="2" MinHeight="45">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Text="{x:Bind PageHeaderProperty}"
+                VerticalAlignment="Top"
+                Margin="10,0,0,0"
+                Padding="0,0,0,0"
+                Style="{StaticResource TitleTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
+                <Button
+                    Tag="RemoveDevice"
+                    win:ToolTipService.ToolTip="Remove Device"
+                    Margin="0,0,3,0"
+                    Style="{ThemeResource SplitViewPaneButtonStyle}"
+                    Click="RemoveDeviceBtnClick">
+                    <SymbolIcon Symbol="Delete"/>
+                </Button>
+                <Button
+                    Tag="More"
+                    win:ToolTipService.ToolTip="More Options"
+                    Margin="0,0,3,0"
+                    Style="{ThemeResource SplitViewPaneButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem Text="Read and Update Device" Click="{x:Bind ItemViewModel.ForceSyncDevice_Click}"/>
+                            <MenuFlyoutItem Text="Check Connection Status" Click="{x:Bind ItemViewModel.ForceCheckDeviceConnectionStatus_Click}"/>
+                            <MenuFlyoutItem Text="Remove Device" Click="{x:Bind ItemViewModel.RemoveDevice_Click}"/>
+                            <MenuFlyoutItem Text="Replace Device" Click="{x:Bind ItemViewModel.ReplaceDevice_Click}"/>
+                            <MenuFlyoutItem Text="Copy Device" Click="{x:Bind ItemViewModel.CopyDevice_Click}"/>
+                            <MenuFlyoutItem Text="Remove Stale Controllers/Responders" Click="{x:Bind ItemViewModel.RemoveStaleLinks_Click}"/>
+                            <MenuFlyoutItem Text="Remove Duplicate Controllers/Responders" Click="{x:Bind ItemViewModel.RemoveDuplicateLinks_Click}"/>
+                            <MenuFlyoutItem Text="Ensure Hub is First Controller" Click="{x:Bind ItemViewModel.EnsureLinkToHubIsFirst_Click}"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                    <SymbolIcon Symbol="More"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Device detail View -->
+        <local:DeviceView
+            x:Name="DeviceDetailsPresenter"
+            Grid.Row="1"
+            Margin="10,0,10,2"
+            Content="{x:Bind ItemViewModel, Mode=OneWay}"/>
+
+        <!-- Footer -->
+        <ctl:StatusBar
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Background="{ThemeResource AppBarBackgroundThemeBrush}"
+            StatusText="{x:Bind StatusBarViewModel.StatusText, Mode=OneWay}"
+            IsUserActionRequest="{x:Bind StatusBarViewModel.IsUserActionRequest, Mode=OneWay}"/>
+
+    </Grid>
+
+</local:DeviceDetailsPageBase>

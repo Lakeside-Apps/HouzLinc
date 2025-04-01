@@ -1,0 +1,342 @@
+﻿<ContentControl
+    x:Class="UnoApp.Views.Links.LinkHostViews"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctl="using:UnoApp.Controls"
+    xmlns:dlg="using:UnoApp.Dialogs"
+    xmlns:vm="using:ViewModel.Links"
+    xmlns:local="using:UnoApp.Views.Links"
+    xmlns:utils="using:UnoApp.Utils"
+    xmlns:sys="using:System"
+    xmlns:android="http://uno.ui/android"
+    xmlns:ios="http://uno.ui/ios"
+    xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d android ios wasm"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    HorizontalContentAlignment="Stretch">
+
+    <ContentControl.ContentTemplateSelector>
+        <local:LinkListViewTemplateSelector/>
+    </ContentControl.ContentTemplateSelector>
+
+    <ContentControl.Resources>
+        <ResourceDictionary>
+            <vm:LinkTemplateSelector x:Key="LinkTemplateSelector" ControllerLinkTemplate="{StaticResource ControllerLinkGridViewItem}" ResponderLinkTemplate="{StaticResource ResponderLinkGridViewItem}"/>
+
+            <DataTemplate x:Key="DeviceControllerLinkListView" x:DataType="vm:LinkHostViewModel">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            x:Name="Header"
+                            x:Load="{x:Bind HasChannels, Converter={StaticResource BoolNegation}, Mode=OneWay}"
+                            Text="Responders"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            TextWrapping="NoWrap"/>
+                        <TextBlock
+                            x:Name="HeaderWithChannels"
+                            x:Load="{x:Bind HasChannels, Mode=OneWay}"
+                            Text="{x:Bind sys:String.Format(x:Null, 'Responders of {0} {1}', ChannelType, QuotedCurrentChannelName), Mode=OneWay}"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            TextWrapping="NoWrap"/>
+                        <Button
+                            Grid.Column="1"
+                            Margin="3,0,0,0"
+                            Style="{ThemeResource SplitViewPaneButtonStyle}"
+                            Click="AddNewControllerLinkAsync"
+                            Tag="Add Responder"
+                            win:ToolTipService.ToolTip="Add Responder">
+                            <SymbolIcon Symbol="Add"/>
+                        </Button>
+                    </Grid>
+                    <GridView
+                        x:Name="ControllerLinkGridView"
+                        ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
+                        ItemTemplate="{StaticResource ControllerLinkGridViewItem}"
+                        ItemsSource="{x:Bind ControllerLinks, Mode=OneWay}"
+                        SelectedItem="{x:Bind ControllerLinks.SelectedLink, Mode=TwoWay}"
+                        ItemClick="OnItemClick"
+                        IsItemClickEnabled="True"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DeviceResponderLinkListView" x:DataType="vm:LinkHostViewModel">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            x:Name="Header"
+                            x:Load="{x:Bind HasChannels, Converter={StaticResource BoolNegation}, Mode=OneWay}"
+                            Text="Controllers"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            TextWrapping="NoWrap"/>
+                        <TextBlock
+                            x:Name="HeaderWithChannels"
+                            x:Load="{x:Bind HasChannels, Mode=OneWay}"
+                            Text="{x:Bind sys:String.Format(x:Null, 'Controllers of {0} {1}', ChannelType, QuotedCurrentChannelName), Mode=OneWay}"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            TextWrapping="NoWrap"/>
+                        <Button
+                            Grid.Column="1"
+                            Margin="3,0,0,0"
+                            Style="{ThemeResource SplitViewPaneButtonStyle}"
+                            Click="AddNewResponderLinkAsync"
+                            Tag="Add Controller"
+                            win:ToolTipService.ToolTip="Add Controller">
+                            <SymbolIcon Symbol="Add"/>
+                        </Button>
+                    </Grid>
+                    <GridView
+                        x:Name="ResponderLinkGridView"
+                        ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
+                        ItemTemplate="{StaticResource ResponderLinkGridViewItem}"
+                        ItemsSource="{x:Bind ResponderLinks, Mode=OneWay}"
+                        SelectedItem="{x:Bind ResponderLinks.SelectedLink, Mode=TwoWay}"
+                        ItemClick="OnItemClick"
+                        IsItemClickEnabled="True"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DeviceLinkListView" x:DataType="vm:LinkHostViewModel">
+                <GridView
+                    Margin="5,0,5,0"
+                    ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
+                    ItemTemplateSelector="{StaticResource LinkTemplateSelector}"
+                    ItemsSource="{x:Bind Links.View, Mode=OneWay}"
+                    IsItemClickEnabled="True"
+                    ItemClick="OnItemClick">
+                    <GridView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderContainerStyle>
+                                <Style TargetType="GridViewHeaderItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Background" Value="{ThemeResource GridViewHeaderItemBackground}"/>
+                                </Style>
+                            </GroupStyle.HeaderContainerStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate x:DataType="vm:LinkGroup">
+                                    <Border AutomationProperties.AccessibilityView="Raw">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Text="{x:Bind GroupHeader}"
+                                                Style="{ThemeResource SubtitleTextBlockStyle}"
+                                                AutomationProperties.AccessibilityView="Raw"/>
+                                            <Button
+                                                Grid.Column="1"
+                                                Margin="3,0,0,0"
+                                                Click="AddNewLinkAsync"
+                                                Style="{ThemeResource SplitViewPaneButtonStyle}"
+                                                win:ToolTipService.ToolTip="{x:Bind GroupType, Converter={StaticResource StringFormatConverter}, ConverterParameter='Modify {0}'}">
+                                                <SymbolIcon Symbol="Add"/>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </GridView.GroupStyle>
+                </GridView>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ControllerLinkGridViewItem" x:DataType="vm:LinkViewModel">
+                <Grid PointerEntered="{x:Bind PointerEntered}" PointerExited="{x:Bind PointerExited}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- - Canvas is necessary for PointerEntered/Exited to cover the whole item area -->
+                    <Canvas
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="Transparent"/>
+                    <Ellipse
+                        Grid.Column="0"
+                        Width="96"
+                        Height="96"
+                        Margin="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Fill="{ThemeResource ControllerLinkStampColor}"/>
+                    <Image
+                        Grid.Column="0"
+                        Width="72"
+                        Height="72"
+                        Margin="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="{x:Bind DestDeviceModelIconPath_72x72, Mode=OneWay}"/>
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MinWidth="400"
+                        Margin="6,0,0,0">
+                        <TextBlock Text="{x:Bind DestDeviceDisplayNameAndId}" FontWeight="Bold" TextWrapping="NoWrap"/>
+                        <TextBlock Visibility="{x:Bind DestDeviceHasRoom}" Text="{x:Bind DestDeviceRoom}" TextWrapping="NoWrap"/>
+                        <TextBlock Visibility="{x:Bind DestDeviceHasChannels, Mode=OneWay}" Text="{x:Bind ResponderDestDeviceChannelTypeIdsAndNames}" TextWrapping="NoWrap"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <SymbolIcon Symbol="Link" win:ToolTipService.ToolTip="Has complement responder link" Visibility="{x:Bind HasComplementLink, Mode=OneWay}"/>
+                            <SymbolIcon
+                                Margin="10,0,0,0"
+                                Symbol="Sync"
+                                win:ToolTipService.ToolTip="Is synchronized with device"
+                                Visibility="{x:Bind IsSynchronized, Mode=OneWay}"/>
+                            <SymbolIcon
+                                Margin="10,0,0,0"
+                                Symbol="Delete"
+                                win:ToolTipService.ToolTip="Has been removed"
+                                Visibility="{x:Bind IsRemoved, Mode=OneWay}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Border
+                        Grid.Column="1"
+                        CornerRadius="10"
+                        Background="{ThemeResource GridViewItemBackground}"
+                        Opacity=".85"
+                        Visibility="{x:Bind IsSynchronized, Converter={StaticResource VisibilityNegation}, Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <TextBlock
+                                Text="Pending Sync"
+                                FontSize="16"
+                                Foreground="Teal"
+                                Margin="10,0,0,0"/>
+                            <ProgressRing Foreground="Teal"/>
+                        </StackPanel>
+                    </Border>
+                    <!--
+                        HorizontalAlignment is off by around 74 pixels on non-Windows platforms.
+                        CommandBarFlyoutEllipsisButtonStyle does not render correctly on non-Windows platforms.
+                        Prefixing below works around that issue temporarily.
+                        TODO: need a better fix.
+                    -->
+                    <Button
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,0,8"
+                        win:Style="{ThemeResource SplitViewPaneButtonStyle}"
+                        Click="EditLinkAsync"
+                        win:ToolTipService.ToolTip="Inspect or remove this responder"
+                        Visibility="{x:Bind IsEditButtonShown, Mode=OneWay}">
+                        <SymbolIcon Symbol="Edit"/>
+                    </Button>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ResponderLinkGridViewItem" x:DataType="vm:LinkViewModel">
+                <Grid PointerEntered="{x:Bind PointerEntered}" PointerExited="{x:Bind PointerExited}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- - Canvas is necessary for PointerEntered/Exited to cover the whole item area -->
+                    <Canvas
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="Transparent"/>
+                    <Ellipse
+                        Grid.Column="0"
+                        Width="96"
+                        Height="96"
+                        Margin="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Fill="{ThemeResource ResponderLinkStampColor}"/>
+                    <Image
+                        Grid.Column="0"
+                        Width="72"
+                        Height="72"
+                        Margin="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="{x:Bind DestDeviceModelIconPath_72x72, Mode=OneWay}"/>
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MinWidth="400"
+                        Margin="6,0,0,0">
+                        <TextBlock Text="{x:Bind DestDeviceDisplayNameAndId}" FontWeight="Bold" TextWrapping="NoWrap"/>
+                        <TextBlock Visibility="{x:Bind DestDeviceHasRoom}" Text="{x:Bind DestDeviceRoom}" TextWrapping="NoWrap"/>
+                        <TextBlock Visibility="{x:Bind DestDeviceHasChannels, Mode=OneWay}" Text="{x:Bind ControllerDestDeviceChannelTypeIdAndName}" TextWrapping="NoWrap"/>
+                        <StackPanel Orientation="Horizontal" Visibility="{x:Bind HasRampRateAndOnLevel}">
+                            <TextBlock Text="{x:Bind OnLevel, Converter={StaticResource StringFormatConverter}, ConverterParameter='Level: {0}'}" TextWrapping="NoWrap"/>
+                            <TextBlock Text="{x:Bind RampRateAsString, Converter={StaticResource StringFormatConverter}, ConverterParameter=', Ramp: {0}'}" TextWrapping="NoWrap"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <SymbolIcon Symbol="Link" win:ToolTipService.ToolTip="Has complement controller link" Visibility="{x:Bind HasComplementLink, Mode=OneWay}"/>
+                            <SymbolIcon
+                                Margin="10,0,0,0"
+                                Symbol="Sync"
+                                win:ToolTipService.ToolTip="Is synchronized with device"
+                                Visibility="{x:Bind IsSynchronized, Mode=OneWay}"/>
+                            <SymbolIcon
+                                Margin="10,0,0,0"
+                                Symbol="Delete"
+                                win:ToolTipService.ToolTip="Has been removed"
+                                Visibility="{x:Bind IsRemoved, Mode=OneWay}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Border
+                        Grid.Column="1"
+                        CornerRadius="10"
+                        Background="{ThemeResource GridViewItemBackground}"
+                        Opacity=".80"
+                        Visibility="{x:Bind IsSynchronized, Converter={StaticResource VisibilityNegation}, Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <TextBlock
+                                Text="Pending Sync"
+                                FontSize="16"
+                                Foreground="Teal"
+                                Margin="10,0,0,0"/>
+                            <ProgressRing Foreground="Teal"/>
+                        </StackPanel>
+                    </Border>
+                    <!--
+                        HorizontalAlignment is off by around 74 pixels on non-Windows platforms.
+                        CommandBarFlyoutEllipsisButtonStyle does not render correctly on non-Windows platforms.
+                        Prefixing below works around that issue temporarily.
+                        TODO: need a better fix.
+                    -->
+                    <Button
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,0,8"
+                        Style="{ThemeResource SplitViewPaneButtonStyle}"
+                        Click="EditLinkAsync"
+                        win:ToolTipService.ToolTip="Edit or remove this controller"
+                        Visibility="{x:Bind IsEditButtonShown, Mode=OneWay}">
+                        <SymbolIcon Symbol="Edit"/>
+                    </Button>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentControl.Resources>
+</ContentControl>
