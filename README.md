@@ -53,7 +53,7 @@ There is an abstraction of Storage Providers (`StorageProvider` and derived clas
 
 **View Model**: (`ViewModel.*`) the view model functions as it does in most MVVM applications, i.e., maintain a set of view oriented data on the model that is used by the UI layer. The view model gets notified of changes to the model and updates the UI using XAML databinding. It also receives user actions from the UI and applies them to the model.
 
-**UI (View)**: (`HouzLinc.*`) written in XAML, the UX uses XAML C# databinding to dynamically keep up to date with the View Model and reflects user changes to the View Model and Model layers. 
+**UI (View)**: (`UnoApp.*`) written in XAML, the UX uses XAML C# databinding to dynamically keep up to date with the View Model and reflects user changes to the View Model and Model layers. 
 
 ## Getting Started
 I am currently working on deploying the first version of this app to the relevant stores for public consumption. In the meantime, if you want to try out HouzLinc, you will need to build it yourself. You can build it on a Windows machine using Visual Studio 2022, and then either deploy it locally on that machine, or create a MSIX package and install it on any Windows machine with developer mode turned on. You can also build it for Android and deploy it to a phone or an emulator using Visual Studio 2022.
@@ -77,7 +77,7 @@ Building and running the app in Visual Studio is straightforeward: select a conf
 #### Building an Unsigned App Package for Sideloading on Windows
 Using Visual Studio `msbuild`, you can create an MSIX installer package that can be sideloaded on any Windows machine with developer mode turned on. Proceed as follows (see [here](https://platform.uno/docs/articles/uno-publishing-windows-packaged-unsigned.html) for more details):
 
-1. In a Developer Powershell window (either View|Terminal or Tools|Command Line|Developer Powershell), navigate to the `HouzLinc` folder where the `HouzLinc.csproj` project file is located.
+1. In a Developer Powershell window (either View|Terminal or Tools|Command Line|Developer Powershell), navigate to the `UnoApp` folder where the `UnoApp.csproj` project file is located.
 2. Run the following command to restore the correct dependency packages:
 ```
 msbuild /r /t:Restore /p:Configuration=Release /v:minimal
@@ -111,9 +111,9 @@ To build and deploy on an Android physical device, select the device under `Andr
 #### Enabling OneDrive sign-in
 HouzLinc enables you to store the house configuration on OneDrive. If you are building HouzLinc yourself and want to enable this functionality, you will need to register an application with Microsoft Entra ID to obtain a Client Id and, on certain platforms, a redirect URI. This is necessary to allow users to sign-in to OneDrive to let Houzlinc access the configuration file. Go to the [Azure portal](https://portal.azure.com/) and [register a new app](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) for Microsoft Entra ID. If you already have an application registered with Microsoft Entra, you can use that one instead. You will need the client Id and the redirect URI for a mobile app (Android, iOS).
 
-Create a file named appsettings.json in the project HouzLinc folder:
+Create a file named appsettings.json in the project UnoApp folder under your repo root:
 ```
-<your repo root>/HouzLinc/appsettings.json
+<your repo root>/UnoApp/appsettings.json
 ```
 Containing the following section:
 ```
@@ -147,7 +147,7 @@ To enable these buttons, add the following section to the appsettings.json file:
 Rebuild and relaunch the app. The buttons will appear on the bottom right of the window.
 
 ### Unit Tests
-The project currently contains some non-UI unit tests for the Insteon layer. These tests are written using the MSTest framework. They can be run in Visual Studio by selecting the `Test` menu and then `Run All Tests`. The tests are located in the `HouzLinc.UnitTestApp` project.
+The project currently contains some non-UI unit tests for the Insteon layer. These tests are written using the MSTest framework. They can be run in Visual Studio by selecting the `Test` menu and then `Run All Tests`. The tests are located in the `UnitTestApp` project.
 
 Tests can also be built from the command line using msbuild. Navigate to UnitTestApp folder under the root of the repo and run the following command:
 ```
