@@ -999,28 +999,27 @@ public sealed class Device : DeviceBase
     }
     private SyncStatus propertiesSyncStatus;
 
-    // Helper to update the overal sync status for the device
-    // Called when one of the read/write properties changes
-    // Parameter afterSync indicates that this called as the result of reading or writing the physical device,
-    // as opposed to the result of a change in the model
+    // Helper to update the overal sync status for the device.
+    // Parameter afterSync indicates why this is called:
+    // -> false: because one of the tracked properties changed in the model.
+    // -> true: because of a read from or write to the device.
     private void UpdatePropertiesSyncStatus(bool afterSync = false)
     {
-        // No action before this device is deserialized, as we want to track only user changes here.
+        // No action before this device is being deserialized, as we want to track only user changes here.
         // No action if updating sync status is deferred (because we are setting multiple properties in a row).
         if (!isDeserialized || deferPropertiesSyncStatusUpdate)
         {
             return;
         }
 
-        // Determine if we have read the properties from the device.
-        // We avoid creating a deviceDriver if we don't have one yet,
-        // we know we have not read properties from the device if we don't have a driver yet.
-        if (deviceDriver == null || !((DeviceDriver as DeviceDriver)?.ArePropertiesRead ?? true))
-        {
-            // We don't yet have the physical device property values
-            // That should only happen if we were called as the result of a change in the model
-            Debug.Assert(!afterSync);
+        // If we are called as a result of a read/write to the device, we should have a device driver.
+        Debug.Assert(!afterSync && deviceDriver != null);
 
+        // Determine if we have read the properties from the device.
+        // We avoid creating a device driver if we don't have one yet,
+        // we know we have not read properties from the device if we don't have a driver yet.
+        if (deviceDriver == null || !((DeviceDriver as DeviceDriver)?.ArePropertiesRead ?? false))
+        {
             // If the model is reporting properties as synced, we mark them "Changed" to reflect the change in the model.
             // If the model is already reporting "Unknown" or "Changed", we leave it as is. Values will either be read
             // from the physical device ("Unknown") or written to it ("Changed") in the next sync pass.
