@@ -48,7 +48,7 @@
             Canvas.ZIndex="1"
             IsHitTestVisible="True">
             <StackPanel Orientation="Horizontal">
-                <Image Width="30" Source="Assets/Images/houzlinc.png" Margin="16,0,0,0"/>
+                <Image Width="30" Source="Assets/Images/applogo.png" Margin="16,0,0,0"/>
                 <TextBlock
                     x:Name="AppTitle"
                     Margin="16,0,0,0"

@@ -140,6 +140,7 @@
   </Target>
 
   <ItemGroup>
+    <UnoImage Include="Assets\Images\*" />
     <UnoIcon Include="Assets\Icons\appicon.svg" ForegroundFile="Assets\Icons\appicon_foreground.svg" ForegroundScale="0.65" />
     <UnoSplashScreen Include="Assets\SplashScreen\splash_screen.svg" />
   </ItemGroup>
