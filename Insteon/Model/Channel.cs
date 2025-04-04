@@ -365,7 +365,7 @@ public sealed class Channel : ChannelBase
 
         if (!ArePropertiesRead)
         {
-            if (PropertiesSyncStatus == SyncStatus.Synced)
+            if (!afterSync)
                 PropertiesSyncStatus = SyncStatus.Changed;
         }
         else if (
@@ -378,7 +378,7 @@ public sealed class Channel : ChannelBase
         {
             PropertiesSyncStatus = SyncStatus.Synced;
         }
-        else
+        else if (PropertiesSyncStatus != SyncStatus.Changed)
         {
             PropertiesSyncStatus = afterSync ? SyncStatus.Unknown : SyncStatus.Changed;
         }
