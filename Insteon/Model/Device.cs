@@ -1023,7 +1023,7 @@ public sealed class Device : DeviceBase
             // If the model is reporting properties as synced, we mark them "Changed" to reflect the change in the model.
             // If the model is already reporting "Unknown" or "Changed", we leave it as is. Values will either be read
             // from the physical device ("Unknown") or written to it ("Changed") in the next sync pass.
-            if (PropertiesSyncStatus == SyncStatus.Synced)
+            if (!afterSync && PropertiesSyncStatus == SyncStatus.Synced)
                 PropertiesSyncStatus = SyncStatus.Changed;
         }
         else if (
