@@ -1,4 +1,4 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
     <TargetFrameworks>
       net8.0-android;
@@ -20,6 +20,13 @@
       https://aka.platform.uno/singleproject-features
     -->
     <UnoFeatures>Logging;</UnoFeatures>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- The warning suppression indicated in article below does not appear to work
+    https://platform.uno/docs/articles/uno-build-error-codes.html#unob0011-the-desktop-targetframework-must-be-placed-first-in-the-targetframeworks-property
+    -->
+    <UnoDisableVSWarnDesktopNotFirst>true</UnoDisableVSWarnDesktopNotFirst>
   </PropertyGroup>
 
   <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
