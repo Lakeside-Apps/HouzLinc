@@ -401,7 +401,7 @@ public sealed class KeypadLincViewModel : DeviceViewModel
 
         }
     }
-    private string followBehaviorHelpText;
+    private string followBehaviorHelpText = string.Empty;
 
     // Helper to set the followBehaviorText bindable variable
     // and show the follow behavior help message
@@ -439,7 +439,7 @@ public sealed class KeypadLincViewModel : DeviceViewModel
         timer.Start();
     }
 
-    DispatcherTimer timer;
+    DispatcherTimer? timer;
 
     /// <summary>
     /// Filter the list of links to the current channel (button)
