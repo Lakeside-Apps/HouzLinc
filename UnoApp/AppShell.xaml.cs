@@ -148,14 +148,19 @@ public sealed partial class AppShell : Page, INotifyPropertyChanged
     /// </summary>
     public void SetTitleBar()
     {
+#if !DESKTOP
+        // https://github.com/unoplatform/uno/issues/15789
         App.MainWindow.ExtendsContentIntoTitleBar = true;
         App.MainWindow.SetTitleBar(AppTitleBar);
+#endif
     }
 
     // We use the width of the NavView pane in the compact form as the height of the titlebar,
     // with a default of 48 as we are loading things up before showing the NavView
     private double TitleBarHeight => NavView?.CompactPaneLength ?? 48;
-    
+
+    // Similarly, ensure we have a default CompactModeThresholdWidth before showing the NavView
+    private double CompactModeThresholdWidth => NavView?.CompactModeThresholdWidth ?? 480;
 
     /// <summary>
     /// Default keyboard focus movement for any unhandled keyboarding
