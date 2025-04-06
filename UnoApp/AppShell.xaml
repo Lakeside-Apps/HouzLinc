@@ -104,7 +104,7 @@
             <VisualStateGroup x:Name="TitleBarStates">
                 <VisualState x:Name="WideLayout">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{x:Bind NavView.CompactModeThresholdWidth}"/>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind CompactModeThresholdWidth}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AppTitleBar.Margin" Value="34,0,0,0"/>
