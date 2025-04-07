@@ -107,6 +107,14 @@ To build and deply on the Android Emulator on in Visual Studio:
 #### Android Physical Device
 To build and deploy on an Android physical device, select the device under `Android Local Devices` for the profile. Make sure that USB debugging is enabled on the device. Connect the device to the computer with a USB cable. Hit F5 to build, deploy and run the app on the device.
 
+### Other platforms
+HouzLinc can be build for and run on frameworks Desktop and WebAssembly (WASM). Just select these profiles in Visual Studio. If built for Desktop, it will run on Windows, but instead of using Windows App SDK / WinUI3, it will use the Uno implementation backed by Skia for rendering. This offers an easy to deploy environment to test the Uno implementation of the Windows App SDK.
+
+I am working on making this avaiable on MacOS as well.
+
+It is also posisble to build for WebAssembly and run HouzLinc in your favorite browser.
+
+
 ### App Configuration
 #### Enabling OneDrive sign-in
 HouzLinc enables you to store the house configuration on OneDrive. If you are building HouzLinc yourself and want to enable this functionality, you will need to register an application with Microsoft Entra ID to obtain a Client Id and, on certain platforms, a redirect URI. This is necessary to allow users to sign-in to OneDrive to let Houzlinc access the configuration file. Go to the [Azure portal](https://portal.azure.com/) and [register a new app](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) for Microsoft Entra ID. If you already have an application registered with Microsoft Entra, you can use that one instead. You will need the client Id and the redirect URI for a mobile app (Android, iOS).
