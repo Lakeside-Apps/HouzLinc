@@ -65,7 +65,7 @@
     that matches the certificate used to sign the package (not done yet!).
  -->
   <PropertyGroup>
-    <Publisher>CN=eHouz</Publisher>
+    <Publisher>CN=LakesideApps</Publisher>
     <Namespace>
       <Namespace Prefix="dn" Uri="http://schemas.microsoft.com/appx/manifest/foundation/windows10" />
     </Namespace>
@@ -76,7 +76,7 @@
     <AppxBundle>Never</AppxBundle>
     <UapAppxPackageBuildMode>Sideloading</UapAppxPackageBuildMode>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
-    <Publisher>CN=eHouz, OID.2.25.311729368913984317654407730594956997722=1</Publisher>
+    <Publisher>CN=LakesideApps, OID.2.25.311729368913984317654407730594956997722=1</Publisher>
   </PropertyGroup>
 
   <Target Name="UpdateAppxManifest" BeforeTargets="GenerateManifests" Outputs=".\Package.appmanifest">
