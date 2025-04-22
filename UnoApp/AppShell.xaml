@@ -6,6 +6,7 @@
     xmlns:local="using:UnoApp"
     xmlns:controls="using:UnoApp.Controls"
     xmlns:utils="using:UnoApp.Utils"
+    xmlns:utu="using:Uno.Toolkit.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:android="http://uno.ui/android"
@@ -35,7 +36,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" utu:SafeArea.Insets="All">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

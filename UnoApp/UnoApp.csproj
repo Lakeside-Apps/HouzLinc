@@ -41,6 +41,7 @@
       Configuration;
       Material;
       Navigation;
+      Toolkit;
     </UnoFeatures>
   </PropertyGroup>
 
