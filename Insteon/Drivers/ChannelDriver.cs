@@ -52,9 +52,8 @@ internal class ChannelDriver : ChannelBase
             OnLevel = command.OnLevel;
             RampRate = command.RampRate;
 
-            // NonToggleMask, OnOffMask are returned by this command 
-            // but are the same for all channels/groups, i.e., the channel/group Id is ignored.
-            // The bits in these masks control the behavior of the device buttons/channels/groups)
+            // NonToggleMask, OnOffMask are returned by this command, but the same mask of 8 bits
+            // is returned for all channels/groups. Each bit represent a given channel/group.
             ToggleMode = ((command.NonToggleMask & (byte)(1 << (Id - 1))) != 0) ?
                 (((command.OnOffMask & (byte)(1 << (Id - 1))) != 0) ? ToggleMode.On : ToggleMode.Off) : ToggleMode.Toggle;
 

@@ -659,7 +659,7 @@ internal class DeviceDriver : DeviceDriverBase
                 }
                 else
                 {
-                    // If the record in the logical database is not marked "Changed", propagate the physical record if it is different
+                    // If the record in the logical database is marked "Synced", propagate the physical record if it is different
                     // (taking in-use into account) and uses a valid (non-stale) destination device, which might have the effect of
                     // deleting or undeleting the record in the logical database. We let the user deal with that.
                     // If the device is stale, mark the logical record as "Changed" to write the logical record to to device,
