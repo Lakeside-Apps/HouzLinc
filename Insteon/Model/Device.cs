@@ -1018,8 +1018,8 @@ public sealed class Device : DeviceBase
         // Determine if we have read the properties from the physical device.
         // Note that we avoid creating a device driver if we don't have one yet for two reasons:
         // 1. We don't need to: if we don't have a DeviceDriver yet, we have not read properties.
-        // 2. The DeviceDriver should not be created, for example when applying changes to
-        //    a house model we just read from file.
+        // 2. This method might be called when applying changes to a secondary house model,
+        //    not the one presented to the user, in which case we don't need/want any driver.
         if (deviceDriver == null || !((DeviceDriver as DeviceDriver)?.ArePropertiesRead ?? false))
         {
             // We don't know the property values in the physical device.
