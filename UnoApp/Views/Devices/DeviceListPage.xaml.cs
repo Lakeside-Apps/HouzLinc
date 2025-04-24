@@ -46,10 +46,10 @@ public sealed partial class DeviceListPage : DeviceListPageBase
         this.InitializeComponent();
     }
 
-    // TODO: Consider moving these to a more global place such as the MainWindow for example
-    // showDeviceId prepopulates the dialog with the given device ID
-    // showPriorError shows an error message if the dialog was shown before and the device ID could not be resolved
-    private async Task<InsteonID?> ShowNewDeviceDialog(InsteonID? showDeviceId = null, bool showPriorError = false)
+    // TODO: Consider moving these to a more global place such as the MainWindow for example.
+    // showDeviceId prepopulates the dialog with the given device ID, null to not prepopulate.
+    // showPriorError shows an error message if the dialog was shown before and the device ID could not be resolved.
+    private async Task<InsteonID?> ShowNewDeviceDialog(InsteonID? showDeviceId, bool showPriorError = false)
     {
         if (XamlRoot == null)
         {
@@ -66,7 +66,7 @@ public sealed partial class DeviceListPage : DeviceListPageBase
 
     private async Task<InsteonID?> ShowNewDeviceDialog()
     {
-        return await ShowNewDeviceDialog();
+        return await ShowNewDeviceDialog(showDeviceId: null);
     }
 
     private async Task<InsteonID?> ShowDeviceIdDialog()
