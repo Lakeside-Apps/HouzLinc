@@ -363,7 +363,9 @@ public sealed class Channel : ChannelBase
             return;
         }
 
-        if (!ArePropertiesRead)
+        // We avoid creating channel and device drivers if not created yet
+        // (See same method in Device for additional information)
+        if (channelDriver == null || !ArePropertiesRead)
         {
             if (!afterSync)
                 PropertiesSyncStatus = SyncStatus.Changed;

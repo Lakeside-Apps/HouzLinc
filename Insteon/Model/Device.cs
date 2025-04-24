@@ -1016,8 +1016,10 @@ public sealed class Device : DeviceBase
         Debug.Assert(!afterSync || deviceDriver != null);
 
         // Determine if we have read the properties from the physical device.
-        // Note that we avoid creating a device driver if we don't have one yet,
-        // we know we have not read properties if we don't have a driver yet.
+        // Note that we avoid creating a device driver if we don't have one yet for two reasons:
+        // 1. We don't need to: if we don't have a DeviceDriver yet, we have not read properties.
+        // 2. This method might be called when applying changes to a secondary house model,
+        //    not the one presented to the user, in which case we don't need/want any driver.
         if (deviceDriver == null || !((DeviceDriver as DeviceDriver)?.ArePropertiesRead ?? false))
         {
             // We don't know the property values in the physical device.
@@ -2313,7 +2315,7 @@ public sealed class Device : DeviceBase
 
     /// <summary>
     /// Modify all links in any device pointing to this device to point to another device
-    /// Note: leave the link from group 0 of the hub intact, assuming it will be removed if/when this device gets remoed
+    /// Note: leave the link from group 0 of the hub intact, assuming it will be removed if/when this device gets removed
     /// </summary>
     /// <param name="replacementDeviceId">Device to move the links to</param>
     public void FixupLinksToThis(InsteonID replacementDeviceId)
