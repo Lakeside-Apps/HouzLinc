@@ -13,7 +13,6 @@
    limitations under the License.
 */
 
-using UnoApp.Utils;
 using UnoApp.Views.Scenes;
 using Microsoft.UI.Xaml.Media.Animation;
 using ViewModel.Scenes;

@@ -13,7 +13,6 @@
    limitations under the License.
 */
 
-using Common;
 using Insteon.Base;
 
 namespace Insteon.Commands;

@@ -15,9 +15,6 @@
 
 using Microsoft.UI.Xaml.Input;
 using ViewModel.Console;
-using System.ComponentModel;
-using Common;
-using System.Runtime.CompilerServices;
 using ViewModel.Settings;
 using UnoApp.Views.Base;
 

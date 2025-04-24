@@ -1,5 +1,4 @@
-/* Copyright 2022 ChristianGa Fortini
-/* Copyright 2022 ChristianGa Fortini
+/* Copyright 2022 Christian Fortini
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,11 +13,6 @@
    limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Insteon.Model;
 using Common;
 using ViewModel.Settings;

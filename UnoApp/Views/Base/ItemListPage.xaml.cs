@@ -13,12 +13,8 @@
    limitations under the License.
 */
 
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml.Media.Animation;
-using System.Collections.ObjectModel;
 using ViewModel.Base;
-using ViewModel.Settings;
 
 namespace UnoApp.Views.Base;
 

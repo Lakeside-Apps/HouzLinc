@@ -16,7 +16,6 @@
 using Common;
 using Insteon.Mock;
 using Insteon.Model;
-using Insteon.Base;
 
 namespace Insteon.Drivers;
 

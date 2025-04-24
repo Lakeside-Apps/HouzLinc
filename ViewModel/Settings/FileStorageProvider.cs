@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using Common;
 using Insteon.Serialization.Houselinc;
 using Insteon.Model;
+using System.Diagnostics;
 
 namespace ViewModel.Settings;
 

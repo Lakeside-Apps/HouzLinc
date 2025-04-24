@@ -13,15 +13,12 @@
    limitations under the License.
 */
 
-using Microsoft.UI.Xaml.Controls;
+namespace UnoApp.Controls;
 
-namespace UnoApp.Controls
+public partial class RampRatesComboBox : ComboBox
 {
-    public partial class RampRatesComboBox : ComboBox
+    public RampRatesComboBox() 
     {
-        public RampRatesComboBox() 
-        {
-            ItemsSource = ViewModel.Base.RampRate.RampRates;
-        }
+        ItemsSource = ViewModel.Base.RampRate.RampRates;
     }
 }

@@ -13,8 +13,6 @@
    limitations under the License.
 */
 
-using Microsoft.UI.Xaml.Controls;
-
 namespace UnoApp.Dialogs;
 
 public sealed partial class EditLinkDialog : ContentDialog
