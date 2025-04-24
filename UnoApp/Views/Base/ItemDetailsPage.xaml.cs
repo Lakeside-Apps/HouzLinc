@@ -15,10 +15,8 @@
 
 using Microsoft.UI.Xaml.Media.Animation;
 using ViewModel.Base;
-using ViewModel.Settings;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Microsoft.UI.Xaml.Controls;
 
 namespace UnoApp.Views.Base;
 

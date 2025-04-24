@@ -13,8 +13,6 @@
    limitations under the License.
 */
 
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using ViewModel.Settings;
 using ViewModel.Base;
 using UnoApp.Views.Base;

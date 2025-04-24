@@ -13,7 +13,6 @@
    limitations under the License.
 */
 
-using System.Diagnostics;
 using ViewModel.Devices;
 
 namespace UnoApp.Views.Devices;

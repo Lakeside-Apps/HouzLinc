@@ -16,33 +16,32 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
-namespace UnoApp.Controls
+namespace UnoApp.Controls;
+
+public partial class TextBoxWithKeyPreview : TextBox
 {
-    public partial class TextBoxWithKeyPreview : TextBox
+    public TextBoxWithKeyPreview()
     {
-        public TextBoxWithKeyPreview()
-        {
-        }
-
-        protected override void OnKeyUp(KeyRoutedEventArgs e)
-        {
-            CustomPreviewKeyUp?.Invoke(this, e);
-            if (!e.Handled)
-            {
-                base.OnKeyUp(e);
-            }
-        }
-
-        protected override void OnKeyDown(KeyRoutedEventArgs e)
-        {
-            CustomPreviewKeyDown?.Invoke(this, e);
-            if (!e.Handled)
-            {
-                base.OnKeyDown(e);
-            }
-        }
-
-        public event KeyEventHandler? CustomPreviewKeyDown;
-        public event KeyEventHandler? CustomPreviewKeyUp;
     }
+
+    protected override void OnKeyUp(KeyRoutedEventArgs e)
+    {
+        CustomPreviewKeyUp?.Invoke(this, e);
+        if (!e.Handled)
+        {
+            base.OnKeyUp(e);
+        }
+    }
+
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        CustomPreviewKeyDown?.Invoke(this, e);
+        if (!e.Handled)
+        {
+            base.OnKeyDown(e);
+        }
+    }
+
+    public event KeyEventHandler? CustomPreviewKeyDown;
+    public event KeyEventHandler? CustomPreviewKeyUp;
 }

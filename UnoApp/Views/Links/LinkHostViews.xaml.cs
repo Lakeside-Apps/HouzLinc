@@ -13,7 +13,6 @@
    limitations under the License.
 */
 
-using System.Diagnostics;
 using UnoApp.Dialogs;
 using UnoApp.Views.Devices;
 using UnoApp.Views.Hub;

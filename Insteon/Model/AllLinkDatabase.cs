@@ -14,7 +14,6 @@
 */
 
 using System.Diagnostics;
-using System.Xml;
 using Common;
 
 namespace Insteon.Model;
