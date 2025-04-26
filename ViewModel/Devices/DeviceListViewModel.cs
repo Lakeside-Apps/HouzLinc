@@ -137,18 +137,7 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
         Scheduler.JobCompletionCallback<(DeviceViewModel? deviceViewModel, bool isNew)>? completionCallback = null, 
         TimeSpan delay = new TimeSpan())
     {
-        // We create and add the device view model to this collection immediately,
-        // to provide a  instant visual feedback to the user.
         DeviceViewModel? deviceViewModel = DeviceViewModel.GetById(deviceId);
-        if (deviceViewModel == null)
-        {
-            deviceViewModel = DeviceViewModel.GetOrCreateById(devices.House, deviceId);
-            if (deviceViewModel != null)
-            {
-                Items.Add(deviceViewModel);
-            }
-        }
-
         // If no device exists with this id or the device is not connected to the network, add and connect it now
         if (deviceViewModel == null || deviceViewModel.DeviceConnectionStatus != Device.ConnectionStatus.Connected)
         {

@@ -124,7 +124,9 @@ public sealed partial class DeviceListPage : DeviceListPageBase
         InsteonID? deviceId = null;
         while (true)
         {
-            // If we already showed the dialog and could not resolve the device ID, show an error
+            // Present the dialog to the user to enter/discover the device Id.
+            // If successfull, this will add the new device to the model and
+            // the corresponding new view model to this list if not already in.
             deviceId = await ShowNewDeviceDialog(deviceId, showPriorError);
             if (deviceId == null || deviceId.IsNull)
                 break;
@@ -132,6 +134,17 @@ public sealed partial class DeviceListPage : DeviceListPageBase
             var deviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, deviceId);
             if (deviceViewModel != null)
             {
+                // If we had preloaded a vanilla device view model for percieved responsiveness,
+                // remove it now
+                if (!deviceListViewModel.Items.Empty() && 
+                    deviceListViewModel.Items.Last().Id == deviceId)
+                {
+                    deviceListViewModel.Items.RemoveAt(deviceListViewModel.Items.Count - 1);
+                }
+
+                // Add the new device view model to the list showing on this page
+                deviceListViewModel.Items.Add(deviceViewModel);
+
                 // Select the new device
                 SelectedItem = deviceViewModel;
                 break;
@@ -154,7 +167,7 @@ public sealed partial class DeviceListPage : DeviceListPageBase
 
             if (await confirmDialog.ShowAsync())
             {
-                // Remove this scene and unselect it
+                // Remove this device and unselect it
                 deviceListViewModel.ScheduleRemoveDevice(SelectedItem.Id, success =>
                 {
                     if (success)
