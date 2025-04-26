@@ -124,7 +124,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
         else
         {
             var deviceViewModelType = GetDeviceViewModelType(device);
-            if (typeof(DeviceViewModel) != deviceViewModelType)
+            if (deviceViewModel.GetType() != deviceViewModelType)
             {
                 deviceViewModels.Remove(device.Id);
                 device.RemoveObserver(deviceViewModel);
