@@ -103,11 +103,7 @@ public class SortableObservableCollection<T> : ObservableCollection<T>
         // First copy the newItems list as LINQ queries are deferred and
         // we need to instanciate it before we start modifying this list,
         // from which newItems is derived
-        List<T> list = new List<T>();
-        foreach (var item in newItems)
-        {
-            list.Add(item);
-        }
+        List<T> list = [.. newItems];
 
         // Then replace items in the this list to make all changes observable
         // and progressive in the UX
