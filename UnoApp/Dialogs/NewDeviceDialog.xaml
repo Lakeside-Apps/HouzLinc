@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Title="Add New Device"
     PrimaryButtonText="Add"
-    IsPrimaryButtonEnabled="{x:Bind DeviceIdBox.IsValueValid, Mode=OneWay}"
+    IsPrimaryButtonEnabled="{x:Bind isInputEnabledAndValueValid, Mode=OneWay}"
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
@@ -29,14 +29,15 @@
             x:Name="DeviceIdBox"
             HorizontalAlignment="Center"
             Margin="0,0,0,0"
-            IsEnabled="{x:Bind isAutoDiscovering, Converter={StaticResource BoolNegation}, Mode=OneWay}"/>
+            IsValueValid="{x:Bind isValueValid, Mode=TwoWay}"
+            IsEnabled="{x:Bind isInputEnabled, Mode=OneWay}"/>
 
         <TextBlock Margin="0,20,0,0" Text="Or auto-discover the device: tap below, then walk to the device and press and hold its 'set' button." TextWrapping="Wrap"/>
         <Button
             Content="Auto-discover device"
             Margin="0,20,0,0"
             HorizontalAlignment="Center"
-            IsEnabled="{x:Bind isAutoDiscovering, Converter={StaticResource BoolNegation}, Mode=OneWay}"
+            IsEnabled="{x:Bind isInputEnabled, Mode=OneWay}"
             Click="AutoDiscover_Click"/>
     </StackPanel>
 </ContentDialog>

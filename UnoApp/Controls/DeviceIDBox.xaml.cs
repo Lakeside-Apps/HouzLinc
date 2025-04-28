@@ -41,9 +41,6 @@ sealed partial class DeviceIDBox : UserControl, INotifyPropertyChanged
     }
     private bool isReadOnly = false;
 
-    // Is the value a valid InsteonID
-    public bool IsValueValid => Value != null && !Value.IsNull;
-
     /// <summary>
     /// Value of the control
     /// </summary>
@@ -61,13 +58,28 @@ sealed partial class DeviceIDBox : UserControl, INotifyPropertyChanged
         {
             idBox.OnPropertyChanged(nameof(Value));
             idBox.OnPropertyChanged(nameof(DeviceIDText));
-            idBox.OnPropertyChanged(nameof(IsValueValid));
+            idBox.IsValueValid = e.NewValue != null && e.NewValue is InsteonID id && !id.IsNull;
         }
     }
 
     public static readonly DependencyProperty ValueProperty =
-        DependencyProperty.Register("Value", typeof(InsteonID), typeof(DeviceIDBox), 
+        DependencyProperty.Register(nameof(Value), typeof(InsteonID), typeof(DeviceIDBox), 
             new PropertyMetadata(DependencyProperty.UnsetValue, new PropertyChangedCallback(OnValueChanged)));
+
+    /// <summary>
+    /// Whether the value of the control is a valid device ID
+    /// </summary>
+    public bool IsValueValid
+    {
+        get => (bool)GetValue(IsValueValidProperty);
+        set => SetValue(IsValueValidProperty, value);
+    }
+
+    // Is the value a valid InsteonID
+    // Register the IsValueValid dependency property
+    public static readonly DependencyProperty IsValueValidProperty =
+        DependencyProperty.Register(nameof(IsValueValid), typeof(bool), typeof(DeviceIDBox),
+            new PropertyMetadata(false));
 
     // Used to bind to the textbox in the XAML of this user control
     public string DeviceIDText => Value?.ToString() ?? string.Empty;

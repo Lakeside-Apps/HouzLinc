@@ -160,14 +160,35 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
             {
                 deviceId = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(isInputEnabledAndValueValid));
             }
         }
     }
     InsteonID? deviceId;
 
-    // Whether we are in the process of auto-discovering the device,
-    // i.e., the StartAllLinking command was called
-    private bool isAutoDiscovering => autoDiscoveryJob != null;
+    /// <summary>
+    /// Private property tracking DeviceIdBox.IsValueValid.
+    /// so that we can show the Add button when the value is valid.
+    /// </summary>
+    private bool isValueValid
+    {
+        get => _isValueValid;
+        set
+        {
+            if (_isValueValid != value)
+            {
+                _isValueValid = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(isInputEnabledAndValueValid));
+            }
+        }
+    }
+    private bool _isValueValid;
+    
+    // Whether input is enabled in the dialog.
+    // It is not when autodiscovering or waiting to close.
+    private bool isInputEnabled => autoDiscoveryJob == null && canClose;
+    private bool isInputEnabledAndValueValid => isInputEnabled && isValueValid;
 
     // Auto-discovery job (aka, Add device manually, StartAllLinking command)
     private object? autoDiscoveryJob
@@ -181,7 +202,8 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
                 if (value != null)
                     DeviceIdBox.Value = null;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(isAutoDiscovering));
+                OnPropertyChanged(nameof(isInputEnabled));
+                OnPropertyChanged(nameof(isInputEnabledAndValueValid));
             }
         }
     }
@@ -197,7 +219,20 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
     private ContentDialogClosingDeferral? closingDeferral;
 
     // Whether the dialog can close
-    private bool canClose;
+    private bool canClose
+    {
+        get => _canClose;
+        set
+        {
+            if (value != _canClose)
+            {
+                _canClose = value;
+                OnPropertyChanged(nameof(isInputEnabled));
+                OnPropertyChanged(nameof(isInputEnabledAndValueValid));
+            }
+        }
+    }
+    private bool _canClose;
 
     // Dialog should show an error indicating prior failure and asking user to try again
     private bool showPriorError;
