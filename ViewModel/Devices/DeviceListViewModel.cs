@@ -188,7 +188,7 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
                 DeviceViewModel? deviceViewModel = null;
                 if (d.device != null)
                 {
-                    deviceViewModel = DeviceViewModel.GetById(d.device.Id);
+                    deviceViewModel = DeviceViewModel.GetOrCreateById(d.device.House, d.device.Id);
                 }
                 completionCallback?.Invoke((deviceViewModel, d.isNew));
             },
