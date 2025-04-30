@@ -142,6 +142,7 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
                     DeviceViewModel = d.deviceViewModel;
                     DeviceId = d.deviceViewModel.Id;
                     DeviceIdBox.Value = d.deviceViewModel.Id;
+                    isNewDevice = d.isNew;
                     wasAutoDiscovered = true;
                 }
                 autoDiscoveryJob = null;
