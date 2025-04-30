@@ -876,10 +876,15 @@ public sealed class Devices : OrderedKeyedList<Device>
                 // from the IMAllLinking command, and try again later as part of device synchronization.
                 if (await device.TryReadProductDataAsync())
                 {
-                    // Read the properties of the new device
-                    // This is relatively cheap so do immediately to update the UI
+                    // Channels may have changed as operating flags control the number of channels
+                    // on a certain devices such as KeypadLinc for example
+                    device.EnsureChannels();
+
+                    // Force reading the properties of the new device
+                    // We schedule this here so that it occurs as soon as possible after the interaction
+                    // with the user is finished 
                     device.ResetPropertiesSyncStatus();
-                    await device.TryReadDevicePropertiesAsync(forceSync: true);
+                    device.ScheduleReadDeviceProperties(forceSync: true);
 
                     // Mark link database of the device unknown to force reading from physical device
                     device.AllLinkDatabase.ResetSyncStatus();
@@ -956,10 +961,13 @@ public sealed class Devices : OrderedKeyedList<Device>
                 // from the IMAllLinking command, and try again later as part of device synchronization.
                 if (await device.TryReadProductDataAsync())
                 {
-                    // Read the other properties of the new device
-                    // This is relatively cheap so do immediately to update the UI
+                    device.EnsureChannels();
+
+                    // Force reading the properties of the new device
+                    // We schedule this here so that it occurs as soon as possible after the interaction
+                    // with the user is finished 
                     device.ResetPropertiesSyncStatus();
-                    await device.TryReadDevicePropertiesAsync(forceSync: true);
+                    device.ScheduleReadDeviceProperties(forceSync: true);
 
                     // Mark link database of the device unknown to force reading from physical device
                     device.AllLinkDatabase.ResetSyncStatus();
