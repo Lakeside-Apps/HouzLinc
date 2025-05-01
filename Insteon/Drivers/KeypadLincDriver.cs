@@ -52,8 +52,10 @@ internal sealed class KeypadLincDriver : DeviceDriver
     /// <summary>
     /// Channel count
     /// Channel count depends on operating flags, bit 3, which appears to override product data.
-    /// Note that the OperatingFlags get populated in the DeviceDriverBase constructor
-    /// so it's ok to call this before the OperatingFlags are read from the physical device.
+    /// Note that the OperatingFlags get populated in the DeviceDriverBase constructor from either
+    /// the value read from the model file or the value obtained by querying product data for a new device.
+    /// So, it's ok to call this before the OperatingFlags are read from the physical device.
+    /// It might change though once OperatingFlags are read from the device.
     /// TODO: verify that all KeypadLincs expose OperatingFlags bit 3 as the 6/8 button flag,
     /// if not, we should use product data for those who don't.
     /// </summary>
