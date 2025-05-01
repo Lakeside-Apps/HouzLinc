@@ -433,7 +433,7 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
 
     void IDevicesObserver.DeviceRemoved(Device device)
     {
-        var index =- GetItemIndexByKey(device.Id.ToString());
+        var index = GetItemIndexByKey(device.Id.ToString());
         if (index != -1)
         {
             Items.RemoveAt(index);

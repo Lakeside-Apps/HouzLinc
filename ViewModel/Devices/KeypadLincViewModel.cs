@@ -108,7 +108,17 @@ public sealed class KeypadLincViewModel : DeviceViewModel
         set
         {
             Debug.Assert(nameof(Is8Button) == nameof(Device.Is8Button));
-            Device.Is8Button = value;
+
+            if (value != Device.Is8Button)
+            {
+                Device.Is8Button = value;
+
+                // When switching to a 6 button keypad, we might need to adjust the depressed button
+                if (IsActive && !Device.Is8Button && (depressedButton == 2 || depressedButton >= 7))
+                {
+                    SetDepressedButton(1, true);
+                }
+            }
         }
     }
 
@@ -155,7 +165,7 @@ public sealed class KeypadLincViewModel : DeviceViewModel
     /// <summary>
     /// DataTemplate to use when presenting the device details
     /// </summary>
-    public override string DeviceTemplateName => $"Keypad{ButtonCount}View";
+    public override string DeviceTemplateName => $"KeypadView";
 
     /// <summary>
     /// Return a string describing the type of channels on this device
