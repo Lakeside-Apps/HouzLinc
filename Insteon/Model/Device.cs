@@ -366,9 +366,16 @@ public sealed class Device : DeviceBase
     {
         get => PropertyBag.GetValue(OperatingFlagsName);
         set
-        { 
+        {
+            Bits oldValue = OperatingFlags;
             if (PropertyBag.SetValue(OperatingFlagsName, value))
             {
+                foreach (var prop in OperatingFlagsProperties)
+                {
+                    if (oldValue[prop.index] != value[prop.index])
+                        NotifyObserversOfPropertyChanged(prop.name);
+                }
+
                 NotifyObserversOfPropertyChanged();
                 UpdatePropertiesSyncStatus();
             }
@@ -715,23 +722,55 @@ public sealed class Device : DeviceBase
     public MockPhysicalDevice? MockPhysicalDevice => House.GetMockPhysicalDevice(Id);
 
     // -----------------------------------------------------------------------------------
-    // Read-write properties from the physical device, as part of OperatingFlags.
+    // Read-write properties from the physical device, stored as bits in OperatingFlags.
     // PropertiesSyncStatus is updated every time these properties get changed and
     // the OnDevicePropertyChange event is raised.
     // ------------------------------------------------------------------------------------
+
+    // We use this array as the central place to describe properties stored in OperatingFlags
+    // to make it easy to fire OnPropertyChanged notifications, whether the result of a single
+    // property changing or the whole OperatingFlags or OpFlags2 bytes.
+    private readonly static (int index, string name)[] OperatingFlagsProperties =
+    {
+        (0, nameof(ProgramLock)),
+        (1, nameof(LEDOnTx)),
+        (2, nameof(ResumeDim)),
+        (2, nameof(BeeperOn)),
+        (3, nameof(Is8Button)),
+        (3, nameof(StayAwake)),
+        (4, nameof(LEDOn)),
+        (5, nameof(LoadSenseOn)),
+        (5, nameof(NoHeartbeat)),
+        (5, nameof(KeyBeep)),
+        (6, nameof(RFEnabled)),
+        (7, nameof(PowerlineEnabled)),
+        (8+5, nameof(DetachedLoad)) // in OpFlags2
+    };
+
+    // Returns the bit index of a given property in the array above
+    private static int BitInOperatingFlags([CallerMemberName] string name = "")
+    {
+        foreach (var prop in OperatingFlagsProperties)
+            if (name == prop.name)
+                return prop.index;
+
+        Debug.Assert(false, $"Unknown OperatingFlags property: {name}");
+        return 0;
+    }
 
     /// <summary>
     /// Operating flags bits - Program Lock
     /// </summary>
     public bool ProgramLock
     {
-        get { return OperatingFlags[0]; }
+        get { return OperatingFlags[BitInOperatingFlags()]; }
         set
         {
-            if (value != OperatingFlags[0])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags; 
-                flags[0] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -743,13 +782,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool LEDOnTx
     {
-        get { return OperatingFlags[1]; }
+        get { return OperatingFlags[BitInOperatingFlags()]; }
         set
         {
-            if (value != OperatingFlags[1])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[1] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -761,13 +801,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool ResumeDim
     {
-        get { return OperatingFlags[2]; }
+        get { return OperatingFlags[BitInOperatingFlags()]; }
         set
         {
-            if (value != OperatingFlags[2])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[2] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -779,13 +820,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool BeeperOn
     {
-        get { return OperatingFlags[2]; }
+        get { return OperatingFlags[BitInOperatingFlags()]; }
         set
         {
-            if (value != OperatingFlags[2])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[2] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -797,13 +839,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool Is8Button
     {
-        get { return OperatingFlags[3]; }
+        get { return OperatingFlags[BitInOperatingFlags()]; }
         set
         {
-            if (value != OperatingFlags[3])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[3] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -815,13 +858,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool StayAwake
     {
-        get { return OperatingFlags[3]; }
-        set 
+        get { return OperatingFlags[BitInOperatingFlags()]; }
+        set
         {
-            if (value != OperatingFlags[3])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[3] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -834,13 +878,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool LEDOn
     {
-        get => !OperatingFlags[4];
+        get => !OperatingFlags[BitInOperatingFlags()];
         set
         {
-            if (!value != OperatingFlags[4])
+            var bit = BitInOperatingFlags();
+            if (!value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[4] = !value;
+                flags[bit] = !value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -852,13 +897,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool ReceiveOnly
     {
-        get => OperatingFlags[4];
+        get => OperatingFlags[BitInOperatingFlags()];
         set
         {
-            if (value != OperatingFlags[4])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[4] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -870,13 +916,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool LoadSenseOn
     {
-        get => OperatingFlags[5];
+        get => OperatingFlags[BitInOperatingFlags()];
         set
         {
-            if (value != OperatingFlags[5])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[5] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -888,13 +935,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool NoHeartbeat
     {
-        get => OperatingFlags[5];
+        get => OperatingFlags[BitInOperatingFlags()];
         set
         {
-            if (value != OperatingFlags[5])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[5] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -906,13 +954,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool KeyBeep
     {
-        get => OperatingFlags[5];
+        get => OperatingFlags[BitInOperatingFlags()];
         set
         {
-            if (value != OperatingFlags[5])
+            var bit = BitInOperatingFlags();
+            if (value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[5] = value;
+                flags[bit] = value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -925,13 +974,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool RFEnabled
     {
-        get => !OperatingFlags[6];
+        get => !OperatingFlags[BitInOperatingFlags()];
         set
         {
-            if (!value != OperatingFlags[6])
+            var bit = BitInOperatingFlags();
+            if (!value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[6] = !value;
+                flags[bit] = !value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -944,13 +994,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool PowerlineEnabled
     {
-        get => !OperatingFlags[7];
-        set 
+        get => !OperatingFlags[BitInOperatingFlags()];
+        set
         {
-            if (!value != OperatingFlags[7])
+            var bit = BitInOperatingFlags();
+            if (!value != OperatingFlags[bit])
             {
                 Bits flags = OperatingFlags;
-                flags[7] = !value;
+                flags[bit] = !value;
                 OperatingFlags = flags;
                 NotifyObserversOfPropertyChanged();
             }
@@ -963,13 +1014,14 @@ public sealed class Device : DeviceBase
     /// </summary>
     public bool DetachedLoad
     {
-        get => OpFlags2[5];
+        get => OpFlags2[BitInOperatingFlags() - 8];
         set
         {
-            if (value != OpFlags2[5])
+            var bit = BitInOperatingFlags() - 8;
+            if (value != OpFlags2[bit])
             {
                 Bits flags = OpFlags2;
-                flags[5] = value;
+                flags[bit] = value;
                 OpFlags2 = flags;
                 NotifyObserversOfPropertyChanged();
             }
