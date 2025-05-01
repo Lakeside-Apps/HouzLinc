@@ -454,6 +454,24 @@ public abstract class HubCommand : Command
                 advanced = true;
             }
         }
+        else if (header.Byte(2) == IMCommandCode_SendInsteonMessage)
+        {
+            // When devices send a message in response to the user pressing and holding SET
+            // to all-link devices, the IM appears to echo the message back to the sender.
+            // Advance past that echo.
+
+            // Minus 3 from the length as the SendInsteonMessage command does not send the "From" id
+            HexString response = await ResponseStream.Read(ResponseHeaderLength + InsteonStandardMessage.Length - 3);
+
+            // This command can also send an extended message
+            if ((response.Byte(ResponseHeaderLength + 4) & (byte)MessageLength.Extended) != 0)
+            {
+                await ResponseStream.Read(ResponseHeaderLength + InsteonExtendedMessage.Length - 3);
+            }
+
+            ResponseStream.Advance();
+            advanced = true;
+        }
 
         // X10 message
         else if (header.Byte(2) == IMCommandCode_X10Received)

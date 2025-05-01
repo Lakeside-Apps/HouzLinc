@@ -322,6 +322,7 @@ public abstract class DeviceCommand : HubCommand
 
     /// <summary>
     ///  Called when echo/ACK is received from IM
+    ///  or when a All-Link record is received for certain commands
     ///  See base class for details
     /// </summary>
     /// <param name="message">message received</param>
@@ -436,10 +437,8 @@ public abstract class DeviceCommand : HubCommand
         {
             ExtendedResponseMessage = message;
             SetComplete();
-            return true;
         }
-
-        return false;
+        return true;
     }
 
     /// <summary>
