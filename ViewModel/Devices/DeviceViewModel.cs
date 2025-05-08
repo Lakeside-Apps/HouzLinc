@@ -879,12 +879,75 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     }
 
     /// <summary>
-    /// Remove this device
+    /// ViewModel level helper to schedule adding a device to the network by Id.
+    /// </summary>
+    /// <param name="deviceId"></param>
+    /// <param name="completionCallback"></param>
+    /// <param name="delay"></param>
+    /// <returns>handle to scheduled job, null if the device was already in the network</returns>
+    public static object? ScheduleAddOrConnectDevice(InsteonID deviceId, House house,
+        Scheduler.JobCompletionCallback<(DeviceViewModel? deviceViewModel, bool isNew)>? completionCallback = null,
+        TimeSpan delay = new TimeSpan())
+    {
+        DeviceViewModel? deviceViewModel = DeviceViewModel.GetById(deviceId);
+        // If no device exists with this id or the device is not connected to the network, add and connect it now
+        if (deviceViewModel == null || deviceViewModel.DeviceConnectionStatus != Device.ConnectionStatus.Connected)
+        {
+            return house.Devices.ScheduleAddOrConnectDevice(deviceId, (d) =>
+            {
+                DeviceViewModel? deviceViewModel = null;
+                if (d.device != null)
+                {
+                    deviceViewModel = DeviceViewModel.GetById(d.device.Id);
+                }
+                completionCallback?.Invoke((deviceViewModel, d.isNew));
+            },
+            delay);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// ViewModel level helper to schedule adding a new device manually to the network, 
+    /// The user has to press the SET button for 3 sec on the actual device.
+    /// If successful, update properties and links from the new device and links the hub
+    /// </summary>
+    /// <param name="completionCallback">called on completion if not null</param>
+    /// <param name="delay">delay before running job</param>
+    /// <returns>handle to scheduled job</returns>
+    public static object ScheduleAddDeviceManually(House house,
+        Scheduler.JobCompletionCallback<(DeviceViewModel? deviceViewModel, bool isNew)>? completionCallback = null, TimeSpan delay = new TimeSpan())
+    {
+        return house.Devices.ScheduleAddDeviceManually((d) =>
+        {
+            DeviceViewModel? deviceViewModel = null;
+            if (d.device != null)
+            {
+                deviceViewModel = DeviceViewModel.GetOrCreateById(d.device.House, d.device.Id);
+            }
+            completionCallback?.Invoke((deviceViewModel, d.isNew));
+        },
+            delay);
+    }
+
+    /// <summary>
+    /// ViewModel level helper to cancel adding a device manually
+    /// </summary>
+    /// <param name="job">Add device job to cancel</param>
+    /// <returns>handle to scheduled job</returns>
+    public static object ScheduleCancelAddDevice(object job, House house)
+    {
+        return house.Devices.ScheduleCancelAddDevice(job);
+    }
+
+    /// <summary>
+    /// ViewModel level helper to schedule removing this device from the model
     /// </summary>
     /// <param name="completionCallback"></param>
     /// <param name="delay"></param>
     /// <returns>handle to scheduled job</returns>
-    public object RemoveDevice(Scheduler.JobCompletionCallback<bool>? completionCallback = null, TimeSpan delay = new TimeSpan())
+    public Object? ScheduleRemoveDevice(Scheduler.JobCompletionCallback<bool>? completionCallback = null, TimeSpan delay = new TimeSpan())
     {
         return Device.House.Devices.ScheduleRemoveDevice(Device.Id, completionCallback, delay);
     }
@@ -910,46 +973,21 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     }
 
     /// <summary>
-    /// Handler for the "Remove Device" menu
+    /// Replace this device by another
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void RemoveDevice_Click(object sender, RoutedEventArgs e)
+    public void ReplaceDevice(InsteonID replacementDeviceId)
     {
-        RemoveDevice();
+        Device.TryReplaceDeviceBy(replacementDeviceId);
+        ScheduleRemoveDevice();
     }
 
     /// <summary>
-    /// Handler for the "Replace Device" menu
+    /// Copy this device to another
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public async void ReplaceDevice_Click(object sender, RoutedEventArgs e)
+    /// <param name="copyDeviceId"></param>
+    public void CopyDevice(InsteonID copyDeviceId)
     {
-        var replacementDeviceId = await DeviceListViewModel.ShowNewDeviceDialog();
-        if (replacementDeviceId != null && !replacementDeviceId.IsNull)
-        {
-            Device.TryReplaceDeviceBy(replacementDeviceId);
-
-            // Remove this device from the house
-            Device.House.Devices.ScheduleRemoveDevice(this.Id);
-        }
-    }
-
-    /// <summary>
-    /// Handler for the "Copy Device" menu
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public async void CopyDevice_Click(object sender, RoutedEventArgs e)
-    {
-        var copyDeviceId = await DeviceListViewModel.ShowDeviceIdDialog();
-        if (copyDeviceId != null && !copyDeviceId.IsNull)
-        {
-            // TODO: Cleanup Destination device
-
-            Device.TryCopyDeviceTo(copyDeviceId);
-        }
+        Device.TryCopyDeviceTo(copyDeviceId);
     }
 
     /// <summary>
