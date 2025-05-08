@@ -20,5 +20,6 @@ public interface IDevicesObserver
     public void DeviceAdded(Device device);
     public void DeviceInserted(int seq, Device device);
     public void DeviceRemoved(Device device);
+    public void DeviceTypeChanged(Device device);
 }
 

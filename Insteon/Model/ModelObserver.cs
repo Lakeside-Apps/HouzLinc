@@ -57,6 +57,11 @@ public sealed class ModelObserver :
         OnModelChanged?.Invoke();
     }
 
+    void IDevicesObserver.DeviceTypeChanged(Device device)
+    {
+        OnModelChanged?.Invoke();
+    }
+
     void IDevicesObserver.DeviceInserted(int seq, Device device)
     {
         modelChangePlayer.Record(new DeviceInsertedChange(seq, device));

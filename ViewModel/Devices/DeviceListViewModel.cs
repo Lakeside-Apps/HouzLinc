@@ -126,95 +126,11 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
         }
     }
 
-    /// <summary>
-    /// Add a device to the network and to this collection by Id
-    /// </summary>
-    /// <param name="deviceId"></param>
-    /// <param name="completionCallback"></param>
-    /// <param name="delay"></param>
-    /// <returns>handle to scheduled job, null if the device was already in the network</returns>
-    public object? ScheduleAddOrConnectDevice(InsteonID deviceId, 
-        Scheduler.JobCompletionCallback<(DeviceViewModel? deviceViewModel, bool isNew)>? completionCallback = null, 
-        TimeSpan delay = new TimeSpan())
-    {
-        DeviceViewModel? deviceViewModel = DeviceViewModel.GetById(deviceId);
-        // If no device exists with this id or the device is not connected to the network, add and connect it now
-        if (deviceViewModel == null || deviceViewModel.DeviceConnectionStatus != Device.ConnectionStatus.Connected)
-        {
-            return devices.ScheduleAddOrConnectDevice(deviceId, (d) =>
-            {
-                DeviceViewModel? deviceViewModel = null;
-                if (d.device != null)
-                {
-                    deviceViewModel = DeviceViewModel.GetById(d.device.Id);
-                }
-                else if (deviceViewModel != null)
-                {
-                    // TODO: Should we remove the device view model from the collection on failure to create the device?
-                    // Or is it better to leave it there marked disconnected?
-                    Items.Remove(deviceViewModel);
-                }
-                completionCallback?.Invoke((deviceViewModel, d.isNew));
-            },
-            delay);
-        }
-
-        return null;
-    }
-
-    /// <summary>
-    /// Schedule removing a device from the network, from the model and from this collection
-    /// </summary>
-    /// <param name="deviceId">id of device to remove</param>
-    /// <param name="completionCallback"></param>
-    /// <param name="delay"></param>
-    /// <returns>handle to scheduled job</returns>
-    public Object? ScheduleRemoveDevice(InsteonID deviceId, Scheduler.JobCompletionCallback<bool>? completionCallback = null, TimeSpan delay = new TimeSpan())
-    {
-        return devices.House.Devices.ScheduleRemoveDevice(deviceId, completionCallback, delay);
-    }
-
-    /// <summary>
-    /// Schedule adding a new device manually to the network, i.e., the user has to press the SET button for 3 sec on the actual device
-    /// If successful, update properties and links from the new device and links the hub
-    /// </summary>
-    /// <param name="completionCallback">called on completion if not null</param>
-    /// <param name="delay">delay before running job</param>
-    /// <returns>handle to scheduled job</returns>
-    public object ScheduleAddDeviceManually(Scheduler.JobCompletionCallback<(DeviceViewModel? deviceViewModel, bool isNew)>? completionCallback = null, TimeSpan delay = new TimeSpan())
-    {
-        return devices.ScheduleAddDeviceManually((d) =>
-            {
-                DeviceViewModel? deviceViewModel = null;
-                if (d.device != null)
-                {
-                    deviceViewModel = DeviceViewModel.GetOrCreateById(d.device.House, d.device.Id);
-                }
-                completionCallback?.Invoke((deviceViewModel, d.isNew));
-            },
-            delay);
-    }
 
     /// <summary>
     /// Show new device dialog, using a callback into the UI layer
     /// </summary>
-    internal static async Task<InsteonID?> ShowNewDeviceDialog()
-    {
-        if (ShowNewDeviceDialogHandler != null)
-        {
-            return await ShowNewDeviceDialogHandler.Invoke();
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// Event to UI layer to show NewDeviceDialog
-    /// </summary>
-    public static event Func<Task<InsteonID?>> ShowNewDeviceDialogHandler = null!;
-
-    /// <summary>
-    /// Show new device dialog, using a callback into the UI layer
-    /// </summary>
+    public static event Func<Task<InsteonID?>> ShowDeviceIdDialogHandler = null!;
     internal static async Task<InsteonID?> ShowDeviceIdDialog()
     {
         if (ShowDeviceIdDialogHandler != null)
@@ -222,22 +138,6 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
             return await ShowDeviceIdDialogHandler.Invoke();
         }
         return null;
-    }
-
-    /// <summary>
-    /// Event to UI layer to show DeviceIdDialog
-    /// </summary>
-    /// <returns></returns>
-    public static event Func<Task<InsteonID?>> ShowDeviceIdDialogHandler = null!;
-
-    /// <summary>
-    /// Cancels adding a device manually
-    /// </summary>
-    /// <param name="job">Add device job to cancel</param>
-    /// <returns>handle to scheduled job</returns>
-    public object ScheduleCancelAddDevice(object job)
-    {
-        return devices.ScheduleCancelAddDevice(job);
     }
 
     /// <summary>
@@ -438,6 +338,26 @@ public sealed class DeviceListViewModel : ItemListViewModel<DeviceViewModel>, ID
         {
             Items.RemoveAt(index);
             RoomsChanged();
+        }
+    }
+
+    void IDevicesObserver.DeviceTypeChanged(Device device)
+    {
+        // The device type may have changed and require a new type of view model.
+        // (e.g., we preloaded a generic device view model for percieved responsiveness,
+        // and it's the wrong type now)
+        var deviceViewModel = DeviceViewModel.GetOrCreateById(device.House, device.Id);
+        if (deviceViewModel != null)
+        {
+            var index = GetItemIndexByKey(deviceViewModel.ItemKey);
+            if (index != -1)
+            {
+                if (!ReferenceEquals(Items[index], deviceViewModel))
+                {
+                    System.Diagnostics.Debug.Assert(Items[index].ItemKey == deviceViewModel.ItemKey);
+                    Items[index] = deviceViewModel;
+                }
+            }
         }
     }
 

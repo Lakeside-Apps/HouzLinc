@@ -876,6 +876,10 @@ public sealed class Devices : OrderedKeyedList<Device>
                 // from the IMAllLinking command, and try again later as part of device synchronization.
                 if (await device.TryReadProductDataAsync())
                 {
+                    // Observers might have to adjust to the new product data
+                    // (e.g., view model created when adding the device might have to change)
+                    observers.ForEach(o => o.DeviceTypeChanged(device));
+
                     // Channels may have changed as operating flags control the number of channels
                     // on a certain devices such as KeypadLinc for example
                     device.EnsureChannels();
@@ -961,6 +965,12 @@ public sealed class Devices : OrderedKeyedList<Device>
                 // from the IMAllLinking command, and try again later as part of device synchronization.
                 if (await device.TryReadProductDataAsync())
                 {
+                    // Observers might have to adjust to the new product data
+                    // (e.g., view model created when adding the device might have to change)
+                    observers.ForEach(o => o.DeviceTypeChanged(device));
+
+                    // Channels may have changed as operating flags control the number of channels
+                    // on a certain devices such as KeypadLinc for example
                     device.EnsureChannels();
 
                     // Force reading the properties of the new device

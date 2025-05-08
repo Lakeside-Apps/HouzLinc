@@ -53,7 +53,7 @@
                     win:ToolTipService.ToolTip="Remove Device"
                     Margin="0,0,3,0"
                     Style="{ThemeResource SplitViewPaneButtonStyle}"
-                    Click="RemoveDeviceBtnClick">
+                    Click="RemoveDevice_Click">
                     <SymbolIcon Symbol="Delete"/>
                 </Button>
                 <Button
@@ -65,9 +65,9 @@
                         <MenuFlyout Placement="Bottom">
                             <MenuFlyoutItem Text="Read and Update Device" Click="{x:Bind ItemViewModel.ForceSyncDevice_Click}"/>
                             <MenuFlyoutItem Text="Check Connection Status" Click="{x:Bind ItemViewModel.ForceCheckDeviceConnectionStatus_Click}"/>
-                            <MenuFlyoutItem Text="Remove Device" Click="{x:Bind ItemViewModel.RemoveDevice_Click}"/>
-                            <MenuFlyoutItem Text="Replace Device" Click="{x:Bind ItemViewModel.ReplaceDevice_Click}"/>
-                            <MenuFlyoutItem Text="Copy Device" Click="{x:Bind ItemViewModel.CopyDevice_Click}"/>
+                            <MenuFlyoutItem Text="Remove Device" Click="{x:Bind RemoveDevice_Click}"/>
+                            <MenuFlyoutItem Text="Replace Device" Click="{x:Bind ReplaceDevice_Click}"/>
+                            <MenuFlyoutItem Text="Copy Device" Click="{x:Bind CopyDevice_Click}"/>
                             <MenuFlyoutItem Text="Remove Stale Controllers/Responders" Click="{x:Bind ItemViewModel.RemoveStaleLinks_Click}"/>
                             <MenuFlyoutItem Text="Remove Duplicate Controllers/Responders" Click="{x:Bind ItemViewModel.RemoveDuplicateLinks_Click}"/>
                             <MenuFlyoutItem Text="Ensure Hub is First Controller" Click="{x:Bind ItemViewModel.EnsureLinkToHubIsFirst_Click}"/>

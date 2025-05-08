@@ -17,22 +17,25 @@ using Common;
 using ViewModel.Devices;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Insteon.Model;
 
 namespace UnoApp.Dialogs;
 
 public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChanged
 {
-    public NewDeviceDialog(XamlRoot xamlRoot, DeviceListViewModel deviceListViewModel, 
+    public NewDeviceDialog(XamlRoot xamlRoot, House house, string title, string primaryButtonText,
         InsteonID? showDeviceId = null, bool showPriorError = false)
     {
         this.InitializeComponent();
         this.Closing += DeviceIdDialog_Closing;
-        this.deviceListViewModel = deviceListViewModel;
+        this.house = house;
         this.XamlRoot = xamlRoot;
         this.canClose = true;
         this.DeviceId = showDeviceId;
         this.DeviceIdBox.Value = DeviceId;
         this.showPriorError = showPriorError;
+        this.Title = title;
+        this.PrimaryButtonText = primaryButtonText;
     }
 
     // Data bdinding to the UI
@@ -57,7 +60,7 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
             }
 
             canClose = false;
-            var job = deviceListViewModel.ScheduleAddOrConnectDevice(DeviceId,
+            var job = DeviceViewModel.ScheduleAddOrConnectDevice(DeviceId, house,
                 (d) =>
                 {
                     if (d.deviceViewModel != null)
@@ -93,7 +96,7 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
         {
             // We discovered a device, then user canceled, so remove it
             canClose = false;
-            deviceListViewModel.ScheduleRemoveDevice(DeviceViewModel.Id,
+            DeviceViewModel.ScheduleRemoveDevice(
                 (success) =>
                 {
                     if (success)
@@ -113,7 +116,7 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
         {
             // No point holding the dialog open since the user cancelled,
             // just fire and forget the cancellation
-            deviceListViewModel.ScheduleCancelAddDevice(autoDiscoveryJob);
+            DeviceViewModel.ScheduleCancelAddDevice(autoDiscoveryJob, house);
             canClose = true;
         }
         else 
@@ -134,7 +137,7 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
     // Start an IM linking operation 
     private void AutoDiscover_Click(object sender, RoutedEventArgs e)
     {
-        autoDiscoveryJob = deviceListViewModel.ScheduleAddDeviceManually(
+        autoDiscoveryJob = DeviceViewModel.ScheduleAddDeviceManually(house,
             (d) =>
             {
                 if (d.deviceViewModel != null)
@@ -213,8 +216,8 @@ public sealed partial class NewDeviceDialog : ContentDialog, INotifyPropertyChan
     // DeviceViewModel for the device that is bing added
     private DeviceViewModel? DeviceViewModel;
 
-    // List of deviceListViewModel to add new device to
-    private readonly DeviceListViewModel deviceListViewModel;
+    // Model to which the device is to be added
+    private readonly House house;
 
     // Closing defferal to delay closing until the device is added
     private ContentDialogClosingDeferral? closingDeferral;

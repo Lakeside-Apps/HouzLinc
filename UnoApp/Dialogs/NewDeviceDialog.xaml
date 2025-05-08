@@ -7,8 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Add New Device"
-    PrimaryButtonText="Add"
     IsPrimaryButtonEnabled="{x:Bind isInputEnabledAndValueValid, Mode=OneWay}"
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
@@ -32,7 +30,7 @@
             IsValueValid="{x:Bind isValueValid, Mode=TwoWay}"
             IsEnabled="{x:Bind isInputEnabled, Mode=OneWay}"/>
 
-        <TextBlock Margin="0,20,0,0" Text="Or auto-discover the device: tap below, then walk to the device and press and hold its 'set' button." TextWrapping="Wrap"/>
+        <TextBlock Margin="0,20,0,0" Text="Or auto-discover the device: tap below, then walk to the device and press and hold its 'Set' button until the device emits a double beep." TextWrapping="Wrap"/>
         <Button
             Content="Auto-discover device"
             Margin="0,20,0,0"
