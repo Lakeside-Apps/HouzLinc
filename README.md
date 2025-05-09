@@ -35,7 +35,7 @@ This promotes a Windows first development approach, where development can occur 
 ### Layering
 The following diagram shows HouzLinc high level architecture:
 
-![](architecture.jpg)
+![](Architecture.jpg)
 
 **Commands**: (namespace: `Insteon.Commands`) consists of an implementation of Insteon Hub and Device commands, using the Insteon Hub http interface. This layer abstracts the underlying details of the protocol and exposes a set of easily consumable command classes.
 
