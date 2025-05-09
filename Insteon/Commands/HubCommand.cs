@@ -329,6 +329,15 @@ public abstract class HubCommand : Command
                     }
                 }
 
+                // Extra 00 in front of response message
+                // In some cases we get an extra 00
+                else if (header.Byte(1) == 0 && header.Byte(2) == 0x02)
+                {
+                    Logger.Log.Debug("Received extra 00 from the IM");
+                    ResponseStream.Advance(1);
+                    advanced = true;
+                }
+
                 // Extra ACK
                 // In some cases we get an extra ACK
                 else if (header.Byte(1) == IMCommandCode_ACK)
