@@ -154,7 +154,7 @@
             IsItemClickEnabled="True"
             ItemClick="OnItemClick"
             ItemsSource="{x:Bind sceneListViewModel.Items, Mode=OneWay}"
-            SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+            SelectedItem="{x:Bind sceneListViewModel.SelectedItem, Mode=TwoWay}"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.HorizontalScrollMode="Enabled"
             ItemContainerStyle="{StaticResource CustomListViewItemExpanded}">

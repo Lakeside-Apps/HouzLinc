@@ -132,7 +132,6 @@ public sealed partial class DeviceListPage : DeviceListPageBase
             var deviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, deviceId);
             if (deviceViewModel != null)
             {
-
                 SelectedItem = deviceViewModel;
                 break;
             }

@@ -53,6 +53,7 @@ public abstract partial class ItemListPage<ItemViewModelType, ItemDetailsPage> :
     protected StatusBarViewModel StatusBarViewModel => StatusBarViewModel.Instance;
 
     // Currently selected item in the main view model
+    // Convenience but NOT bindable. Bind UI to ItemListViewModel.SelectedItem instead
     protected ItemViewModelType? SelectedItem
     {
         get => ItemListViewModel.SelectedItem;
