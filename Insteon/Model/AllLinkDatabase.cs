@@ -488,14 +488,14 @@ public sealed class AllLinkDatabase : OrderedNonUniqueKeyedList<AllLinkRecord>
     /// </summary>
     /// <param name="seq1">valid seq of first record to swap</param>
     /// <param name="seq2">valid seq of second record to swap</param>
-    internal void SwapRecords(int seq1, int seq2)
+    internal bool SwapRecords(int seq1, int seq2)
     {
         Debug.Assert(seq1 >= 0 && seq1 < Count);
         Debug.Assert(seq2 >= 0 && seq2 < Count);
 
         // Can't swap with high water mark
-        Debug.Assert(!this[seq1].IsHighWatermark);
-        Debug.Assert(!this[seq2].IsHighWatermark);
+        if (this[seq1].IsHighWatermark) return false;
+        if (this[seq2].IsHighWatermark) return false;
 
         // Remember the original records
         AllLinkRecord record1 = this[seq1];
@@ -511,6 +511,8 @@ public sealed class AllLinkDatabase : OrderedNonUniqueKeyedList<AllLinkRecord>
         this[seq1] = new(this[seq1]) { Uid = record2.Uid, SyncStatus = SyncStatus.Changed };
 
         LastStatus = SyncStatus.Changed;
+
+        return true;
     }
 
     /// <summary>
