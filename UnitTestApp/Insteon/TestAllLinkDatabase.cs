@@ -289,14 +289,9 @@ public sealed class TestAllLinkDatabase
         AllLinkDatabase database = BuildDatabaseBefore();
         AllLinkDatabase referenceDatabase = BuildReferenceDatabaseAfterSwap();
 
-        database.SwapRecords(0, 1);
-        database.SwapRecords(2, 3);
-        try
-        {
-            database.SwapRecords(3, 5); // attempt to swap with high water mark, should fail
-            Assert.IsTrue(false, "Attempt to swap with high water mark should fail");
-        }
-        catch { }
+        Assert.IsTrue(database.SwapRecords(0, 1));
+        Assert.IsTrue(database.SwapRecords(2, 3));
+        Assert.IsFalse(database.SwapRecords(3, 5)); // attempt to swap with high water mark, should fail
 
         // Check records against reference
         Assert.AreEqual(referenceDatabase.Count, database.Count, "Test and ref databases have a different number of records");
