@@ -116,6 +116,7 @@ public static class HouseExtensions
         await house.Devices.AddOrConnectDeviceAsync(newDeviceId);
         var device = house.Devices.GetDeviceByID(newDeviceId)!;
         if (name != null) device.DisplayName = name;
+        await device.TryReadDevicePropertiesAsync(forceSync: true);
         await device.TryReadAllLinkDatabaseAsync();
         await house.Hub.TryReadAllLinkDatabaseAsync();
     }
