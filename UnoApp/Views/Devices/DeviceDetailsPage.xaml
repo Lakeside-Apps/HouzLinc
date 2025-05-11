@@ -49,6 +49,14 @@
                 Style="{StaticResource TitleTextBlockStyle}"/>
             <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
                 <Button
+                    Tag="AddDevice"
+                    win:ToolTipService.ToolTip="Add Device"
+                    Margin="0,0,3,0"
+                    Style="{ThemeResource SplitViewPaneButtonStyle}"
+                    Click="{x:Bind AddDevice_Click}">
+                    <SymbolIcon Symbol="Add"/>
+                </Button>
+                <Button
                     Tag="RemoveDevice"
                     win:ToolTipService.ToolTip="Remove Device"
                     Margin="0,0,3,0"

@@ -18,6 +18,7 @@ using UnoApp.Dialogs;
 using ViewModel.Devices;
 using ViewModel.Settings;
 using Common;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace UnoApp.Views.Devices;
 
@@ -69,13 +70,36 @@ public sealed partial class DeviceDetailsPage : DeviceDetailsPageBase
         return null;
     }
 
-
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+    // Handler for the "Add device" button
     private async void AddDevice_Click(object sender, RoutedEventArgs e)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        // Current not implemented - Detail page does not have Add button
-        throw new NotImplementedException();
+        bool showPriorError = false;
+        InsteonID? deviceId = null;
+        while (true)
+        {
+            // Present the dialog to the user to enter/discover the device Id.
+            // If successfull, this will add the new device to the model and
+            // add the corresponding new view model to this list if not already in.
+            deviceId = await ShowNewDeviceDialog("Add New Device", "Add", deviceId, showPriorError);
+            if (deviceId == null || deviceId.IsNull)
+            {
+                // User cancelled out of the dialog
+                break;
+            }
+
+            // If we have a new device view model, select it and return
+            var deviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, deviceId);
+            if (deviceViewModel != null)
+            {
+                // Navigate to the detail page for the copied device
+                Frame.Navigate(typeof(DeviceDetailsPage), deviceViewModel.ItemKey, new DrillInNavigationTransitionInfo());
+                break;
+            }
+
+            // We could not add the device (e.g., device with the Id the user entered
+            // did not exist on the network). Try again.
+            showPriorError = true;
+        }
     }
 
     private async void RemoveDevice_Click(object sender, RoutedEventArgs e)
@@ -122,6 +146,8 @@ public sealed partial class DeviceDetailsPage : DeviceDetailsPageBase
             if (replacementDeviceViewModel != null && ItemViewModel != null)
             {
                 ItemViewModel.ReplaceDevice(replacementDeviceId);
+                // Navigate to the detail page for the replaced device
+                Frame.Navigate(typeof(DeviceDetailsPage), replacementDeviceViewModel.ItemKey, new DrillInNavigationTransitionInfo());
                 break;
             }
 
@@ -147,6 +173,8 @@ public sealed partial class DeviceDetailsPage : DeviceDetailsPageBase
             if (copyDeviceViewModel != null && ItemViewModel != null)
             {
                 ItemViewModel.CopyDevice(copyDeviceId);
+                // Navigate to the detail page for the copy
+                Frame.Navigate(typeof(DeviceDetailsPage), copyDeviceViewModel.ItemKey, new DrillInNavigationTransitionInfo());
                 break;
             }
 
