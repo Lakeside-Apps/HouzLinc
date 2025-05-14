@@ -397,7 +397,7 @@ public class TestModelChanges : ModelTestsBase
             // Simulate acquiring Product Data from the physical device
             device.CategoryId = deviceSpec.CategoryId;
             device.SubCategory = deviceSpec.SubCategory;
-            device.IsProductDataRead = true;
+            device.IsProductDataKnown = true;
             device.DisplayName = deviceSpec.DisplayName;
         }
 

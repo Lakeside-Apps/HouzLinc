@@ -185,7 +185,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
             Device.House.Rooms.AddObserver(this);
 
             // Read interesting info from the device
-            // Only attempt to read information from the device if it is connected
+            // but only attempt it if the device is connected
             Device.ScheduleGetConnectionStatus(status => 
             {
                 if (status == Device.ConnectionStatus.Connected )
@@ -203,7 +203,8 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
                         delay: new TimeSpan(0, 0, 5),
                         forceSync: false);
                 }
-            });
+            }, 
+            force: true);
         }
         else
         {
