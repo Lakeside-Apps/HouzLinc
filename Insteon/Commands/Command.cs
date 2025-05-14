@@ -201,10 +201,12 @@ public abstract class Command
     /// <summary>
     /// Max number of attempts of the command by default
     /// The default is 1 (no retry), so as to return to the scheduler as soon as possible
-    /// to decide whether to retry or cancel the job, potentially giving pending commands the opportunity to run.
-    /// A different number can be passed to TryRunAsync.
+    /// to decide whether to retry or cancel the job, potentially giving pending commands 
+    /// the opportunity to run first.
+    /// Certain commands (e.g., GetLink) that have a tendency to fail intermitently on some devices 
+    /// can pass a different number
     /// </summary>
-    internal const int DefaultMaxAttempts = 3;
+    internal const int DefaultMaxAttempts = 1;
 
     // Wait time before retrying after the command returns a error that could be due to network or device instability
     private static TimeSpan waitBeforeRetryAfterError = TimeSpan.FromMilliseconds(100);
