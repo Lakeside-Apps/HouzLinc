@@ -421,7 +421,7 @@ public sealed class Channel : ChannelBase
     /// </summary>
     /// <param name="forceSync">see above</param>
     /// <returns>success</returns>
-    internal async Task<bool> TryReadChannelProperties(bool forceSync)
+    internal async Task<bool> TryReadChannelPropertiesAsync(bool forceSync)
     {
         // Fail silently if the device does not have channel properties.
         if (!DeviceDriver.HasChannelProperties)
@@ -430,6 +430,8 @@ public sealed class Channel : ChannelBase
         bool success = await DeviceDriver.TryReadChannelPropertiesAsync(Id);
         if (success)
         {
+            // Defer updating the sync status until we have read all properties
+            // (without deferredExecution, each assignment below calls UpdatePropertiesSyncStatus)
             using (new Common.DeferredExecution<bool>(UpdatePropertiesSyncStatus, param: true,
                 deferExecutionCallback: (bool defer) => deferPropertiesSyncStatusUpdate = defer))
             {
@@ -456,16 +458,15 @@ public sealed class Channel : ChannelBase
     /// Asynchronously synchronize local properties to the device
     /// </summary>
     /// <returns>true if success</returns>
-    internal async Task<bool> TryWriteChannelProperties()
+    internal async Task<bool> TryWriteChannelPropertiesAsync()
     {
         bool success = true;
-        bool changed = false;
 
         // First try to read the channel properties to limit the number of writes
         // If that fails, we still try to write all properties
         if (!ArePropertiesRead)
         {
-            await TryReadChannelProperties(forceSync: false);
+            await TryReadChannelPropertiesAsync(forceSync: false);
         }
 
         // Now try to write properties if not read or not synced
@@ -473,7 +474,6 @@ public sealed class Channel : ChannelBase
         {
             if (ChannelDriver != null && await ChannelDriver.TryWriteFollowMask((byte)FollowMask))
             {
-                changed = true;
                 FollowMaskLastUpdate = DateTime.Now;
             }
             else success = false;
@@ -487,7 +487,6 @@ public sealed class Channel : ChannelBase
         {
             if (ChannelDriver != null && await ChannelDriver.TryWriteFollowOffMask((byte)FollowOffMask))
             {
-                changed = true;
                 FollowOffMaskLastUpdate = DateTime.Now;
             }
             else success = false;
@@ -501,7 +500,6 @@ public sealed class Channel : ChannelBase
         {
             if (ChannelDriver != null && await ChannelDriver.TryWriteOnLevel((byte)OnLevel))
             {
-                changed = true;
                 OnLevelLastUpdate = DateTime.Now;
             }
             else success = false;
@@ -515,7 +513,6 @@ public sealed class Channel : ChannelBase
         {
             if (ChannelDriver != null && await ChannelDriver.TryWriteRampRate((byte)RampRate))
             {
-                changed = true;
                 RampRateLastUpdate = DateTime.Now;
             }
             else success = false;
@@ -527,13 +524,6 @@ public sealed class Channel : ChannelBase
 
         // Reflect writing properties in the sync status
         UpdatePropertiesSyncStatus();
-
-        // If we successfully wrote at least one property value,notify observer
-        // of change as this might have affected the SyncStatus of the channel
-        if (changed)
-        {
-            UpdatePropertiesSyncStatus();
-        }
 
         return success;
     }

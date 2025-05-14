@@ -63,7 +63,8 @@ public sealed class ChannelViewModel : BaseViewModel, IChannelObserver
                         delay: new TimeSpan(0, 0, 10),
                         forceSync: false);
                 }
-            });
+            },
+            force: true);
         }
         else if (readCurrentChannelPropertiesJob != null)
         {

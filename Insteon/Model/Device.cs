@@ -57,7 +57,7 @@ public sealed class Device : DeviceBase
         ProductKey = device.ProductKey;
         Revision = device.Revision;
         EngineVersion = device.EngineVersion;
-        IsProductDataRead = device.IsProductDataRead;
+        IsProductDataKnown = device.IsProductDataKnown;
         OperatingFlags = device.OperatingFlags;
         LEDBrightness = device.LEDBrightness;
         X10House = device.X10House;
@@ -90,7 +90,7 @@ public sealed class Device : DeviceBase
             ProductKey == device.ProductKey &&
             Revision == device.Revision &&
             EngineVersion == device.EngineVersion &&
-            IsProductDataRead == device.IsProductDataRead &&
+            IsProductDataKnown == device.IsProductDataKnown &&
             OperatingFlags == device.OperatingFlags &&
             LEDBrightness == device.LEDBrightness &&
             OnLevel == device.OnLevel &&
@@ -124,7 +124,7 @@ public sealed class Device : DeviceBase
 
         // We assume that product data of a device obtained from the deserialization is correct
         // since this information is immutable and never change after the device is added to the model.
-        IsProductDataRead = true;
+        IsProductDataKnown = true;
 
         AllLinkDatabase.OnDeserialized();
 
@@ -262,8 +262,8 @@ public sealed class Device : DeviceBase
 
     /// <summary>
     /// Lkg connection status of the device
-    /// To update and obtain the true connection status at this time,
-    /// call GetConnectionStatus or GetConnectionStatusAsync
+    /// To obtain the true connection status from the device at this time,
+    /// call ScheduleGetConnectionStatus or GetConnectionStatusAsync
     /// </summary>
     public ConnectionStatus Status
     {
@@ -678,7 +678,7 @@ public sealed class Device : DeviceBase
     /// of this device to determine what driver type to create. The Product Data was
     /// either loaded from the persisted model or acquired from the physical device
     /// when adding a new device.
-    /// We use IsProductDataRead to assert that we have correct Product Data. At least 
+    /// We use IsProductDataKnown to assert that we have correct Product Data. At least 
     /// Category and SubCategory need to be correct to initialize the proper device driver.
     /// The Product Data is also copied to the device driver during creation to allow 
     /// it to function properly.
@@ -690,7 +690,7 @@ public sealed class Device : DeviceBase
             if (deviceDriver == null)
             {
                 // See above
-                Debug.Assert(IsProductDataRead);
+                Debug.Assert(IsProductDataKnown);
 
                 if (IsHub)
                 {
@@ -1195,7 +1195,7 @@ public sealed class Device : DeviceBase
             {
                 pingJob = InsteonScheduler.Instance.AddAsyncJob(
                     $"Pinging Device - {DisplayNameAndId}",
-                    GetConnectionStatusAsync,
+                    () => GetConnectionStatusAsync(force),
                     status =>
                     {
                         // And run all callbacks on success
@@ -1208,6 +1208,7 @@ public sealed class Device : DeviceBase
                     },
                     maxRunCount: 1);
             }
+            return ConnectionStatus.Unknown;
         }
         return Status;
     }
@@ -1370,10 +1371,9 @@ public sealed class Device : DeviceBase
     public object ScheduleReadChannelProperties(int channelId, Scheduler.JobCompletionCallback<bool>? completionCallback = null, 
         object? group = null, TimeSpan delay = new TimeSpan(), Scheduler.Priority priority = Scheduler.Priority.Medium, bool forceSync = true)
     {
-        Channel channel = GetChannel(channelId);
         return InsteonScheduler.Instance.AddAsyncJob(
-            $"Reading Channel {channel.Id} Properties - {DisplayNameAndId}",
-            () => channel.TryReadChannelProperties(forceSync),
+            $"Reading Channel {channelId} Properties - {DisplayNameAndId}",
+            () => TryReadChannelPropertiesAsync(channelId, forceSync),
             completionCallback,
             group,
             delay, priority);
@@ -1401,10 +1401,9 @@ public sealed class Device : DeviceBase
     public object ScheduleWriteChannelProperties(int channelId, Scheduler.JobCompletionCallback<bool>? completionCallback = null, 
         object? group = null, TimeSpan delay = new TimeSpan(), Scheduler.Priority priority = Scheduler.Priority.Medium)
     {
-        Channel channel = GetChannel(channelId);
         return InsteonScheduler.Instance.AddAsyncJob(
-            $"Updating Channels {channel.Id} Properties - {DisplayNameAndId}",
-            channel.TryWriteChannelProperties,
+            $"Updating Channel {channelId} Properties - {DisplayNameAndId}",
+            () => TryWriteChannelPropertiesAsync(channelId),
             completionCallback,
             group,
             delay, priority);
@@ -1512,29 +1511,24 @@ public sealed class Device : DeviceBase
     public object? ScheduleSync(Scheduler.JobCompletionCallback<bool>? completionCallback = null, object? group = null, TimeSpan delay = new TimeSpan(), 
         Scheduler.Priority priority = Scheduler.Priority.Medium, bool forceRead = false)
     {
-        // If the device is not connected, there is nothing we can do for it!
-        // Querying Status will trigger a ping, which will potentially update the status asynchronously,
-        // and we'll use the updated status in the next sync pass.
-        // TODO: should we be testing for ConnectionStatus.Connected instead.
-        if (Status == ConnectionStatus.Disconnected)
-        {
-                return null;
-        }
-
-        // If the device last known status is not "Connected", we can't update it
-        if (Status != ConnectionStatus.Connected)
+        if (!DeviceNeedsSync)
         {
             return null;
         }
 
-        object? localGroup = null;
-        string groupTitle = $"Updating Device {DisplayNameAndId}";
+        // If the device status is known to be unreachable, don't try to sync
+        // The user can go to the device view and attempt to connect it.
+        if (connectionStatus == ConnectionStatus.Disconnected || connectionStatus == ConnectionStatus.GatewayError)
+        {
+            return null;
+        }
+
+        object? localGroup = InsteonScheduler.Instance.AddGroup($"Updating Device {DisplayNameAndId}", completionCallback, group);
 
         // Then sync device properties
         if (PropertiesSyncStatus == SyncStatus.Unknown || forceRead)
         {
             // If no property was changed yet (status unknown), we read the property values into this device (forceSync: true)
-            localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
             ScheduleReadDeviceProperties(null, localGroup, delay, priority, forceSync: true);
         }
 
@@ -1542,7 +1536,6 @@ public sealed class Device : DeviceBase
         {
             // If at least one property has changed already, write all properties values to the physical device.
             // TODO: consider maintaining that state per property to avoid overriding values in the physical device.
-            localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
             ScheduleWriteDeviceProperties(null, localGroup, delay, priority);
         }
 
@@ -1556,13 +1549,11 @@ public sealed class Device : DeviceBase
                 // Same as for device properties (see above)
                 if (channel.PropertiesSyncStatus == SyncStatus.Unknown || forceRead)
                 {
-                    localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
                     ScheduleReadChannelProperties(channel.Id, null, localGroup, delay, priority, forceSync: true);
                 }
 
                 if (channel.PropertiesSyncStatus == SyncStatus.Changed)
                 {
-                    localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
                     ScheduleWriteChannelProperties(channel.Id, null, localGroup, delay, priority);
                     changed = true;
                 }
@@ -1571,7 +1562,6 @@ public sealed class Device : DeviceBase
             if (changed)
             {
                 // If one of the channels had changed, also write the properties stored as bit masks in the device
-                localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
                 ScheduleWriteChannelsBitMasks(null, localGroup, delay, priority);
             }
         }
@@ -1579,22 +1569,17 @@ public sealed class Device : DeviceBase
         // And finally sync links
         if (AllLinkDatabase.LastStatus != SyncStatus.Synced || forceRead)
         {
-            localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
             ScheduleReadAllLinkDatabase(null, localGroup, delay, priority, forceRead: forceRead);
         }
 
         if (AllLinkDatabase.LastStatus == SyncStatus.Changed)
         {
-            localGroup ??= InsteonScheduler.Instance.AddGroup(groupTitle, completionCallback, group);
             ScheduleWriteAllLinkDatabase(null, localGroup, delay, priority);
         }
 
-        if (localGroup != null)
+        if (IsRemoteLinc)
         {
-            if (IsRemoteLinc)
-            {
-                ScheduleCleanUpAfterSync();
-            }
+            ScheduleCleanUpAfterSync();
         }
 
         return localGroup;
@@ -1700,10 +1685,11 @@ public sealed class Device : DeviceBase
     }
 
     /// <summary>
-    /// Return connection status - private async version of the above method to be used in async job handlers
+    /// Return connection status
     /// </summary>
+    /// <param name="force">Ping the device regardless of isConnectionStatusKnown</param>
     /// <returns>Connection status</returns>
-    internal async Task<ConnectionStatus> GetConnectionStatusAsync()
+    internal async Task<ConnectionStatus> GetConnectionStatusAsync(bool force = false)
     {
         // Make sure we have the product data (no cost if we already have it)
         if (!await TryReadProductDataAsync())
@@ -1712,13 +1698,23 @@ public sealed class Device : DeviceBase
         }
 
         // And ping the device if we have not already
-        if (!isConnectionStatusKnown)
+        if (!isConnectionStatusKnown || force)
         {
             SetKnownConnectionStatus(await TryPingAsync());
         }
         return Status;
     }
     private bool isConnectionStatusKnown = false;
+
+    /// <summary>
+    /// Return whether the device is unreachable, i.e., not connected to the hub
+    /// </summary>
+    /// <returns></returns>
+    internal async Task<bool> IsUnreachableAsync()
+    {
+        var status = await GetConnectionStatusAsync();
+        return status == ConnectionStatus.Disconnected || status == ConnectionStatus.GatewayError;
+    }
 
     /// <summary>
     /// Helper to set a known (just acquired) connection status
@@ -1738,7 +1734,7 @@ public sealed class Device : DeviceBase
     /// <returns>success</returns>
     internal async Task<bool> TryReadProductDataAsync(bool force = false)
     {
-        if (!IsProductDataRead || EngineVersion == 0 || force)
+        if (!IsProductDataKnown || EngineVersion == 0 || force)
         {
             var productData = (Id == House.Gateway.DeviceId) ?
                 await ProductData.GetIMProductDataAsync(House) :
@@ -1757,13 +1753,13 @@ public sealed class Device : DeviceBase
             ProductKey = productData.ProductKey;
             Revision = productData.Revision;
             EngineVersion = productData.EngineVersion;
-            IsProductDataRead = true;
+            IsProductDataKnown = true;
         }
         return true;
     }
 
     // Whether we already have the ProductData for this device
-    internal bool IsProductDataRead = false;
+    internal bool IsProductDataKnown = false;
 
     // Try to read physical device properties from the network and notifies via PropertiesSyncStatusChanged event
     // Properties are read into the device driver, but hard propagated to this logical device only if forceSync is true
@@ -1773,7 +1769,7 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             // We defer the sync status updates until we have read all the properties
             // and indicate that properties were modified by syncing with the physical device, not by the user.
@@ -1859,7 +1855,7 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             if (DeviceDriver.HasOperatingFlags)
             {
@@ -1903,7 +1899,7 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             EnsureChannels();
 
@@ -1913,7 +1909,7 @@ public sealed class Device : DeviceBase
 
                 for (int i = 0; i < Channels.Count; i++)
                 {
-                    if (!await Channels[i].TryReadChannelProperties(forceSync))
+                    if (!await Channels[i].TryReadChannelPropertiesAsync(forceSync))
                     {
                         success = false;
                     }
@@ -1932,18 +1928,50 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             // Now write the properties that have a per channel set command
             // This will update the property synced flags in each ChannelViewModel
             // including for the ToggleMode property written separately above
             for (int i = 0; i < ChannelCount; i++)
             {
-                if (!await Channels[i].TryWriteChannelProperties())
+                if (!await Channels[i].TryWriteChannelPropertiesAsync())
                 {
                     success = false;
                 }
             }
+        }
+
+        return success;
+    }
+
+    // Try to read properties of a channel from the physical device
+    // Returns: success or failure
+    private async Task<bool> TryReadChannelPropertiesAsync(int channelId, bool forceSync)
+    {
+        bool success = true;
+
+        // Fail silently if device is disconnected so as to not trigger a retry
+        if (!await IsUnreachableAsync())
+        {
+            Channel channel = GetChannel(channelId);
+            success = await channel.TryReadChannelPropertiesAsync(forceSync);
+        }
+
+        return success;
+    }
+
+    // Try to write properties of a channel to the physical device
+    // Returns: success or failure
+    private async Task<bool> TryWriteChannelPropertiesAsync(int channelId)
+    {
+        bool success = true;
+
+        // Fail silently if device is disconnected so as to not trigger a retry
+        if (!await IsUnreachableAsync())
+        {
+            Channel channel = GetChannel(channelId);
+            success = await channel.TryWriteChannelPropertiesAsync();
         }
 
         return success;
@@ -1957,7 +1985,7 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             if (IsKeypadLinc && DeviceDriver is DeviceDriver pdp && pdp.Channels != null)
             {
@@ -2054,7 +2082,7 @@ public sealed class Device : DeviceBase
         (bool Success, bool Done) ret = (true, true);
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             ret = await DeviceDriver.TryReadAllLinkDatabaseStepAsync(AllLinkDatabase, restart, force);
         }
@@ -2072,7 +2100,7 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             success = await DeviceDriver.TryReadAllLinkDatabaseAsync(AllLinkDatabase, force: forceRead);
         }
@@ -2088,7 +2116,7 @@ public sealed class Device : DeviceBase
         bool success = true;
 
         // Fail silently if device is disconnected so as to not trigger a retry
-        if (await GetConnectionStatusAsync() != ConnectionStatus.Disconnected)
+        if (!await IsUnreachableAsync())
         {
             if (await DeviceDriver.TryWriteAllLinkDatabaseAsync(AllLinkDatabase, forceRead))
             {
