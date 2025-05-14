@@ -531,8 +531,9 @@ public abstract class Scheduler
         {
             runCount++;
 
-            // If part of a group, notify job is starting
-            if (group != null)
+            // If part of a group and not a continuation step,
+            // notify the group that a job is starting
+            if (group != null && !isContinuationStep)
             {
                 group.NotifyJobStarting();
             }
@@ -655,8 +656,9 @@ public abstract class Scheduler
         {
             runCount++;
 
-            // If part of a group, notify job is starting
-            if (group != null)
+            // If part of a group and not a continuation step,
+            // notify the group that a job is starting
+            if (group != null && !isContinuationStep)
             {
                 group.NotifyJobStarting();
             }
