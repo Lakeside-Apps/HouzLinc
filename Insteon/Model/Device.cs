@@ -1320,9 +1320,9 @@ public sealed class Device : DeviceBase
             $"Reading Product Data - {DisplayNameAndId}",
             () => TryReadProductDataAsync(forceRead),
             completionCallback,
+            prehandlerAsync: null,
             group,
-            delay, priority);
-    }
+            delay, priority);    }
 
     /// <summary>
     /// Schedule reading the device properties from the network
@@ -1340,6 +1340,7 @@ public sealed class Device : DeviceBase
             $"Reading Device Properties - {DisplayNameAndId}",
             () => TryReadDevicePropertiesAsync(forceSync),
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay, priority);
     }
@@ -1356,6 +1357,7 @@ public sealed class Device : DeviceBase
             $"Updating Device Properties - {DisplayNameAndId}",
             TryWriteDevicePropertiesAsync,
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay, priority);
     }
@@ -1375,6 +1377,7 @@ public sealed class Device : DeviceBase
             $"Reading Channel {channelId} Properties - {DisplayNameAndId}",
             () => TryReadChannelPropertiesAsync(channelId, forceSync),
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay, priority);
     }
@@ -1390,6 +1393,7 @@ public sealed class Device : DeviceBase
             $"Reading All Channels Properties - {DisplayNameAndId}",
             () => TryReadChannelsPropertiesAsync(forceSync),
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay, priority);
     }
@@ -1405,6 +1409,7 @@ public sealed class Device : DeviceBase
             $"Updating Channel {channelId} Properties - {DisplayNameAndId}",
             () => TryWriteChannelPropertiesAsync(channelId),
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay, priority);
     }
@@ -1420,6 +1425,7 @@ public sealed class Device : DeviceBase
             $"Updating All Channels Properties - {DisplayNameAndId}",
             TryWriteChannelsPropertiesAsync,
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay,
             priority);
@@ -1436,6 +1442,7 @@ public sealed class Device : DeviceBase
             $"Updating All Channels Bit Masks - {DisplayNameAndId}",
             TryWriteChannelsBitMasksAsync,
             completionCallback,
+            async () => !await IsUnreachableAsync(),
             group,
             delay,
             priority);
@@ -1460,12 +1467,14 @@ public sealed class Device : DeviceBase
                 $"Reading Device Database - {DisplayNameAndId}",
                 () => TryReadAllLinkDatabaseAsync(forceRead),
                 completionCallback,
+                async () => !await IsUnreachableAsync(),
                 group,
                 delay, priority) :
             InsteonScheduler.Instance.AddAsyncSteppedJob(
                 $"Reading Device Database Step by Step - {DisplayNameAndId}",
                 (restart) => TryReadAllLinkDatabaseStepAsync(restart, forceRead),
                 completionCallback,
+                async () => !await IsUnreachableAsync(),
                 group,
                 delay, priority);
     }
@@ -1485,6 +1494,7 @@ public sealed class Device : DeviceBase
             $"Updating Device Database - {DisplayNameAndId}",
             () => TryWriteAllLinkDatabaseAsync(forceRead: forceRead),
             completionCallback,
+            async () => !await IsUnreachableAsync(), 
             group,
             delay, priority);
     }
