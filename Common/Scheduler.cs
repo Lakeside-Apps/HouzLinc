@@ -53,21 +53,45 @@ namespace Common;
 /// </summary>
 public abstract class Scheduler
 {
-    // Job handler
+    /// <summary>
+    /// Job pre-handler
+    /// Performs any pre-job handling and can cancel the job and all associated logging.
+    /// <returns>false to cancel the job</returns>
+    public delegate Task<bool> JobPrehandlerAsync();
+    public delegate bool JobPrehandler();
+
+    /// <summary>
+    /// Job handler
+    /// Perforrms the job
+    /// </summary>
+    /// <typeparam name="RetType">Handler return value</typeparam>
+    /// <returns></returns>
     public delegate Task<RetType> JobHandlerAsync<RetType>();
     public delegate RetType JobHandler<RetType>();
 
-    // Step handler
-    // The bool in the returned tuple indicates that the job is done
+    /// <summary>
+    /// Step handler
+    /// Performs one step of the job and returns whether the job is completed or not
+    /// </summary>
+    /// <param name="retType">Step return value</param>
+    /// <param name="completed">true if the job is done</param>
+    /// <returns></returns>
     public delegate Task<(RetType retType, bool completed)> JobStepHandlerAsync<RetType>(bool isFirstStep);
     public delegate (RetType retType, bool completed) JobStepHandler<RetType>(bool isFirstStep);
 
-    // Completion callback
-    public delegate void JobCompletionCallback<RetType>(RetType success);
+    /// <summary>
+    /// Completion callback
+    /// Called after the job completed
+    /// </summary>
+    /// <param name="retType">Success if RetType is bool, job return value otherwise</param>
+    public delegate void JobCompletionCallback<RetType>(RetType retType);
 
     // Cancellation handler
     public delegate Task<bool> JobCancellationHandlerAsync();
 
+    /// <summary>
+    /// Priority at which to run the job. Jobs of higher priority are handled first.
+    /// </summary>
     public enum Priority
     {
         Low,        // job runs when no other jobs are scheduled or running , and its delay has expired
@@ -410,6 +434,8 @@ public abstract class Scheduler
         protected int runCount;                                 // number of times this job has run
         protected int maxRunCount = 3;                          // max number of times to run this job
         protected TimeSpan rerunDelay = TimeSpan.FromSeconds(5);// delay between reruns
+
+        // Stepped jobs
         protected bool isContinuationStep;                      // this job is a continuation step
         protected int stepCount;                                // number of steps this job has run
 
@@ -516,9 +542,12 @@ public abstract class Scheduler
 
     class SyncJob<RetType> : SyncJobBase
     {
-        public SyncJob(Scheduler scheduler, string description, Group? group, JobHandler<RetType>? jobHandler, JobStepHandler<RetType>? jobStepHandler, JobCompletionCallback<RetType>? jobCompletionCallback, TimeSpan delay, Priority priority, int maxRunCount, LogLevel logLevel)
+        public SyncJob(Scheduler scheduler, string description, Group? group, JobHandler<RetType>? jobHandler, 
+            JobStepHandler<RetType>? jobStepHandler, JobCompletionCallback<RetType>? jobCompletionCallback,
+            JobPrehandler? jobPrehandler, TimeSpan delay, Priority priority, int maxRunCount, LogLevel logLevel)
             : base(scheduler, description, group, delay, priority, maxRunCount, logLevel)
         {
+            this.jobPrehandler = jobPrehandler;
             this.jobHandler = jobHandler;
             this.jobStepHandler = jobStepHandler;
             this.jobCompletionCallback = jobCompletionCallback;
@@ -624,6 +653,7 @@ public abstract class Scheduler
         private JobHandler<RetType>? jobHandler;                        // Job handler (for non-interruptable jobs)
         private JobStepHandler<RetType>? jobStepHandler;                // Job step handler (for interruptable jobs)
         private JobCompletionCallback<RetType>? jobCompletionCallback;  // callback when the job is completed
+        private JobPrehandler? jobPrehandler;                           // called before job handler and can cancel job
     }
 
     /// <summary>
@@ -641,12 +671,14 @@ public abstract class Scheduler
     class AsyncJob<RetType> : AsyncJobBase
     {
         public AsyncJob(Scheduler scheduler, string description, Group? group, JobHandlerAsync<RetType>? jobHandlerAsync, 
-            JobStepHandlerAsync<RetType>? jobStepHandlerAsync, JobCompletionCallback<RetType>? jobCompletionCallback, TimeSpan delay, Priority priority, int maxRunCount, LogLevel logLevel)
+            JobStepHandlerAsync<RetType>? jobStepHandlerAsync, JobCompletionCallback<RetType>? jobCompletionCallback, 
+            JobPrehandlerAsync? jobPrehandlerAsync, TimeSpan delay, Priority priority, int maxRunCount, LogLevel logLevel)
             : base(scheduler, description, group, delay, priority, maxRunCount, logLevel)
         {
             this.jobHandlerAsync = jobHandlerAsync;
             this.jobStepHandlerAsync = jobStepHandlerAsync;
             this.jobCompletionCallback = jobCompletionCallback;
+            this.jobPrehandlerAsync = jobPrehandlerAsync;
         }
 
         /// <summary>
@@ -655,6 +687,13 @@ public abstract class Scheduler
         public override async Task RunAsync()
         {
             runCount++;
+
+            // If prehandler is provided, call it and cancel job if it returns false
+            if (jobPrehandlerAsync != null && !await jobPrehandlerAsync.Invoke())
+            {
+                LogDebug($"Prehandler cancelled job {Description}");
+                return;
+            }
 
             // If part of a group and not a continuation step,
             // notify the group that a job is starting
@@ -733,6 +772,7 @@ public abstract class Scheduler
         private JobHandlerAsync<RetType>? jobHandlerAsync;                          // job handler (for uninteruptable jobs only)
         private JobStepHandlerAsync<RetType>? jobStepHandlerAsync;                  // Job step handler (for interuptable, stepped jobs)
         private JobCompletionCallback<RetType>? jobCompletionCallback;              // callback when the job is completed
+        private JobPrehandlerAsync? jobPrehandlerAsync;                             // called before job handler and can cancel job
     }
 
 
@@ -767,16 +807,18 @@ public abstract class Scheduler
     /// <param name="group">group this job is part of, if any</param>
     /// <returns>Object identifying the new job</returns>
     public object AddJob<RetType>(string description, JobHandler<RetType> handler, JobCompletionCallback<RetType>? completionCallback = null,
-        object? group = null, TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
+        JobPrehandler? prehandler = null,object? group = null, 
+        TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
     {
-        SyncJob<RetType> job = new SyncJob<RetType>(this, description, group as Group, handler, null, completionCallback, delay, priority, maxRunCount, logLevel);
+        SyncJob<RetType> job = new SyncJob<RetType>(this, description, group as Group, handler, null, completionCallback, prehandler, delay, priority, maxRunCount, logLevel);
         job.Schedule();
         return job;
     }
-    public object AddSteppedJob<RetType>(string description, JobStepHandler<RetType> stepHandler, JobCompletionCallback<RetType>? completionCallback = null, 
-        object? group = null, TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
+    public object AddSteppedJob<RetType>(string description, JobStepHandler<RetType> stepHandler, JobCompletionCallback<RetType>? completionCallback = null,
+        JobPrehandler? prehandler = null, object? group = null, 
+        TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
     {
-        SyncJob<RetType> job = new SyncJob<RetType>(this, description, group as Group, null, stepHandler, completionCallback, delay, priority, maxRunCount, logLevel);
+        SyncJob<RetType> job = new SyncJob<RetType>(this, description, group as Group, null, stepHandler, completionCallback, prehandler, delay, priority, maxRunCount, logLevel);
         job.Schedule();
         return job;
     }
@@ -789,7 +831,7 @@ public abstract class Scheduler
     /// <returns></returns>
     public object Wait(JobCompletionCallback<bool> completionCallback, TimeSpan delay, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
     {
-        return AddJob("Wait " + delay.ToString(), () => { return true; }, completionCallback, null, delay, Priority.Low, maxRunCount, logLevel);
+        return AddJob("Wait " + delay.ToString(), () => { return true; }, completionCallback, prehandler: null, group: null, delay, Priority.Low, maxRunCount, logLevel);
     }
 
     /// <summary>
@@ -806,17 +848,21 @@ public abstract class Scheduler
     /// <param name="group">group this job is part of, if any</param>
     /// <returns>Object identifying the new job</returns>
     public object AddAsyncJob<RetType>(string description, JobHandlerAsync<RetType> handlerAsync, JobCompletionCallback<RetType>? completionCallback = null,
-        object? group = null, TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
+        JobPrehandlerAsync? prehandlerAsync = null, object ? group = null, 
+        TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal
+        )
     {
-        AsyncJob<RetType> job = new AsyncJob<RetType>(this, description, group as Group, handlerAsync, null, completionCallback, delay, priority, maxRunCount, logLevel);
+        AsyncJob<RetType> job = new AsyncJob<RetType>(this, description, group as Group, handlerAsync, null, completionCallback, prehandlerAsync, delay, priority, maxRunCount, logLevel);
         job.Schedule();
         return job;
     }
 
-    public object AddAsyncSteppedJob<RetType>(string description, JobStepHandlerAsync<RetType> stepHandlerAsync, JobCompletionCallback<RetType>? completionCallback = null, 
-        object? group = null, TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal)
+    public object AddAsyncSteppedJob<RetType>(string description, JobStepHandlerAsync<RetType> stepHandlerAsync, JobCompletionCallback<RetType>? completionCallback = null,
+        JobPrehandlerAsync? prehandlerAsync = null, object? group = null, 
+        TimeSpan delay = new TimeSpan(), Priority priority = Priority.Medium, int maxRunCount = 3, LogLevel logLevel = LogLevel.Normal
+        )
     {
-        AsyncJob<RetType> job = new AsyncJob<RetType>(this, description, group as Group, null, stepHandlerAsync, completionCallback, delay, priority, maxRunCount, logLevel);
+        AsyncJob<RetType> job = new AsyncJob<RetType>(this, description, group as Group, null, stepHandlerAsync, completionCallback, prehandlerAsync, delay, priority, maxRunCount, logLevel);
         job.Schedule();
         return job;
     }

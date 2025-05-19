@@ -204,7 +204,7 @@ public sealed class Devices : OrderedKeyedList<Device>
             "Adding Device Manually",
             AddDeviceManuallyAsync,
             (deviceWithIsNew) => { completionCallback?.Invoke((deviceWithIsNew?.Device, deviceWithIsNew?.IsNew ?? false)); },
-            delay);
+            delay: delay);
     }
 
     /// <summary>
@@ -251,6 +251,7 @@ public sealed class Devices : OrderedKeyedList<Device>
             "Removing Device - " + deviceId,
             () => RemoveDevice(deviceId),
             completionCallback,
+            prehandler: null,
             group,
             delay,
             Scheduler.Priority.Medium);
