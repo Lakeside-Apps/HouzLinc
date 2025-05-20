@@ -459,6 +459,7 @@ public sealed class Channel : ChannelBase
             }
         }
 
+        Device.OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -537,6 +538,7 @@ public sealed class Channel : ChannelBase
         // Reflect writing properties in the sync status
         UpdatePropertiesSyncStatus();
 
+        Device.OnTryReadWriteComplete(success);
         return success;
     }
 }
