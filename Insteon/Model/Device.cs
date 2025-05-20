@@ -1182,7 +1182,7 @@ public sealed class Device : DeviceBase
     /// <summary>
     /// Lkg connection status of the device
     /// To obtain the true connection status from the device at this time,
-    /// call ScheduleGetConnectionStatus or GetConnectionStatusAsync
+    /// call ScheduleRetrieveConnectionStatus or RetrieveConnectionStatusAsync
     /// </summary>
     public ConnectionStatus Status
     {
@@ -1199,18 +1199,19 @@ public sealed class Device : DeviceBase
     private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
 
     /// <summary>
-    /// Return connection status, i.e., whether this device is connected to the hub and responding to pings.
-    /// The connection status is persisted and will be queried from the device only once, unless something 
-    /// invalidates it (by setting isConnectionStatusKnown to false), or the force flag is on.
-    /// We start with the persisted value and trigger a ping of the device. If the ping doesn't succeed, we downgrade 
-    /// the connection status to "Disconnected" or "GatewayError" and invoke the callback to notify listeners (UX).
-    /// Once the connection status has been obtained, we won't re-ping the device unless the "force" parameter is true.
+    /// Retrieve connection status, i.e., whether this device is connected to the hub and responding to pings.
+    /// The connection status is persisted and will be queried from the device only once, unless something, 
+    /// such as a failing read/write operation, invalidates it by setting isConnectionStatusKnown to false, 
+    /// or the force flag is on.
+    /// If the connection status is believe to be known, this function simply returns it. If not, a retrieval 
+    /// of the current connection status is schedule, and callers will be notified when it is retreived through
+    /// a callback they provide.
     /// If multiple calls are made to this method while a ping is pending or running, we simply add the callback, 
     /// if any, to a list, and will use the same ping job to notify all listeners.
     /// </summary>
     /// <param name="callback">This will be called when status is determined, if it has changed</param>
     /// <param name="force">Force a re-ping of the device</param>
-    public ConnectionStatus ScheduleGetConnectionStatus(ConnectionStatusCallback? callback = null, bool force = false)
+    public ConnectionStatus ScheduleRetrieveConnectionStatus(ConnectionStatusCallback? callback = null, bool force = false)
     {
         if (!isConnectionStatusKnown || force)
         {
@@ -1225,12 +1226,11 @@ public sealed class Device : DeviceBase
             {
                 pingJob = InsteonScheduler.Instance.AddAsyncJob(
                     $"Pinging Device - {DisplayNameAndId}",
-                    () => GetConnectionStatusAsync(force),
-                    status =>
+                    () => RetrieveConnectionStatusAsync(force),
+                    (status) =>
                     {
                         // And run all callbacks on success
                         pingJob = null;
-                        SetKnownConnectionStatus(status);
                         var callbacks = new List<ConnectionStatusCallback>(connectionStatusCallbacks);
                         connectionStatusCallbacks.Clear();
                         callbacks.ForEach(c => c.Invoke(Status));
@@ -1251,19 +1251,23 @@ public sealed class Device : DeviceBase
     /// </summary>
     /// <param name="force">Ping the device regardless of isConnectionStatusKnown</param>
     /// <returns>Connection status</returns>
-    internal async Task<ConnectionStatus> GetConnectionStatusAsync(bool force = false)
+    internal async Task<ConnectionStatus> RetrieveConnectionStatusAsync(bool force = false)
     {
+        ConnectionStatus status = Status;
+
         // Make sure we have the product data (no cost if we already have it)
         if (!await TryReadProductDataAsync())
         {
-            return ConnectionStatus.Disconnected;
+            status = ConnectionStatus.Disconnected;
         }
 
         // And ping the device if we have not already
         if (!isConnectionStatusKnown || force)
         {
-            SetKnownConnectionStatus(await TryPingAsync());
+            status = await TryPingAsync();
         }
+
+        SetKnownConnectionStatus(status);
         return Status;
     }
     private bool isConnectionStatusKnown = false;
@@ -1274,8 +1278,8 @@ public sealed class Device : DeviceBase
     /// <returns></returns>
     internal async Task<bool> IsUnreachableAsync()
     {
-        var status = await GetConnectionStatusAsync();
-        return status == ConnectionStatus.Disconnected || status == ConnectionStatus.GatewayError;
+        await RetrieveConnectionStatusAsync();
+        return Status == ConnectionStatus.Disconnected || Status == ConnectionStatus.GatewayError;
     }
 
     /// <summary>
@@ -1289,9 +1293,10 @@ public sealed class Device : DeviceBase
     }
 
     /// <summary>
-    /// Called when we complete a reading or writing operation with this device
-    /// On error, we reset the connection status to force a re-ping, which might
-    /// change the connection status and propagate the new status to the UI
+    /// Called when we complete a read or write operation with this device.
+    /// On error, we reset the connection status to force a new retrieval
+    /// - to propagate the new status to the UI
+    /// - to cut short any batch of operation (such as a sync of the device)
     /// </summary>
     internal void OnTryReadWriteComplete(bool success)
     {

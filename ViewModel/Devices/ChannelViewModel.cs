@@ -51,7 +51,7 @@ public sealed class ChannelViewModel : BaseViewModel, IChannelObserver
         if (isActive && channel != null)
         {
             // Only attempt to read information from the device if it is connected
-            deviceViewModel.Device.ScheduleGetConnectionStatus(status =>
+            deviceViewModel.Device.ScheduleRetrieveConnectionStatus(status =>
             {
                 if (status == Device.ConnectionStatus.Connected)
                 {

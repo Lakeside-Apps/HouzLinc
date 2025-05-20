@@ -186,7 +186,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
 
             // Read interesting info from the device
             // but only attempt it if the device is connected
-            Device.ScheduleGetConnectionStatus(status => 
+            Device.ScheduleRetrieveConnectionStatus(status => 
             {
                 if (status == Device.ConnectionStatus.Connected )
                 {
@@ -638,7 +638,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     /// Returns whether this device is connected so that we can send commands to it via the Hub.
     /// The callback is called when the connection status changes.
     /// </summary>
-    public Device.ConnectionStatus DeviceConnectionStatus => Device.ScheduleGetConnectionStatus();
+    public Device.ConnectionStatus DeviceConnectionStatus => Device.ScheduleRetrieveConnectionStatus();
     public bool IsStatusPending => DeviceConnectionStatus == Device.ConnectionStatus.Unknown;
     public bool IsConnected => DeviceConnectionStatus == Device.ConnectionStatus.Connected;
     public bool IsDisconnected => DeviceConnectionStatus == Device.ConnectionStatus.Disconnected;
@@ -970,7 +970,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     /// <param name="e"></param>
     public void ForceCheckDeviceConnectionStatus_Click(object sender, RoutedEventArgs e)
     {
-        Device.ScheduleGetConnectionStatus(force: true);
+        Device.ScheduleRetrieveConnectionStatus(force: true);
     }
 
     /// <summary>

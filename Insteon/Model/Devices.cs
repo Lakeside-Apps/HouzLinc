@@ -678,7 +678,7 @@ public sealed class Devices : OrderedKeyedList<Device>
         userActionContext.device = device;
         userActionContext.handler = handler;
 
-        device.ScheduleGetConnectionStatus((connectionStatus) =>
+        device.ScheduleRetrieveConnectionStatus((connectionStatus) =>
         {
             if (connectionStatus == Device.ConnectionStatus.Connected)
             {
@@ -1044,7 +1044,7 @@ public sealed class Devices : OrderedKeyedList<Device>
             }
             else
             {
-                connected = await device.GetConnectionStatusAsync() == Device.ConnectionStatus.Connected;
+                connected = await device.RetrieveConnectionStatusAsync() == Device.ConnectionStatus.Connected;
             }
 
             if (!connected)
