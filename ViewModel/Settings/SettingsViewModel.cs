@@ -653,7 +653,7 @@ public class SettingsViewModel : PageViewModel
         HubPassword = Holder.House.Gateway.Password ?? string.Empty;
     }
 
-    // Helper to find the hub on the local network, based on infomration in this Settings page
+    // Helper to find the hub on the local network, based on information in this Settings page
     public async Task<bool> FindHub()
     {
         HubDiscoveryState = HubDiscoveryStates.Searching;
