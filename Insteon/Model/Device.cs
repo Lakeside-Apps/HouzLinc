@@ -1238,7 +1238,6 @@ public sealed class Device : DeviceBase
                     },
                     maxRunCount: 1);
             }
-            return ConnectionStatus.Unknown;
         }
         return Status;
     }
