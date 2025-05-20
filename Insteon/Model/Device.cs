@@ -1289,13 +1289,18 @@ public sealed class Device : DeviceBase
     }
 
     /// <summary>
-    /// Called when we get a failure communicating with this device
+    /// Called when we complete a reading or writing operation with this device
+    /// On error, we reset the connection status to force a re-ping, which might
+    /// change the connection status and propagate the new status to the UI
     /// </summary>
-    internal void OnReadWriteFailure()
+    internal void OnTryReadWriteComplete(bool success)
     {
-        // Reset the connection status to force a re-ping,
-        // which might propagate the failure to the UI
-        isConnectionStatusKnown = false;
+        if (!success)
+        {
+            // Reset the connection status to force a re-ping,
+            // which might propagate the failure to the UI
+            isConnectionStatusKnown = false;
+        }
     }
 
     /// <summary>
@@ -1701,40 +1706,8 @@ public sealed class Device : DeviceBase
             completionCallback);
     }
 
-    /// <summary>
-    /// Purge garbage links from the IM memory
-    /// - controller Links for groups 200 and above
-    /// - responder links with no data1-2-3
-    /// </summary>
-    public void SchedulePurgeIMLinks(Scheduler.JobCompletionCallback<bool>? completionCallback)
-    {
-        if (!IsHub)
-        {
-            completionCallback?.Invoke(false);
-        }
-
-        ScheduleReadAllLinkDatabase(
-            (success) =>
-            {
-                foreach (AllLinkRecord record in AllLinkDatabase)
-                {
-                    if (record.IsController && record.Group >= 200)
-                    {
-                        AllLinkDatabase.RemoveRecord(new(record){ SyncStatus = SyncStatus.Changed });
-                    }
-
-                    if (record.IsResponder && record.Data1 == 0 && record.Data2 == 0 && record.Data3 == 0)
-                    {
-                        AllLinkDatabase.RemoveRecord(new(record){ SyncStatus = SyncStatus.Changed });
-                    }
-                }
-
-                ScheduleWriteAllLinkDatabase(completionCallback);
-            });
-    }
-
     // -----------------------------------------------------------------------------------
-    // Async implementations of the schedule jobs
+    // Async implementations of the scheduled jobs
     // ------------------------------------------------------------------------------------
 
     // Try to ping device to check whether Hub can communicate with device.
@@ -1865,6 +1838,7 @@ public sealed class Device : DeviceBase
             }
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -1908,6 +1882,7 @@ public sealed class Device : DeviceBase
             UpdatePropertiesSyncStatus(afterSync: true);
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -1937,6 +1912,7 @@ public sealed class Device : DeviceBase
             }
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -1962,6 +1938,7 @@ public sealed class Device : DeviceBase
             }
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -1978,6 +1955,7 @@ public sealed class Device : DeviceBase
             success = await channel.TryReadChannelPropertiesAsync(forceSync);
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -1994,6 +1972,7 @@ public sealed class Device : DeviceBase
             success = await channel.TryWriteChannelPropertiesAsync();
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -2089,6 +2068,8 @@ public sealed class Device : DeviceBase
                 }
             }
         }
+
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -2099,7 +2080,7 @@ public sealed class Device : DeviceBase
     // Returns: success or failure
     private async Task<(bool success, bool done)> TryReadAllLinkDatabaseStepAsync(bool restart, bool force)
     {
-        (bool Success, bool Done) ret = (true, true);
+        (bool success, bool done) ret = (true, true);
 
         // Fail silently if device is disconnected so as to not trigger a retry
         if (!await IsUnreachableAsync())
@@ -2107,6 +2088,8 @@ public sealed class Device : DeviceBase
             ret = await DeviceDriver.TryReadAllLinkDatabaseStepAsync(AllLinkDatabase, restart, force);
         }
 
+        SetAllLinkDatabaseSyncStatus();
+        OnTryReadWriteComplete(ret.success);
         return ret;
     }
 
@@ -2125,6 +2108,8 @@ public sealed class Device : DeviceBase
             success = await DeviceDriver.TryReadAllLinkDatabaseAsync(AllLinkDatabase, force: forceRead);
         }
 
+        SetAllLinkDatabaseSyncStatus();
+        OnTryReadWriteComplete(success);
         return success;
     }
 
@@ -2141,20 +2126,7 @@ public sealed class Device : DeviceBase
             if (await DeviceDriver.TryWriteAllLinkDatabaseAsync(AllLinkDatabase, forceRead))
             {
                 // If all records are synced, set the passed-in database status to synced and return success
-                foreach (var record in AllLinkDatabase)
-                {
-                    if (record.SyncStatus != SyncStatus.Synced)
-                    {
-                        success = false;
-                        break;
-                    }
-                }
-
-                if (success)
-                {
-                    AllLinkDatabase.LastStatus = SyncStatus.Synced;
-                    AllLinkDatabase.LastUpdate = DateTime.Now;
-                }
+                success = SetAllLinkDatabaseSyncStatus() == SyncStatus.Synced;
             }
             else
             {
@@ -2162,12 +2134,67 @@ public sealed class Device : DeviceBase
             }
         }
 
+        OnTryReadWriteComplete(success);
         return success;
     }
+
+    // Helper to compute and set the sync status of the database
+    // Returns the sync status that was set
+    private SyncStatus SetAllLinkDatabaseSyncStatus()
+    {
+        SyncStatus syncStatus = SyncStatus.Synced;
+        foreach (var record in AllLinkDatabase)
+        {
+            if (record.SyncStatus == SyncStatus.Unknown && syncStatus != SyncStatus.Changed)
+            {
+                syncStatus = SyncStatus.Unknown;
+            }
+            if (record.SyncStatus == SyncStatus.Changed)
+            {
+                syncStatus = SyncStatus.Changed;
+                break;
+            }
+        }
+
+        AllLinkDatabase.LastStatus = syncStatus;
+        AllLinkDatabase.LastUpdate = DateTime.Now;
+        return syncStatus;
+    }
+
 
     // -----------------------------------------------------------------------------------
     // Useful tasks on the model
     // ------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Purge garbage links from the IM memory
+    /// - controller Links for groups 200 and above
+    /// - responder links with no data1-2-3
+    /// </summary>
+    public void SchedulePurgeIMLinks(Scheduler.JobCompletionCallback<bool>? completionCallback)
+    {
+        if (!IsHub)
+        {
+            completionCallback?.Invoke(false);
+        }
+
+        ScheduleReadAllLinkDatabase(
+            (success) =>
+            {
+                foreach (AllLinkRecord record in AllLinkDatabase)
+                {
+                    if (record.IsController && record.Group >= 200)
+                    {
+                        AllLinkDatabase.RemoveRecord(new(record) { SyncStatus = SyncStatus.Changed });
+                    }
+
+                    if (record.IsResponder && record.Data1 == 0 && record.Data2 == 0 && record.Data3 == 0)
+                    {
+                        AllLinkDatabase.RemoveRecord(new(record) { SyncStatus = SyncStatus.Changed });
+                    }
+                }
+            });
+    }
 
     /// <summary>
     /// Check whether this device has a link record of any kind to a given device 
