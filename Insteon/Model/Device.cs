@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using Insteon.Mock;
 using System.Diagnostics.CodeAnalysis;
 using static Insteon.Model.AllLinkRecord;
+using Insteon.Commands;
 
 namespace Insteon.Model;
 
@@ -141,9 +142,253 @@ public sealed class Device : DeviceBase
     }
     private bool isDeserialized;
 
+    /// <summary>
+    /// For observers to subscribe to change notifications
+    /// </summary>
+    /// <param name="deviceObserver"></param>
+    public Device AddObserver(IDeviceObserver deviceObserver)
+    {
+        observers.Add(deviceObserver);
+        return this;
+    }
+
+    /// <summary>
+    /// For observers to unsubscribe to change notifications
+    /// </summary>
+    /// <param name="deviceObserver"></param>
+    public Device RemoveObserver(IDeviceObserver deviceObserver)
+    {
+        observers.Remove(deviceObserver);
+        return this;
+    }
+
+    private List<IDeviceObserver> observers = new();
+
+    /// <summary>
+    /// Driver of the phycial device in the Insteon network.
+    /// This creates the device driver if not created yet, using the Product Data
+    /// of this device to determine what driver type to create. The Product Data was
+    /// either loaded from the persisted model or acquired from the physical device
+    /// when adding a new device.
+    /// We use IsProductDataKnown to assert that we have correct Product Data. At least 
+    /// Category and SubCategory need to be correct to initialize the proper device driver.
+    /// The Product Data is also copied to the device driver during creation to allow 
+    /// it to function properly.
+    /// </summary>
+    internal DeviceDriverBase DeviceDriver
+    {
+        get
+        {
+            if (deviceDriver == null)
+            {
+                // See above
+                Debug.Assert(IsProductDataKnown);
+
+                if (IsHub)
+                {
+                    deviceDriver = new IMDriver(this);
+                }
+                else if (IsKeypadLinc)
+                {
+                    deviceDriver = new KeypadLincDriver(this);
+                }
+                else if (IsRemoteLinc)
+                {
+                    deviceDriver = new RemoteLincDriver(this);
+                }
+                else
+                {
+                    deviceDriver = new DeviceDriver(this);
+                }
+            }
+
+            return deviceDriver;
+        }
+    }
+    private DeviceDriverBase? deviceDriver;
+
+    /// <summary>
+    /// For testing purposes: set to mock physical device associated to this device
+    /// to avoid network dependency during unit-testing
+    /// </summary>
+    public MockPhysicalDevice? MockPhysicalDevice => House.GetMockPhysicalDevice(Id);
+
     // -----------------------------------------------------------------------------------
-    // Properties stored in the model only for legacy reasons, unknown to the device
-    // Only here to reoundrip to the HouseLinc.xml file
+    // Properties obtained from the physical device but generally not modified after that
+    // ------------------------------------------------------------------------------------
+
+    public override InsteonID Id
+    {
+        get => id ?? InsteonID.Null;
+        set
+        {
+            if (value != id)
+            {
+                id = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private InsteonID? id;
+
+    public override DeviceKind.CategoryId CategoryId
+    {
+        get => categoryId;
+        set
+        {
+            if (value != categoryId)
+            {
+                categoryId = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private DeviceKind.CategoryId categoryId;
+
+    public override int SubCategory
+    {
+        get => subCategory;
+        set
+        {
+            if (value != subCategory)
+            {
+                subCategory = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private int subCategory;
+
+    public override int ProductKey
+    {
+        get => productKey;
+        set
+        {
+            if (value != productKey)
+            {
+                productKey = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private int productKey;
+
+    public override int Revision
+    {
+        get => revision;
+        set
+        {
+            if (value != revision)
+            {
+                revision = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private int revision;
+
+    public override int EngineVersion
+    {
+        get => engineVersion;
+        set
+        {
+            if (value != engineVersion)
+            {
+                engineVersion = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    int engineVersion;
+
+    public string Category => DeviceKind.GetCategoryName(CategoryId);
+    public string ModelName => DeviceKind.GetModelName(CategoryId, SubCategory);
+    public string ModelNumber => DeviceKind.GetModelNumber(CategoryId, SubCategory);
+    public string ModelType => DeviceKind.GetModelTypeAsString(CategoryId, SubCategory);
+
+    // -----------------------------------------------------------------------------------
+    // Properties stored in the model but unknown to the physical device
+    // ------------------------------------------------------------------------------------
+
+    public int Wattage
+    {
+        get => wattage;
+        set
+        {
+            if (value != wattage)
+            {
+                wattage = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private int wattage;
+
+    public string DisplayName
+    {
+        get => displayName;
+        set
+        {
+            if (value != null && value != displayName)
+            {
+                displayName = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private string displayName = string.Empty;
+
+    public string DisplayNameAndId => this.DisplayName + " (" + this.Id + ")";
+
+    public DateTime AddedDateTime
+    {
+        get => addedDateTime;
+        set
+        {
+            if (value != addedDateTime)
+            {
+                addedDateTime = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private DateTime addedDateTime = default;
+
+    public string? Location
+    {
+        get => location;
+        set
+        {
+            if (value != location)
+            {
+                location = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private string? location;
+
+    public string? Room
+    {
+        get => room;
+        set
+        {
+            if (value != room)
+            {
+                room = value;
+                if (isDeserialized)
+                {
+                    House.Rooms.OnRoomsChanged();
+                }
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private string? room;
+
+    // -----------------------------------------------------------------------------------
+    // Properties stored in the model only for legacy reasons, unknown to the device.
+    // Only here to roundrip to the HouseLinc.xml file
     // ------------------------------------------------------------------------------------
 
     public bool Powerline
@@ -244,115 +489,6 @@ public sealed class Device : DeviceBase
         } 
     } 
     private string driver = string.Empty;
-
-    // -----------------------------------------------------------------------------------
-    // Properties stored in the model but unknown to the physical device
-    // ------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Device connection status
-    /// </summary>
-    public enum ConnectionStatus
-    {
-        Unknown,        // No last known status
-        Connected,      // Last known status was: connected to the hub
-        Disconnected,   // Last known status was: not connected to the hub
-        GatewayError    // Hub/Gateway error, the gateway might not have been found
-    }
-
-    /// <summary>
-    /// Lkg connection status of the device
-    /// To obtain the true connection status from the device at this time,
-    /// call ScheduleGetConnectionStatus or GetConnectionStatusAsync
-    /// </summary>
-    public ConnectionStatus Status
-    {
-        get => connectionStatus;
-        set
-        {
-            if (value != connectionStatus)
-            {
-                connectionStatus = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    } 
-    private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
-
-    public int Wattage
-    {
-        get => wattage;
-        set
-        { 
-            if (value != wattage)
-            {
-                wattage = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private int wattage;
-
-    public string DisplayName
-    {
-        get => displayName;
-        set
-        {
-            if (value != null && value != displayName)
-            {
-                displayName = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private string displayName = string.Empty;
-
-    public string DisplayNameAndId => this.DisplayName + " (" + this.Id + ")";
-
-    public DateTime AddedDateTime
-    {
-        get => addedDateTime;
-        set { 
-            if (value != addedDateTime)
-            {
-                addedDateTime = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private DateTime addedDateTime = default;
-
-    public string? Location
-    {
-        get => location;
-        set
-        {
-            if (value != location)
-            {
-                location = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private string? location;
-
-    public string? Room
-    {
-        get => room;
-        set 
-        {
-            if (value != room)
-            {
-                room = value;
-                if (isDeserialized)
-                {
-                    House.Rooms.OnRoomsChanged();
-                }
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private string? room;
 
     // -----------------------------------------------------------------------------------
     // Open ended property bag
@@ -540,186 +676,6 @@ public sealed class Device : DeviceBase
 
     // For round tripping to the HouseLinc.xml file
     public object? customProperties { get; set; }
-
-    // -----------------------------------------------------------------------------------
-    // Properties obtained from the physical device and not modified after that
-    // ------------------------------------------------------------------------------------
-
-    public override InsteonID Id
-    { 
-        get => id ?? InsteonID.Null;
-        set
-        {
-            if (value != id)
-            {
-                id = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private InsteonID? id;
-
-    public override DeviceKind.CategoryId CategoryId
-    {
-        get => categoryId;
-        set
-        {
-            if (value != categoryId)
-            {
-                categoryId = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private DeviceKind.CategoryId categoryId;
-
-    public override int SubCategory
-    {
-        get => subCategory; 
-        set
-        {
-            if (value != subCategory)
-            {
-                subCategory = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private int subCategory;
-
-    public override int ProductKey
-    {
-        get => productKey;
-        set
-        {
-            if (value != productKey)
-            {
-                productKey = value; 
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private int productKey;
-
-    public override int Revision
-    {
-        get => revision;
-        set
-        {
-            if (value != revision)
-            {
-                revision = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    private int revision;
-
-    public override int EngineVersion
-    {
-        get => engineVersion;
-        set
-        {
-            if (value != engineVersion)
-            {
-                engineVersion = value;
-                NotifyObserversOfPropertyChanged();
-            }
-        }
-    }
-    int engineVersion;
-
-    public string Category => DeviceKind.GetCategoryName(CategoryId);
-    public string ModelName => DeviceKind.GetModelName(CategoryId, SubCategory);
-    public string ModelNumber => DeviceKind.GetModelNumber(CategoryId, SubCategory);
-    public string ModelType => DeviceKind.GetModelTypeAsString(CategoryId, SubCategory);
-
-    // -----------------------------------------------------------------------------------
-    // Channels
-    // ------------------------------------------------------------------------------------
-    public Channels Channels 
-    { 
-        get => channels ??= new Channels(this);
-        set
-        {
-            if (value != channels)
-            {
-                channels = value;
-                channels.Device = this;
-                observers.ForEach(o => o.DeviceChannelsChanged(this));
-            }
-        }
-    }
-    private Channels? channels;
-
-    public bool HasChannels => Channels.Count() > 1;
-
-    // TODO: find a way to reconcile this with ChannelCount on the physical device
-    // which is not always available (only if we have read product and operating flags
-    // information from the physical device on the network).
-    public int ChannelCount => IsMultiChannelDevice ? DeviceDriver.ChannelCount : 1;
-    public int FirstChannelId => DeviceDriver.FirstChannelId;
-
-    public Channel GetChannel(int channelId)
-    {
-        // Channel ids can be either 0 or 1 based
-        Debug.Assert(channelId - Channels[0].Id >= 0 && channelId - Channels[0].Id < Channels.Count);
-        return Channels[channelId - Channels[0].Id];
-    }
-
-    internal int GetChannelBitMask(int channelId)
-    {
-        return 1 << (channelId - Channels[0].Id);
-    }
-
-    /// <summary>
-    /// Driver of the phycial device in the Insteon network.
-    /// This creates the device driver if not created yet, using the Product Data
-    /// of this device to determine what driver type to create. The Product Data was
-    /// either loaded from the persisted model or acquired from the physical device
-    /// when adding a new device.
-    /// We use IsProductDataKnown to assert that we have correct Product Data. At least 
-    /// Category and SubCategory need to be correct to initialize the proper device driver.
-    /// The Product Data is also copied to the device driver during creation to allow 
-    /// it to function properly.
-    /// </summary>
-    internal DeviceDriverBase DeviceDriver
-    {
-        get
-        {
-            if (deviceDriver == null)
-            {
-                // See above
-                Debug.Assert(IsProductDataKnown);
-
-                if (IsHub)
-                {
-                    deviceDriver = new IMDriver(this);
-                }
-                else if (IsKeypadLinc)
-                {
-                    deviceDriver = new KeypadLincDriver(this);
-                }
-                else if (IsRemoteLinc)
-                {
-                    deviceDriver = new RemoteLincDriver(this);
-                }
-                else
-                {
-                    deviceDriver = new DeviceDriver(this);
-                }
-            }
-
-            return deviceDriver;
-        }
-    }
-    private DeviceDriverBase? deviceDriver;
-
-    /// <summary>
-    /// For testing purposes: set to mock physical device associated to this device
-    /// to avoid network dependency during unit-testing
-    /// </summary>
-    public MockPhysicalDevice? MockPhysicalDevice => House.GetMockPhysicalDevice(Id);
 
     // -----------------------------------------------------------------------------------
     // Read-write properties from the physical device, stored as bits in OperatingFlags.
@@ -1113,6 +1069,80 @@ public sealed class Device : DeviceBase
     }
 
     // -----------------------------------------------------------------------------------
+    // Channels
+    // ------------------------------------------------------------------------------------
+    public Channels Channels
+    {
+        get => channels ??= new Channels(this);
+        set
+        {
+            if (value != channels)
+            {
+                channels = value;
+                channels.Device = this;
+                observers.ForEach(o => o.DeviceChannelsChanged(this));
+            }
+        }
+    }
+    private Channels? channels;
+
+    public bool HasChannels => Channels.Count() > 1;
+
+    // TODO: find a way to reconcile this with ChannelCount on the physical device
+    // which is not always available (only if we have read product and operating flags
+    // information from the physical device on the network).
+    public int ChannelCount => IsMultiChannelDevice ? DeviceDriver.ChannelCount : 1;
+    public int FirstChannelId => DeviceDriver.FirstChannelId;
+
+    public Channel GetChannel(int channelId)
+    {
+        // Channel ids can be either 0 or 1 based
+        Debug.Assert(channelId - Channels[0].Id >= 0 && channelId - Channels[0].Id < Channels.Count);
+        return Channels[channelId - Channels[0].Id];
+    }
+
+    internal int GetChannelBitMask(int channelId)
+    {
+        return 1 << (channelId - Channels[0].Id);
+    }
+
+    /// <summary>
+    /// Ensure this device has the proper number of channels allocated 
+    /// If we have a physical device already, ensure that the channels match those of the physical device
+    /// If not, we go by the product category and model
+    /// </summary>
+    internal void EnsureChannels()
+    {
+        if (IsMultiChannelDevice)
+        {
+            if (Channels.Count > ChannelCount)
+            {
+                // If we have too many channels in the list, remove them
+                var newChannels = new Channels();
+                for (int i = 0; i < ChannelCount; i++)
+                {
+                    newChannels.Add(Channels[i]);
+                }
+                Channels = newChannels;
+                Debug.Assert(Channels.Count == ChannelCount);
+            }
+            else if (Channels.Count < ChannelCount)
+            {
+                // If we have too few channels in the list, add more
+                for (int i = Channels.Count; i < ChannelCount; i++)
+                {
+                    Channel channel = new Channel(Channels) { Id = i + FirstChannelId }.AddObserver(House.ModelObserver);
+                    Channels.Add(channel);
+                }
+                Debug.Assert(Channels.Count == ChannelCount);
+                observers.ForEach(o => o.DeviceChannelsChanged(this));
+            }
+
+            Debug.Assert(Channels.Count == 0 || Channels[0].Id == FirstChannelId);
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
     // All-Link Database
     // ------------------------------------------------------------------------------------
 
@@ -1134,39 +1164,39 @@ public sealed class Device : DeviceBase
     }
     private AllLinkDatabase? allLinkDatabase;
 
-    /// <summary>
-    /// For observers to subscribe to change notifications
-    /// </summary>
-    /// <param name="deviceObserver"></param>
-    public Device AddObserver(IDeviceObserver deviceObserver)
-    {
-        observers.Add(deviceObserver);
-        return this;
-    }
-
-    /// <summary>
-    /// For observers to unsubscribe to change notifications
-    /// </summary>
-    /// <param name="deviceObserver"></param>
-    public Device RemoveObserver(IDeviceObserver deviceObserver)
-    {
-        observers.Remove(deviceObserver);
-        return this;
-    }
-
-    private List<IDeviceObserver> observers = new();
-
     // -----------------------------------------------------------------------------------
-    // Scheduled Jobs
+    // Device connection status
     // ------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Cancel scheduled job - See Insteon Scheduler
+    /// Device connection status
     /// </summary>
-    public static void CancelScheduledJob(object? job)
+    public enum ConnectionStatus
     {
-        InsteonScheduler.Instance.CancelJob(job);
+        Unknown,        // No last known status
+        Connected,      // Last known status was: connected to the hub
+        Disconnected,   // Last known status was: not connected to the hub
+        GatewayError    // Hub/Gateway error, the gateway might not have been found
     }
+
+    /// <summary>
+    /// Lkg connection status of the device
+    /// To obtain the true connection status from the device at this time,
+    /// call ScheduleGetConnectionStatus or GetConnectionStatusAsync
+    /// </summary>
+    public ConnectionStatus Status
+    {
+        get => connectionStatus;
+        set
+        {
+            if (value != connectionStatus)
+            {
+                connectionStatus = value;
+                NotifyObserversOfPropertyChanged();
+            }
+        }
+    }
+    private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
 
     /// <summary>
     /// Return connection status, i.e., whether this device is connected to the hub and responding to pings.
@@ -1218,6 +1248,58 @@ public sealed class Device : DeviceBase
     private object? pingJob;
 
     /// <summary>
+    /// Return connection status
+    /// </summary>
+    /// <param name="force">Ping the device regardless of isConnectionStatusKnown</param>
+    /// <returns>Connection status</returns>
+    internal async Task<ConnectionStatus> GetConnectionStatusAsync(bool force = false)
+    {
+        // Make sure we have the product data (no cost if we already have it)
+        if (!await TryReadProductDataAsync())
+        {
+            return ConnectionStatus.Disconnected;
+        }
+
+        // And ping the device if we have not already
+        if (!isConnectionStatusKnown || force)
+        {
+            SetKnownConnectionStatus(await TryPingAsync());
+        }
+        return Status;
+    }
+    private bool isConnectionStatusKnown = false;
+
+    /// <summary>
+    /// Return whether the device is unreachable, i.e., not connected to the hub
+    /// </summary>
+    /// <returns></returns>
+    internal async Task<bool> IsUnreachableAsync()
+    {
+        var status = await GetConnectionStatusAsync();
+        return status == ConnectionStatus.Disconnected || status == ConnectionStatus.GatewayError;
+    }
+
+    /// <summary>
+    /// Helper to set a known (just acquired) connection status
+    /// </summary>
+    /// <param name="status">Connection status to set</param>
+    internal void SetKnownConnectionStatus(ConnectionStatus status)
+    {
+        Status = status;
+        isConnectionStatusKnown = true;
+    }
+
+    /// <summary>
+    /// Called when we get a failure communicating with this device
+    /// </summary>
+    internal void OnReadWriteFailure()
+    {
+        // Reset the connection status to force a re-ping,
+        // which might propagate the failure to the UI
+        isConnectionStatusKnown = false;
+    }
+
+    /// <summary>
     /// Called when the Hub/Gateway has changed or its settings have changed
     /// Force a re-ping of the device to update the connection status
     /// </summary>
@@ -1226,12 +1308,24 @@ public sealed class Device : DeviceBase
         isConnectionStatusKnown = false;
     }
 
+    // -----------------------------------------------------------------------------------
+    // Scheduled Jobs
+    // ------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Cancel scheduled job - See Insteon Scheduler
+    /// </summary>
+    public static void CancelScheduledJob(object? job)
+    {
+        InsteonScheduler.Instance.CancelJob(job);
+    }
+
     /// <summary>
     /// Schedule a ping a ping of this physical device
     /// </summary>
     /// <param name="completionCallback">called on completion if not null</param>
     /// <returns>handle to scheduled job</returns>
-    internal object SchedulePingDevice(Scheduler.JobCompletionCallback<Device.ConnectionStatus>? completionCallback = null,
+    public object SchedulePingDevice(Scheduler.JobCompletionCallback<Device.ConnectionStatus>? completionCallback = null,
         object? group = null, int maxRunCount = 3)
     {
         // And add a job to read physcial device properties
@@ -1640,108 +1734,25 @@ public sealed class Device : DeviceBase
             });
     }
 
-    /// <summary>
-    /// Try to ping device to check whether Hub can communicate with device
-    /// </summary>
-    /// <returns>Connection status</returns>
+    // -----------------------------------------------------------------------------------
+    // Async implementations of the schedule jobs
+    // ------------------------------------------------------------------------------------
+
+    // Try to ping device to check whether Hub can communicate with device.
     internal async Task<Device.ConnectionStatus> TryPingAsync()
     {
         return await DeviceDriver.TryPingAsync(maxAttempts: 1);
     }
 
-    /// <summary>
-    /// Try cleaning up after a Sync operation, e.g., letting remotelinc go back to sleep
-    /// </summary>
-    /// <returns></returns>
-    internal async Task<bool> TryCleanUpAfterSyncAsync()
+    // Try cleaning up after a Sync operation, e.g., letting remotelinc go back to sleep
+    private async Task<bool> TryCleanUpAfterSyncAsync()
     {
         return await DeviceDriver.TryCleanUpAfterSyncAsync();
     }
 
-    /// <summary>
-    /// Ensure this device has the proper number of channels allocated 
-    /// If we have a physical device already, ensure that the channels match those of the physical device
-    /// If not, we go by the product category and model
-    /// </summary>
-    internal void EnsureChannels()
-    {
-        if (IsMultiChannelDevice)
-        {
-            if (Channels.Count > ChannelCount)
-            {
-                // If we have too many channels in the list, remove them
-                var newChannels = new Channels();
-                for (int i = 0; i < ChannelCount; i++)
-                {
-                    newChannels.Add(Channels[i]);
-                }
-                Channels = newChannels;
-                Debug.Assert(Channels.Count == ChannelCount);
-            }
-            else if (Channels.Count < ChannelCount)
-            {
-                // If we have too few channels in the list, add more
-                for (int i = Channels.Count; i < ChannelCount; i++)
-                {
-                    Channel channel = new Channel(Channels) { Id = i + FirstChannelId }.AddObserver(House.ModelObserver);
-                    Channels.Add(channel);
-                }
-                Debug.Assert(Channels.Count == ChannelCount);
-                observers.ForEach(o => o.DeviceChannelsChanged(this));
-            }
-
-            Debug.Assert(Channels.Count == 0 || Channels[0].Id == FirstChannelId);
-        }
-    }
-
-    /// <summary>
-    /// Return connection status
-    /// </summary>
-    /// <param name="force">Ping the device regardless of isConnectionStatusKnown</param>
-    /// <returns>Connection status</returns>
-    internal async Task<ConnectionStatus> GetConnectionStatusAsync(bool force = false)
-    {
-        // Make sure we have the product data (no cost if we already have it)
-        if (!await TryReadProductDataAsync())
-        {
-            return ConnectionStatus.Disconnected;
-        }
-
-        // And ping the device if we have not already
-        if (!isConnectionStatusKnown || force)
-        {
-            SetKnownConnectionStatus(await TryPingAsync());
-        }
-        return Status;
-    }
-    private bool isConnectionStatusKnown = false;
-
-    /// <summary>
-    /// Return whether the device is unreachable, i.e., not connected to the hub
-    /// </summary>
-    /// <returns></returns>
-    internal async Task<bool> IsUnreachableAsync()
-    {
-        var status = await GetConnectionStatusAsync();
-        return status == ConnectionStatus.Disconnected || status == ConnectionStatus.GatewayError;
-    }
-
-    /// <summary>
-    /// Helper to set a known (just acquired) connection status
-    /// </summary>
-    /// <param name="status">Connection status to set</param>
-    internal void SetKnownConnectionStatus(ConnectionStatus status)
-    {
-        Status = status;
-        isConnectionStatusKnown = true;
-    }
-
-    /// <summary>
-    /// Acquire the product information data from the device if we don't have it already.
-    /// This does NOT use DeviceDriver and can therefore be called before creating a DeviceDriver.
-    /// It should be called to acquire this information on a newly added device.
-    /// </summary>
-    /// <returns>success</returns>
+    // Acquire the product information data from the device if we don't have it already.
+    // This does NOT use DeviceDriver and can therefore be called before creating a DeviceDriver.
+    // It should be called to acquire this information on a newly added device.
     internal async Task<bool> TryReadProductDataAsync(bool force = false)
     {
         if (!IsProductDataKnown || EngineVersion == 0 || force)
@@ -1989,7 +2000,7 @@ public sealed class Device : DeviceBase
 
     // Try to write channel properties that are stored as bit masks on the device itself
     // Returns: success or failure
-    internal async Task<bool> TryWriteChannelsBitMasksAsync()
+    private async Task<bool> TryWriteChannelsBitMasksAsync()
     {
         Debug.Assert(DeviceDriver is KeypadLincDriver);
         bool success = true;
@@ -2155,6 +2166,10 @@ public sealed class Device : DeviceBase
         return success;
     }
 
+    // -----------------------------------------------------------------------------------
+    // Useful tasks on the model
+    // ------------------------------------------------------------------------------------
+
     /// <summary>
     /// Check whether this device has a link record of any kind to a given device 
     /// </summary>
@@ -2284,7 +2299,7 @@ public sealed class Device : DeviceBase
                         {
                             if (destRecord.IsController != allLinkRecord.IsController)
                             {
-                                // We foud a complement link
+                                // We found a complement link
                                 // Create our returned list if needed
                                 if (complementLinkRecords == null)
                                 {

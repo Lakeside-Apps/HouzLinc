@@ -143,6 +143,10 @@ public sealed class Channel : ChannelBase
     }
     private ChannelDriver? channelDriver = null;
 
+    // -----------------------------------------------------------------------------------
+    // Channel Properties
+    // ------------------------------------------------------------------------------------
+
     /// <summary>
     /// Id property
     /// Read/write, one time bindable
@@ -388,6 +392,10 @@ public sealed class Channel : ChannelBase
 
     private bool deferPropertiesSyncStatusUpdate = false;
 
+    // -----------------------------------------------------------------------------------
+    // Scheduled jobs
+    // ------------------------------------------------------------------------------------
+
     /// <summary>
     /// Sends a LightOn command to all responders on this channel
     /// </summary>
@@ -414,6 +422,10 @@ public sealed class Channel : ChannelBase
             () => DeviceDriver.TrySendAllLinkCommandToGroup(Id, DeviceCommand.CommandCode_LightOFF, 0),
             completionCallback);
     }
+
+    // -----------------------------------------------------------------------------------
+    // Async implementation of scheduled jobs
+    // ------------------------------------------------------------------------------------
 
     /// <summary>
     /// Asynchronously read channel properties in the physical device channel and notifies via PropertiesSyncStatusChanged event
