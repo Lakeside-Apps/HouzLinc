@@ -1,16 +1,17 @@
-﻿<!-- Copyright 2022 Christian Fortini
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+﻿<!--
+    Copyright 2022 Christian Fortini
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 -->
 
 <ContentControl
@@ -40,42 +41,40 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Ellipse
-                        Width="48"
-                        Height="48"
+                        Width="64"
+                        Height="64"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Center"
                         Fill="{ThemeResource SceneStampColor}"/>
                     <TextBlock
                         Text="{x:Bind Id}"
-                        Margin="0,-5,0,0"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         TextAlignment="Center"
                         Style="{ThemeResource TitleTextBlockStyle}"
                         FontWeight="Normal"/>
-                    <ctl:EditableTextBlock
-                        x:Name="SceneNameBox"
-                        Grid.Column="1"
-                        Margin="5,0,0,0"
-                        VerticalAlignment="Bottom"
-                        Style="{ThemeResource TitleEditableTextBlockStyle}"
-                        Text="{x:Bind DisplayName, Mode=TwoWay}"
-                        IsEditable="{x:Bind IsNameEditable, Mode=TwoWay}"/>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <ToggleButton
-                            Tag="Edit"
-                            win:ToolTipService.ToolTip="Edit Scene Name and Notes"
-                            Margin="3,0,0,3"
-                            VerticalAlignment="Bottom"
-                            IsChecked="{x:Bind IsNameEditable, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
-                            Style="{ThemeResource SplitViewTogglePaneButtonStyle}"
-                            Checked="FocusNameBox">
-                            <Grid>
-                                <SymbolIcon Symbol="Edit" Visibility="{x:Bind IsNameEditable, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"/>
-                                <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsNameEditable, Mode=OneWay}"/>
-                            </Grid>
-                        </ToggleButton>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="0,0,3,0">
+                        <ctl:EditableTextBlock
+                            x:Name="SceneNameBox"
+                            Style="{ThemeResource TitleEditableTextBlockStyle}"
+                            Text="{x:Bind DisplayName, Mode=TwoWay}"
+                            IsEditable="{x:Bind IsNameEditable, Mode=TwoWay}"/>
+                        <TextBlock Margin="8,0,0,4" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind Room, Mode=OneWay}"/>
                     </StackPanel>
+                    <ToggleButton
+                        Grid.Column="2"
+                        Tag="Edit"
+                        win:ToolTipService.ToolTip="Edit Scene Name"
+                        Margin="3,0,0,3"
+                        VerticalAlignment="Top"
+                        IsChecked="{x:Bind IsNameEditable, Converter={StaticResource BoolToNullableBool}, Mode=TwoWay}"
+                        Style="{ThemeResource SplitViewTogglePaneButtonStyle}"
+                        Checked="FocusNameBox">
+                        <Grid>
+                            <SymbolIcon Symbol="Edit" Visibility="{x:Bind IsNameEditable, Converter={StaticResource VisibilityNegation}, Mode=OneWay}"/>
+                            <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsNameEditable, Mode=OneWay}"/>
+                        </Grid>
+                    </ToggleButton>
                 </Grid>
             </StackPanel>
         </DataTemplate>
