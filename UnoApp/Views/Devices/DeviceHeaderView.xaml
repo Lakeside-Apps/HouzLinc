@@ -78,7 +78,7 @@
                 <ToggleButton
                     Grid.Column="2"
                     Tag="Edit"
-                    win:ToolTipService.ToolTip="Edit Device Name, Room and Location"
+                    win:ToolTipService.ToolTip="Edit Device Name"
                     Margin="0,5,0,0"
                     Style="{ThemeResource SplitViewTogglePaneButtonStyle}"
                     VerticalAlignment="Top"
