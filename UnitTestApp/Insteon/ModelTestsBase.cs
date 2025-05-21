@@ -116,6 +116,10 @@ public static class HouseExtensions
         await house.Devices.AddOrConnectDeviceAsync(newDeviceId);
         var device = house.Devices.GetDeviceByID(newDeviceId)!;
         if (name != null) device.DisplayName = name;
+
+        // TODO: This should do a full sync instead of just reading the new device and the Hub
+        // and leaving the rest of the devices in the house unsynced
+        // But that would require having an async version of ScheduleSyncDevices
         await device.TryReadDevicePropertiesAsync(forceSync: true);
         await device.TryReadAllLinkDatabaseAsync();
         await house.Hub.TryReadAllLinkDatabaseAsync();
