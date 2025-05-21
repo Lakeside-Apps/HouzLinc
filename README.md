@@ -16,7 +16,7 @@ HouzLinc also offers the following:
 - HouzLinc includes a Console view which can be used to send commands directly to the hub or to individual devices, providing further investigation capabilities.
 - Some handy batch operations are provided, such as removing or replacing a device, copying a device configuration to another, cleaning up after device removal, and so on. More can be added over time as the need arises.
 
-This project is open source with an Apache license. As it is still in development, it contains bugs and limitations. It has not been pushed to an app store yet, so it has to be built and side-loaded on Windows or Android. Contributions to fix issues, enhance or add functionality are welcome!
+This project is open source with an Apache license. As it is still in development, it contains bugs and limitations and usability can be improved in certain places. It has not been pushed to an app store yet, so it has to be built and side-loaded on Windows or Android. Contributions to fix issues, enhance or add functionality are welcome!
 
 ## Screenshots
 Here is a screenshots of the app running on Windows:
