@@ -46,27 +46,16 @@ public sealed class Gateway
         Port = port;
     }
 
-    public Gateway(House house, string hostName, string macAddress, string ipAddress, string port, string username, string password)
+    public Gateway(House house, string hostName, string macAddress, string ipAddress, string port, string? username, string? password)
+        : this(house, hostName, macAddress, ipAddress, port)
     {
-        this.house = house;
-        MacAddress = macAddress;
-        HostName = hostName;
-        IPAddress = ipAddress;
-        Port = port;
         Username = username;
         Password = password;
     }
 
     internal Gateway(Gateway gateway)
+        : this (gateway.house, gateway.HostName, gateway.MacAddress, gateway.IPAddress, gateway.Port, gateway.Username, gateway.Password)
     {
-        house = gateway.house;
-        DeviceId = gateway.DeviceId;
-        MacAddress = gateway.MacAddress;
-        HostName = gateway.HostName;
-        IPAddress = gateway.IPAddress;
-        Port = gateway.Port;
-        Username = gateway.Username;
-        Password = gateway.Password;
     }
 
     ~Gateway()
@@ -92,6 +81,16 @@ public sealed class Gateway
     public override int GetHashCode()
     {
         return DeviceId.ToInt();
+    }
+
+    internal void CopyFrom(Gateway fromGateway)
+    {
+        MacAddress = fromGateway.MacAddress;
+        HostName = fromGateway.HostName;
+        IPAddress = fromGateway.IPAddress;
+        Port = fromGateway.Port;
+        Username = fromGateway.Username;
+        Password = fromGateway.Password;
     }
 
     internal bool IsIdenticalTo(Gateway other)

@@ -23,11 +23,15 @@ namespace Insteon.Model;
 // but instead by creating links between each controller and responder
 public sealed class Scene
 {
-    public Scene(Scenes scenes, string name, int id)
+    public Scene(Scenes scenes, int id)
+    {
+        this.Scenes = scenes;
+        this.Id = id;
+    }
+
+    public Scene(Scenes scenes, string name, int id) : this(scenes, id)
     {
         this.name = name;
-        this.Id = id;
-        this.Scenes = scenes; 
     }
 
     /// <summary>
