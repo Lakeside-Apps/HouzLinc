@@ -30,6 +30,13 @@ public sealed class House
         ModelObserver = new(ModelRecorder);
     }
 
+#if DEBUG
+    // Assign an immutable Id to a house for easier debugging.
+    private static int nextId = 1;
+    public readonly int Id = nextId++;
+    public override string ToString() => $"House - {Id}";
+#endif
+
     public string Name { get; set; } = "";
 
     public string Version { get; set; } = "";
