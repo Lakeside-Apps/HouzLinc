@@ -52,6 +52,8 @@ public sealed class Channels : List<Channel>
 
         for (int i = 0; i < Count; i++)
         {
+            // We don't test if channels are identical as CopyFrom will be a no-op
+            // if they are and will not send notifications to observers
             this[i].CopyFrom(fromChannels[i]);
         }
     }

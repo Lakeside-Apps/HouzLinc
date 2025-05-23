@@ -71,6 +71,9 @@ public sealed class House
     public bool IsIdenticalTo(House house)
     {
         return
+            Name == house.Name &&
+            Version == house.Version &&
+            HouseLocation == house.HouseLocation &&
             Gateways.IsIdenticalTo(house.Gateways) &&
             Devices.IsIdenticalTo(house.Devices) &&
             Scenes.IsIdenticalTo(house.Scenes);

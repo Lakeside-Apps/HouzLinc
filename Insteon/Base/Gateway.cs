@@ -15,6 +15,7 @@
 
 using Common;
 using Insteon.Model;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 
 namespace Insteon.Base;
@@ -67,13 +68,7 @@ public sealed class Gateway
     {
         if (other is Gateway otherGateway)
         {
-            return DeviceId == otherGateway.DeviceId &&
-                MacAddress == otherGateway.MacAddress &&
-                HostName == otherGateway.HostName &&
-                IPAddress == otherGateway.IPAddress &&
-                Port == otherGateway.Port &&
-                Username == otherGateway.Username &&
-                Password == otherGateway.Password;
+            return IsIdenticalTo(otherGateway);
         }
         return false;
     }
@@ -85,6 +80,7 @@ public sealed class Gateway
 
     internal void CopyFrom(Gateway fromGateway)
     {
+        Debug.Assert(DeviceId == fromGateway.DeviceId);
         MacAddress = fromGateway.MacAddress;
         HostName = fromGateway.HostName;
         IPAddress = fromGateway.IPAddress;
@@ -115,18 +111,25 @@ public sealed class Gateway
         house.NotifyGatewayTraffic(hasTraffic);
     }
 
-    private House house;
+    // House this gateway belongs to
+    // Immutable, e.g., not changed by CopyFrom
+    private House house { get; init; }
 
+    // Device ID of this gateway
+    // Immutable, e.g., not changed by CopyFrom
     public InsteonID DeviceId { get; init; } = InsteonID.Null;
 
-    // Serialized properties
+    /// <summary>
+    /// Serialized properties
+    /// </summary>
     public string MacAddress { get; set; }
     public string HostName { get; set; }
     public string IPAddress { get; set; }
     public string Port { get; set; }
 
-    // Locally stored properties
-    // These are immutable after OnDeserialized
+    /// <summary>
+    /// Locally stored properties
+    /// </summary>
     public string? Username { get; private set; }
     public string? Password { get; private set; }
 

@@ -47,6 +47,8 @@ public sealed class AllLinkDatabase : OrderedNonUniqueKeyedList<AllLinkRecord>
     /// <param name="idToExclude">device to eliminate any link to</param>
     internal AllLinkDatabase(AllLinkDatabase from, InsteonID? idToExclude = null)
     {
+        CopyProperties(from);
+
         foreach (var record in from)
         {
             if (idToExclude == null || record.DestID != idToExclude)
@@ -54,77 +56,67 @@ public sealed class AllLinkDatabase : OrderedNonUniqueKeyedList<AllLinkRecord>
                 Add(new AllLinkRecord(record));
             }
         }
-
-        NextRecordToRead = from.NextRecordToRead;
-        ReadResumeData = from.ReadResumeData;
-        Sequence = from.Sequence;
-        Revision = from.Revision;
-        LastStatus = from.LastStatus;
-        LastUpdate = from.LastUpdate;
     }
 
     /// <summary>
     /// Copy state from another AllLinkDatabase.
-    /// The database we copy from is assumed to have the "thruth" about the records.
-    /// Returns this if the database are identical and the "from" database if not.
-    /// The caller should generate an AllLinkDatabaseChanged observer notification 
-    /// if the return value is different from this.
     /// </summary>
     /// <param name="fromDatabase"></param>
-    /// <returns>the resulting database</returns>
-    internal AllLinkDatabase CopyFrom(AllLinkDatabase fromDatabase)
+    internal void CopyFrom(AllLinkDatabase fromDatabase)
     {
-        // TODO: once the rest of the model persistence pipeline is in place,
-        // consider optimizing this and copying to this only the records that actually changed.
-        // See commented out code below for an example. Will require unit-tests.
+        CopyProperties(fromDatabase);
 
-        if (IsIdenticalTo(fromDatabase))
+        // If the databases have identical record lists, we don't have any more to do
+        if (HasIdenticalRecords(fromDatabase))
         {
-            return this;
+            return;
         }
-        return fromDatabase;
 
-        //int seq = 0;
-        //foreach (var record in from)
-        //{
-        //    if (!record.Equals(this[seq]))
-        //    {
-        //        if (from.TryGetEntry(this[seq], null, out _))
-        //        {
-        //            this.Insert(seq, record);
-        //        }
-        //        else
-        //        {
-        //            this[seq] = record;
-        //        }
-        //    }
-        //    seq++;
-        //}
+        // Clear this list and bring the records in to notify the observers.
+        // TODO: we could consider only copying the records that changed as
+        // we do for Devices.CopyFrom, but it's unclear whether the added
+        // complexity is worth it.
+        ClearItems();
+        foreach (var record in fromDatabase)
+        {
+            Add(new AllLinkRecord(record));
+        }
+    }
 
-        //LastStatus = from.LastStatus;
-        //LastUpdate = from.LastUpdate;
-        //NextRecordToRead = from.NextRecordToRead;
-        //ReadResumeData = from.ReadResumeData;
-        //Sequence = from.Sequence;
-        //Revision = from.Revision;
+    // Helper to copy properties from another AllLinkDatabase
+    private void CopyProperties(AllLinkDatabase fromDatabase)
+    {
+        NextRecordToRead = fromDatabase.NextRecordToRead;
+        ReadResumeData = fromDatabase.ReadResumeData;
+        Sequence = fromDatabase.Sequence;
+        Revision = fromDatabase.Revision;
+        LastStatus = fromDatabase.LastStatus;
+        LastUpdate = fromDatabase.LastUpdate;
     }
 
     /// <summary>
-    /// Whether this database is strictly identical to another
+    /// Whether this database is identical to another
     /// </summary>
     /// <param name="database"></param>
     /// <returns></returns>
     internal bool IsIdenticalTo(AllLinkDatabase database)
     {
-        if (Revision != database.Revision ||
-            Count != database.Count ||
-            Sequence != database.Sequence ||
+        if (NextRecordToRead != database.NextRecordToRead ||
+            Revision != database.Revision ||
+            //Sequence != database.Sequence ||
             //ReadResumeData != database.ReadResumeData ||
-            LastStatus != database.LastStatus)
+            LastStatus != database.LastStatus ||
+            LastUpdate != database.LastUpdate)
         {
             return false;
         }
 
+        return HasIdenticalRecords(database);
+    }
+
+    // Helper to test whether the records of this database are identical to another
+    private bool HasIdenticalRecords(AllLinkDatabase database)
+    {
         if (Count != database.Count)
             return false;
 
@@ -278,7 +270,11 @@ public sealed class AllLinkDatabase : OrderedNonUniqueKeyedList<AllLinkRecord>
     /// </summary>
     internal int Sequence;
 
-    // Device holding this All-Link database, if any
+    /// <summary>
+    /// Device holding this All-Link database, if any.
+    /// We can't make this init only because we set it as we assign this database to a device.
+    /// However, this is not changed by CopyFrom, as it needs to point to the containing device.
+    /// </summary>
     internal Device? Device;
 
     /// <summary>

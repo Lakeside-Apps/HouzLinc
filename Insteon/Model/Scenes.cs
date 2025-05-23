@@ -29,6 +29,10 @@ public sealed class Scenes : OrderedKeyedList<Scene>
         House = house;
     }
 
+    /// <summary>
+    /// House this collection belongs to
+    /// Immutable, e.g., not changed by CopyFrom
+    /// </summary>
     public House House { get; init; }
 
     /// <summary>

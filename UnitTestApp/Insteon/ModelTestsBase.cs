@@ -125,6 +125,31 @@ public static class HouseExtensions
         await house.Hub.TryReadAllLinkDatabaseAsync();
     }
 
+    internal static async Task RemoveDevice(this House house, InsteonID removedDeviceId)
+    {
+        var removedDevice = house.Devices.GetDeviceByID(removedDeviceId);
+        if (removedDevice == null)
+            return;
+
+        var mockPhysicalDevice = new MockPhysicalDevice(removedDeviceId, removedDevice.AllLinkDatabase)
+        {
+            CategoryId = removedDevice.CategoryId,
+            SubCategory = removedDevice.SubCategory,
+            ProductKey = removedDevice.ProductKey,
+            Revision = removedDevice.Revision,
+            EngineVersion = removedDevice.EngineVersion,
+            OperatingFlags = removedDevice.OperatingFlags
+        };
+
+        house.WithMockPhysicalDevice(new MockPhysicalIM(house.Hub!.Id, house.Hub!, new AllLinkDatabase(house.Hub.AllLinkDatabase)))
+             .WithMockPhysicalDevice(mockPhysicalDevice);
+
+        house.Devices.RemoveDevice(removedDeviceId);
+
+        await house.Hub.TryReadAllLinkDatabaseAsync();
+    }
+
+
     // Pretend to sync everything by changing statuses to "Synced"
     internal static void PretendSync(this House house)
     {

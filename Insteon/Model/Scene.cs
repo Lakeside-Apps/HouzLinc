@@ -73,7 +73,7 @@ public sealed class Scene
         Name = fromScene.Name;
         LastTrigger = fromScene.LastTrigger;
         Notes = fromScene.Notes;
-        Members = Members.CopyFrom(fromScene.Members);
+        Members.CopyFrom(fromScene.Members);
     }
 
     // Whether this scene is identical to another scene.

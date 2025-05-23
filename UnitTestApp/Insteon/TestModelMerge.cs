@@ -44,7 +44,7 @@ public sealed class TestModelMerge : ModelTestsBase
     }
 
     [TestMethod]
-    public async Task TestAddDeviceLocalAndOther()
+    public async Task TestAddDeviceLocalAddAnotherRemote()
     {
         await LoadModels("Changes1");
 
@@ -56,7 +56,7 @@ public sealed class TestModelMerge : ModelTestsBase
             operatingFlags: 0x08, /*8 channels*/
             name:"New device");
 
-        // Add another device to the target model (containing non local changes)
+        // Add another device to the target model (containing remote changes)
         await targetHouse.AddNewDevice(new InsteonID("44.55.66"),
             categoryId: DeviceKind.CategoryId.DimmableLightingControl,
             subCategory: 0x41, /*keypad dimmer*/
@@ -67,4 +67,25 @@ public sealed class TestModelMerge : ModelTestsBase
         // Merge local and others and check
         await PlayMergeAndCheck();
     }
+
+    [TestMethod]
+    public async Task TestAddDeviceLocalRemoveOneRemote()
+    {
+        await LoadModels("Changes1");
+
+        // Add a device to the working (local) house model
+        await house.AddNewDevice(new InsteonID("11.22.33"),
+            categoryId: DeviceKind.CategoryId.DimmableLightingControl,
+            subCategory: 0x41, /*keypad dimmer*/
+            revision: 72,
+            operatingFlags: 0x08, /*8 channels*/
+            name: "New device");
+
+        // Add delete another device from the target model (containing remote changes)
+        await targetHouse.RemoveDevice(new InsteonID("BB.22.22"));
+
+        // Merge local and others and check
+        await PlayMergeAndCheck();
+    }
+
 }

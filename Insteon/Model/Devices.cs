@@ -38,10 +38,17 @@ public sealed class Devices : OrderedKeyedList<Device>
         House = house;
     }
 
+    /// <summary>
+    /// House this list of devices belongs to
+    /// Immutable, e.g., not changed by CopyFrom
+    /// </summary>
+    public House House { get; init; } = null!;
+
     // Copy state from another Devices object.
     // Generates observer notifications of collection or property changes.
     internal void CopyFrom(Devices fromDevices)
     {
+        // Build a copy of the "from" list that we can edit
         var fromDevices2 = new Devices(House);
         foreach(var device in fromDevices)
         {
@@ -94,11 +101,6 @@ public sealed class Devices : OrderedKeyedList<Device>
         }
         return true;
     }
-
-    /// <summary>
-    /// House this list of devices belongs to
-    /// </summary>
-    public House House { get; init; } = null!;
 
     /// <summary>
     /// Called after deserialization to initialize other data members
