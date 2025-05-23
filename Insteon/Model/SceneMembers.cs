@@ -86,23 +86,25 @@ public sealed class SceneMembers : OrderedNonUniqueKeyedList<SceneMember>
 
     /// <summary>
     /// Copy from another SceneMembers.
-    /// The SceneMembers we copy from is the "truth".
-    /// Returns this if the SceneMembers are identical and the "from" SceneMembers if not.
-    /// The caller should generate an SceneMemberChanged observer notification
-    /// if the return value is different from this.
     /// </summary>
     /// <param name="fromMembers">See above</param>
-    internal SceneMembers CopyFrom(SceneMembers fromMembers)
+    internal void CopyFrom(SceneMembers fromMembers)
     {
-        // TODO: once the rest of the model persistence pipeline is in place,
-        // consider optimizing this and copying to this only the members that actually changed.
-        // See Channels.CopyFrom for an example. Will require unit-tests.
-
+        // If the member lists are identical, nothing to do
         if (IsIdenticalTo(fromMembers))
         {
-            return this;
+            return;
         }
-        return fromMembers;
+
+        // Clear this list and bring the members in to notify the observers.
+        // TODO: we could consider only copying the members that changed as
+        // we do for Devices.CopyFrom, but it's unclear whether the added
+        // complexity is worth it.
+        Clear();
+        foreach (var member in fromMembers)
+        {
+            Add(new SceneMember(member));
+        }
     }
 
     /// <summary>

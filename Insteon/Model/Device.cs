@@ -34,7 +34,7 @@ public sealed class Device : DeviceBase
         isDeserialized = !fromDeserialization;
     }
 
-    internal Devices devices { get; init; }
+    private Devices devices { get; init; }
 
     public House House => devices.House;
 
@@ -45,8 +45,7 @@ public sealed class Device : DeviceBase
         CopyPropertiesFrom(device);
         EnsureChannels();
         Channels.CopyFrom(device.Channels);
-        // TODO: generate incremental change rather than changing the whole database
-        AllLinkDatabase = AllLinkDatabase.CopyFrom(device.AllLinkDatabase);
+        AllLinkDatabase.CopyFrom(device.AllLinkDatabase);
     }
 
     // Helper to copy all properties from another device,
