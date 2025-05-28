@@ -62,7 +62,32 @@ public sealed class TestModelMerge : ModelTestsBase
             subCategory: 0x41, /*keypad dimmer*/
             revision: 72,
             operatingFlags: 0x08, /*8 channels*/
-            name:"New device added by others");
+            name:"New device added remotly");
+
+        // Merge local and others and check
+        await PlayMergeAndCheck();
+    }
+
+    [TestMethod]
+    public async Task TestAddDeviceLocalAddSameRemote()
+    {
+        await LoadModels("Changes1");
+
+        // Add a device to the working (local) house model
+        await house.AddNewDevice(new InsteonID("11.22.33"),
+            categoryId: DeviceKind.CategoryId.DimmableLightingControl,
+            subCategory: 0x41, /*keypad dimmer*/
+            revision: 72,
+            operatingFlags: 0x08, /*8 channels*/
+            name: "New device");
+
+        // Add another device to the target model (remote changes)
+        await targetHouse.AddNewDevice(new InsteonID("11.22.33"),
+            categoryId: DeviceKind.CategoryId.DimmableLightingControl,
+            subCategory: 0x41, /*keypad dimmer*/
+            revision: 72,
+            operatingFlags: 0x08, /*8 channels*/
+            name: "New device added remotly");
 
         // Merge local and others and check
         await PlayMergeAndCheck();
@@ -81,11 +106,40 @@ public sealed class TestModelMerge : ModelTestsBase
             operatingFlags: 0x08, /*8 channels*/
             name: "New device");
 
-        // Add delete another device from the target model (containing remote changes)
+        // Add delete another device from the target model (remote changes)
         await targetHouse.RemoveDevice(new InsteonID("BB.22.22"));
 
         // Merge local and others and check
         await PlayMergeAndCheck();
     }
 
+    [TestMethod]
+    public async Task TestRemoveDeviceLocalRemoveAnotherRemote()
+    {
+        await LoadModels("Changes1");
+
+        // Add a device to the working (local) house model
+        await house.RemoveDevice(new InsteonID("BB.11.11"));
+
+        // Add delete another device from the target model (remote changes)
+        await targetHouse.RemoveDevice(new InsteonID("BB.33.33"));
+
+        // Merge local and others and check
+        await PlayMergeAndCheck();
+    }
+
+    [TestMethod]
+    public async Task TestRemoveDeviceLocalRemoveSameRemote()
+    {
+        await LoadModels("Changes1");
+
+        // Add a device to the working (local) house model
+        await house.RemoveDevice(new InsteonID("BB.44.44"));
+
+        // Add delete another device from the target model (remote changes)
+        await targetHouse.RemoveDevice(new InsteonID("BB.44.44"));
+
+        // Merge local and others and check
+        await PlayMergeAndCheck();
+    }
 }

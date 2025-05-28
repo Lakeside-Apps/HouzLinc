@@ -73,10 +73,18 @@ internal class DeviceAddedChange : ModelChange
 
     internal override void Apply(House house)
     {
-        house.Devices.Add(new Device(house.Devices, deviceId)
+        try
         {
-            AddedDateTime = addedDateTime
-        });
+            house.Devices.Add(new Device(house.Devices, deviceId)
+            {
+                AddedDateTime = addedDateTime
+            });
+        }
+        catch (ArgumentException)
+        {
+            // It's possible that the device has already been added by another running
+            // instance of the app, in that case, fail silently.
+        }
     }
 
     InsteonID deviceId;
@@ -358,7 +366,11 @@ internal class AllLinkRecordAddedChange : ModelChange
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null && device.AllLinkDatabase != null)
         {
-            device.AllLinkDatabase.Add(record);
+            // Avoid creating duplicate records
+            if (!device.AllLinkDatabase.TryGetEntry(record, comparer: null, out _))
+            {
+                device.AllLinkDatabase.Add(record);
+            }
         }
     }
 

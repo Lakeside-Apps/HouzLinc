@@ -56,6 +56,7 @@ public abstract class Scheduler
     /// <summary>
     /// Job pre-handler
     /// Performs any pre-job handling and can cancel the job and all associated logging.
+    /// </summary>
     /// <returns>false to cancel the job</returns>
     public delegate Task<bool> JobPrehandlerAsync();
     public delegate bool JobPrehandler();
@@ -73,8 +74,8 @@ public abstract class Scheduler
     /// Step handler
     /// Performs one step of the job and returns whether the job is completed or not
     /// </summary>
-    /// <param name="retType">Step return value</param>
-    /// <param name="completed">true if the job is done</param>
+    /// <return name="retType">Step return value</return>
+    /// <return name="completed">true if the job is done</return>
     /// <returns></returns>
     public delegate Task<(RetType retType, bool completed)> JobStepHandlerAsync<RetType>(bool isFirstStep);
     public delegate (RetType retType, bool completed) JobStepHandler<RetType>(bool isFirstStep);
