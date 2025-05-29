@@ -41,6 +41,7 @@
     <Content Include="Refs\Changes\TestRemoveScene.xml" />
     <Content Include="Refs\Changes\TestReplaceDevice.xml" />
     <Content Include="Refs\Changes\TestReplaceDeviceWithChannels.xml" />
+    <Content Include="Refs\Merges\TestChangeDevicePropertiesLocalAndRemote.xml" />
     <Content Include="Refs\Merges\TestAddDeviceLocalAddSameRemote.xml" />
     <Content Include="Refs\Merges\TestAddDeviceLocalAddAnotherRemote.xml" />
     <Content Include="Refs\Merges\TestRemoveDeviceLocalRemoveSameRemote.xml" />

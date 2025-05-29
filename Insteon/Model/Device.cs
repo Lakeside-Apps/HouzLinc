@@ -22,7 +22,6 @@ using System.Runtime.CompilerServices;
 using Insteon.Mock;
 using System.Diagnostics.CodeAnalysis;
 using static Insteon.Model.AllLinkRecord;
-using Insteon.Commands;
 
 namespace Insteon.Model;
 

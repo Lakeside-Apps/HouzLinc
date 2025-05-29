@@ -142,4 +142,39 @@ public sealed class TestModelMerge : ModelTestsBase
         // Merge local and others and check
         await PlayMergeAndCheck();
     }
+
+    [TestMethod]
+    public async Task TestChangeDevicePropertiesLocalAndRemote()
+    {
+        await LoadModels("Changes1");
+
+        var deviceLocal = house.GetDeviceByID(new InsteonID("BB.11.11"));
+        if (deviceLocal is null)
+        {
+            Assert.Fail("Device BB.11.11 not found in the local model");
+        }
+
+        var deviceRemote = targetHouse.GetDeviceByID(new InsteonID("BB.11.11"));
+        if (deviceRemote is null)
+        {
+            Assert.Fail("Device BB.11.11 not found in the remote model");
+        }
+
+        deviceLocal.DisplayName = "Local name";
+        deviceRemote.DisplayName = "Remote name";
+
+        deviceLocal.OperatingFlags = 0x08;
+        deviceRemote.OperatingFlags = 0x00;
+
+        deviceLocal.BeeperOn = true;
+        deviceLocal.LEDBrightness = 0xFF;
+        deviceRemote.NonToggleMask = 0xFF;
+
+        deviceRemote.EngineVersion = 3;
+        deviceRemote.Revision = 73;
+        deviceRemote.OnLevel = 0x7F;
+
+        // Merge local and others and check
+        await PlayMergeAndCheck();
+    }
 }
