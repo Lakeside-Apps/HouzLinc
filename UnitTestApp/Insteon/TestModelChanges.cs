@@ -40,7 +40,7 @@ public class TestModelChanges : ModelTestsBase
     public void Cleanup()
     {
         house = null!;
-        targetHouse = null!;
+        remoteHouse = null!;
     }
 
     // Add a device without channels, sync the new device and the hub databases,

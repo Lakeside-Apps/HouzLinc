@@ -40,7 +40,7 @@ public sealed class TestModelMerge : ModelTestsBase
     public void Cleanup()
     {
         house = null!;
-        targetHouse = null!;
+        remoteHouse = null!;
     }
 
     [TestMethod]
@@ -57,7 +57,7 @@ public sealed class TestModelMerge : ModelTestsBase
             name:"New device");
 
         // Add another device to the target model (containing remote changes)
-        await targetHouse.AddNewDevice(new InsteonID("44.55.66"),
+        await remoteHouse.AddNewDevice(new InsteonID("44.55.66"),
             categoryId: DeviceKind.CategoryId.DimmableLightingControl,
             subCategory: 0x41, /*keypad dimmer*/
             revision: 72,
@@ -82,7 +82,7 @@ public sealed class TestModelMerge : ModelTestsBase
             name: "New device");
 
         // Add another device to the target model (remote changes)
-        await targetHouse.AddNewDevice(new InsteonID("11.22.33"),
+        await remoteHouse.AddNewDevice(new InsteonID("11.22.33"),
             categoryId: DeviceKind.CategoryId.DimmableLightingControl,
             subCategory: 0x41, /*keypad dimmer*/
             revision: 72,
@@ -107,7 +107,7 @@ public sealed class TestModelMerge : ModelTestsBase
             name: "New device");
 
         // Add delete another device from the target model (remote changes)
-        await targetHouse.RemoveDevice(new InsteonID("BB.22.22"));
+        await remoteHouse.RemoveDevice(new InsteonID("BB.22.22"));
 
         // Merge local and others and check
         await PlayMergeAndCheck();
@@ -122,7 +122,7 @@ public sealed class TestModelMerge : ModelTestsBase
         await house.RemoveDevice(new InsteonID("BB.11.11"));
 
         // Add delete another device from the target model (remote changes)
-        await targetHouse.RemoveDevice(new InsteonID("BB.33.33"));
+        await remoteHouse.RemoveDevice(new InsteonID("BB.33.33"));
 
         // Merge local and others and check
         await PlayMergeAndCheck();
@@ -137,7 +137,7 @@ public sealed class TestModelMerge : ModelTestsBase
         await house.RemoveDevice(new InsteonID("BB.44.44"));
 
         // Add delete another device from the target model (remote changes)
-        await targetHouse.RemoveDevice(new InsteonID("BB.44.44"));
+        await remoteHouse.RemoveDevice(new InsteonID("BB.44.44"));
 
         // Merge local and others and check
         await PlayMergeAndCheck();
@@ -154,7 +154,7 @@ public sealed class TestModelMerge : ModelTestsBase
             Assert.Fail("Device BB.11.11 not found in the local model");
         }
 
-        var deviceRemote = targetHouse.GetDeviceByID(new InsteonID("BB.11.11"));
+        var deviceRemote = remoteHouse.GetDeviceByID(new InsteonID("BB.11.11"));
         if (deviceRemote is null)
         {
             Assert.Fail("Device BB.11.11 not found in the remote model");
@@ -173,6 +173,23 @@ public sealed class TestModelMerge : ModelTestsBase
         deviceRemote.EngineVersion = 3;
         deviceRemote.Revision = 73;
         deviceRemote.OnLevel = 0x7F;
+
+        // Merge local and others and check
+        await PlayMergeAndCheck();
+    }
+
+    [TestMethod]
+    public async Task TestRemoveSceneControllerLocalRemoveSameSceneResponderRemote()
+    {
+        await LoadModels("Changes1");
+
+        Scene scene = house.Scenes.GetSceneById(6)!;
+        scene.Expand();
+        scene.RemoveSceneMember(InsteonID.FromString("AA.EE.EE"), memberGroup: 8, isController: true, isResponder: false);
+
+        Scene remoteScene = remoteHouse.Scenes.GetSceneById(6)!;
+        remoteScene.Expand();
+        remoteScene.RemoveSceneMember(InsteonID.FromString("AA.BB.BB"), memberGroup: 4, isController: false, isResponder: true);
 
         // Merge local and others and check
         await PlayMergeAndCheck();
