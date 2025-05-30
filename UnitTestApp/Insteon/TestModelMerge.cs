@@ -64,7 +64,7 @@ public sealed class TestModelMerge : ModelTestsBase
             operatingFlags: 0x08, /*8 channels*/
             name:"New device added remotly");
 
-        // Merge local and others and check
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 
@@ -89,7 +89,7 @@ public sealed class TestModelMerge : ModelTestsBase
             operatingFlags: 0x08, /*8 channels*/
             name: "New device added remotly");
 
-        // Merge local and others and check
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 
@@ -109,7 +109,7 @@ public sealed class TestModelMerge : ModelTestsBase
         // Add delete another device from the target model (remote changes)
         await remoteHouse.RemoveDevice(new InsteonID("BB.22.22"));
 
-        // Merge local and others and check
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 
@@ -124,7 +124,7 @@ public sealed class TestModelMerge : ModelTestsBase
         // Add delete another device from the target model (remote changes)
         await remoteHouse.RemoveDevice(new InsteonID("BB.33.33"));
 
-        // Merge local and others and check
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 
@@ -139,7 +139,7 @@ public sealed class TestModelMerge : ModelTestsBase
         // Add delete another device from the target model (remote changes)
         await remoteHouse.RemoveDevice(new InsteonID("BB.44.44"));
 
-        // Merge local and others and check
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 
@@ -174,7 +174,7 @@ public sealed class TestModelMerge : ModelTestsBase
         deviceRemote.Revision = 73;
         deviceRemote.OnLevel = 0x7F;
 
-        // Merge local and others and check
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 
@@ -191,7 +191,79 @@ public sealed class TestModelMerge : ModelTestsBase
         remoteScene.Expand();
         remoteScene.RemoveSceneMember(InsteonID.FromString("AA.BB.BB"), memberGroup: 4, isController: false, isResponder: true);
 
-        // Merge local and others and check
+        // Merge local and remote and check
+        await PlayMergeAndCheck();
+    }
+
+    [TestMethod]
+    public async Task TestAddSceneLocalAddAnotherRemote()
+    {
+        await LoadModels("Changes1");
+
+        // Add a scene to the working (local) house model using AddNewScene
+        house.Scenes.AddNewScene("Local Scene");
+
+        // Add another scene to the target model (containing remote changes) using AddNewScene
+        remoteHouse.Scenes.AddNewScene("Remote Scene");
+
+        // Merge local and remote and check
+        await PlayMergeAndCheck();
+    }
+
+    [TestMethod]
+    public async Task TestAddSceneWithMembersLocalAndRemote()
+    {
+        await LoadModels("Changes1");
+
+        // Add a scene to the working (local) house model and add a member
+        var localScene = house.Scenes.AddNewScene("Local Scene With Member");
+        localScene.AddMember(new SceneMember(localScene)
+        {
+            DeviceId = new InsteonID("AA.DD.DD"),
+            Group = 1,
+            IsController = true,
+            IsResponder = true
+        });
+
+        localScene.AddMember(new SceneMember(localScene)
+        {
+            DeviceId = new InsteonID("AA.BB.BB"),
+            Group = 3,
+            IsController = true,
+            IsResponder = false
+        });
+
+        localScene.AddMember(new SceneMember(localScene)
+        {
+            DeviceId = new InsteonID("BB.33.33"),
+            Group = 1,
+            IsController = true,
+            IsResponder = false
+        });
+
+        localScene.Expand();
+
+        // Add a scene to the remote house and add a different member
+        var remoteScene = remoteHouse.Scenes.AddNewScene("Remote Scene With Member");
+        remoteScene.AddMember(new SceneMember(remoteScene)
+        {
+            DeviceId = new InsteonID("BB.66.66"),
+            Group = 2,
+            IsController = false,
+            IsResponder = true
+        });
+
+        remoteScene.AddMember(new SceneMember(remoteScene)
+        {
+            DeviceId = new InsteonID("AA.11.11"),
+            Group = 5,
+            IsController = true,
+            IsResponder = true
+        });
+
+        remoteScene.Expand();
+
+        // Merge local and remote and check
         await PlayMergeAndCheck();
     }
 }

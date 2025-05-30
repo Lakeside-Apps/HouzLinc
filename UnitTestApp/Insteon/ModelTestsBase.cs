@@ -69,8 +69,8 @@ public class ModelTestsBase
     private protected async Task PlayMergeAndCheck()
     {
         // Play the changes recorded while modifying model house locally
-        // against remoteHouse in which we simulated changes from another instance of this app
-        // This gives us the merged model with all changes
+        // against remoteHouse in which we simulated changes from another (remote) instance of this app.
+        // This gives us the merged model with all changes.
         house.PlayChanges(remoteHouse);
 
         // Save the merged model

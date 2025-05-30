@@ -16,7 +16,6 @@
 using System.Diagnostics;
 using Common;
 using Insteon.Base;
-using static Insteon.Model.AllLinkRecord;
 
 namespace Insteon.Model;
 
@@ -25,7 +24,7 @@ namespace Insteon.Model;
 /// </summary>
 internal abstract class ModelChange
 {
-    internal abstract void Apply(House house);
+    internal abstract void Apply(House house, ModelPlayerContext context);
 }
 
 /// <summary>
@@ -44,7 +43,7 @@ internal class GatewayChangedChange : ModelChange
         this.deviceId = gateway.DeviceId;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         house.PushNewGateway(new Gateway(house, macAddress, hostName, ipAddress, port) { DeviceId = deviceId });
     }
@@ -71,7 +70,7 @@ internal class DeviceAddedChange : ModelChange
         Debug.Assert(device.Status == default);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         try
         {
@@ -110,7 +109,7 @@ internal class DeviceInsertedChange : ModelChange
         Debug.Assert(device.Status == default);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         house.Devices.Insert(seq, new Device(house.Devices, deviceId)
         {
@@ -130,7 +129,7 @@ internal class DeviceRemovedChange : ModelChange
         this.deviceId = device.Id;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null) house.Devices.Remove(device);
@@ -149,7 +148,7 @@ internal class DevicePropertyChangedChange : ModelChange
         this.propertyValue = device.GetType().GetProperty(propertyName)?.GetValue(device);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -171,7 +170,7 @@ internal class DevicePropertiesSyncStatusChanged : ModelChange
         this.status = device.PropertiesSyncStatus;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -193,7 +192,7 @@ internal class DeviceChannelsChangedChange : ModelChange
         this.channels = new Channels(device.Channels);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -217,7 +216,7 @@ internal class ChannelPropertyChangedChange : ModelChange
         this.propertyLastUpdate = (channel.GetType().GetProperty(propertyName + "LastUpdate")?.GetValue(channel) ?? null) as DateTime? ?? DateTime.MinValue;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -247,7 +246,7 @@ internal class ChannelSyncStatusChangedChange : ModelChange
         this.status = channel.PropertiesSyncStatus;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -273,7 +272,7 @@ internal class AllLinkDatabaseChangedChange : ModelChange
         this.allLinkDatabase = new AllLinkDatabase(device.AllLinkDatabase);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -294,7 +293,7 @@ internal class AllLinkDatabaseSyncStatusChangedChange : ModelChange
         this.status = device.AllLinkDatabase.LastStatus;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null)
@@ -317,7 +316,7 @@ internal class AllLinkDatabasePropertiesChangedChange : ModelChange
         this.lastUpdate = device.AllLinkDatabase.LastUpdate;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null && device.AllLinkDatabase != null)
@@ -341,7 +340,7 @@ internal class AllLinkDatabaseClearedChange : ModelChange
         this.deviceId = device.Id;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null && device.AllLinkDatabase != null)
@@ -361,7 +360,7 @@ internal class AllLinkRecordAddedChange : ModelChange
         this.record = record;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null && device.AllLinkDatabase != null)
@@ -386,7 +385,7 @@ internal class AllLinkRecordRemovedChange : ModelChange
         this.recordUid = record.Uid;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null && device.AllLinkDatabase != null)
@@ -409,7 +408,7 @@ internal class AllLinkRecordReplacedChange : ModelChange
         this.newRecord = newRecord;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var device = house.Devices.GetDeviceByID(deviceId);
         if (device != null && device.AllLinkDatabase != null)
@@ -430,9 +429,9 @@ internal class SceneMembersClearedChange : ModelChange
         this.sceneId = scene.Id;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
-        var scene = house.Scenes.GetSceneById(sceneId);
+        var scene = house.Scenes.GetSceneById(context.AdjustSceneId(sceneId));
         if (scene != null)
         {
             scene.RemoveAllMembers();
@@ -450,9 +449,9 @@ internal class SceneMemberAddedChange : ModelChange
         this.member = new SceneMember(member);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
-        if (house.Scenes.TryGetEntry(sceneId, out var scene))
+        if (house.Scenes.TryGetEntry(context.AdjustSceneId(sceneId), out var scene))
         {
             scene.Members.Add(member);
         }
@@ -473,9 +472,9 @@ internal class SceneMemberReplacedChange : ModelChange
         this.newMember = newMember;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
-        if (house.Scenes.TryGetEntry(sceneId, out var scene))
+        if (house.Scenes.TryGetEntry(context.AdjustSceneId(sceneId), out var scene))
         {
             var index = scene.Members.IndexOf(memberToReplace);
             scene.Members[index] = newMember;
@@ -495,9 +494,9 @@ internal class SceneMemberRemovedChange : ModelChange
         this.member = member;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
-        if (house.Scenes.TryGetEntry(sceneId, out var scene))
+        if (house.Scenes.TryGetEntry(context.AdjustSceneId(sceneId), out var scene))
         {
             scene.Members.Remove(member);
         }
@@ -516,9 +515,9 @@ internal class ScenePropertyChangedChange : ModelChange
         this.propertyValue = scene.GetType().GetProperty(propertyName)?.GetValue(scene) ?? null;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
-        if (house.Scenes.TryGetEntry(sceneId, out var scene))
+        if (house.Scenes.TryGetEntry(context.AdjustSceneId(sceneId), out var scene))
         {
             scene.GetType().GetProperty(propertyName)?.SetValue(scene, propertyValue, null);
         }
@@ -537,9 +536,9 @@ internal class SceneMembersChangedChange : ModelChange
         this.members = new SceneMembers(members);
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
-        if (house.Scenes.TryGetEntry(sceneId, out var scene))
+        if (house.Scenes.TryGetEntry(context.AdjustSceneId(sceneId), out var scene))
         {
             scene.Members = members;
         }
@@ -559,8 +558,22 @@ internal class SceneAddedChange : ModelChange
         this.sceneName = scene.Name;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
+        if (house.Scenes.GetSceneById(context.AdjustSceneId(sceneId)) != null)
+        {
+            // If the scene Id already exists, find the next available Id
+            var nextSceneId = house.Scenes.NextSceneID;
+            while (house.Scenes.GetSceneById(nextSceneId) != null)
+                nextSceneId++;
+
+            // Adjust the scene Id to avoid conflicts
+            // and record the adjustment for subequent changes
+            context.setSceneIdAdjustment(sceneId, nextSceneId);
+            sceneId = nextSceneId;
+            house.Scenes.NextSceneID = nextSceneId+1;
+        }
+
         house.Scenes.Add(new Scene(house.Scenes, sceneName, sceneId));
     }
 
@@ -575,7 +588,7 @@ internal class SceneRemovedChange : ModelChange
         this.sceneId = scene.Id;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         var scene = house.Scenes.GetSceneById(sceneId);
         if (scene != null)
@@ -594,7 +607,7 @@ internal class ScenesPropertyChangedChange : ModelChange
         this.nextSceneId = scenes.NextSceneID;
     }
 
-    internal override void Apply(House house)
+    internal override void Apply(House house, ModelPlayerContext context)
     {
         house.Scenes.NextSceneID = nextSceneId;
     }
