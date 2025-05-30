@@ -1,4 +1,4 @@
-/* Copyright 2022 Christian Fortini
+/* Copyright 2022 Chri  tian Fortini
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,9 +36,11 @@ internal class ModelRecorder
             changesToPlay = changes;
             changes = new List<ModelChange>();
         }
+
+        var context = new ModelPlayerContext();
         foreach (var change in changesToPlay)
         {
-            change.Apply(targetHouse);
+            change.Apply(targetHouse, context);
         }
     }
 

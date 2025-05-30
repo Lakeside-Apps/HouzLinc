@@ -270,7 +270,7 @@
           <channel id="253" />
           <channel id="254" />
         </channels>
-        <database sequence="0" lastUpdate="5/21/2025 12:22:46 PM" lastStatus="Synchronized" revision="-1">
+        <database sequence="0" lastUpdate="5/28/2025 11:22:35 AM" lastStatus="Synchronized" revision="-1">
           <record sequence="0">
             <device address="BB.66.66" group="0" recordControl="226" data1="1" data2="65" data3="67" scene="0" syncstatus="synced" uid="3124031505" />
           </record>
@@ -368,10 +368,10 @@
             <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="0" data3="4" scene="12" syncstatus="synced" uid="737273190" />
           </record>
           <record sequence="32">
-            <device address="44.55.66" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="2603956686" />
+            <device address="44.55.66" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="669143562" />
           </record>
           <record sequence="33">
-            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="361411336" />
+            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="3874980314" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
@@ -1784,7 +1784,7 @@
         <channels>
           <channel id="1" />
         </channels>
-        <database sequence="1" lastUpdate="5/21/2025 12:22:46 PM" lastStatus="Changed" revision="2">
+        <database sequence="1" lastUpdate="5/28/2025 11:22:35 AM" lastStatus="Changed" revision="2">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.00.00" group="0" recordControl="162" data1="0" data2="0" data3="1" scene="0" syncstatus="synced" uid="79398351" />
@@ -3124,7 +3124,7 @@
           <channel id="3" name="Fireplace" />
           <channel id="4" name="All Off" />
         </channels>
-        <database sequence="0" lastUpdate="5/21/2025 12:22:46 PM" revision="0">
+        <database sequence="0" lastUpdate="5/28/2025 11:22:35 AM" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="BB.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="2329724910" />
@@ -3173,7 +3173,7 @@
           <channel id="3" name="Fireplace" />
           <channel id="4" name="All Off" />
         </channels>
-        <database sequence="1" lastUpdate="5/21/2025 12:22:46 PM" revision="0">
+        <database sequence="1" lastUpdate="5/28/2025 11:22:35 AM" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.EE.EE" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="161474824" />
@@ -3219,7 +3219,7 @@
           <channel id="3" name="Dim" />
           <channel id="4" name="Fireplace" />
         </channels>
-        <database sequence="1" lastUpdate="5/21/2025 12:22:46 PM" lastStatus="Changed" revision="0">
+        <database sequence="1" lastUpdate="5/28/2025 11:22:35 AM" lastStatus="Changed" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="4" syncstatus="changed" uid="3167623054" />
@@ -3274,7 +3274,7 @@
         </properties>
       </device>
       <device insteonID="11.22.33" category="1" subcategory="65" revision="72" engineVersion="2" status="connected" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="New device" active="1">
-        <notes added="5/21/2025 12:22:46 PM" />
+        <notes added="5/28/2025 11:22:35 AM" />
         <location />
         <channels>
           <channel id="1" />
@@ -3286,22 +3286,22 @@
           <channel id="7" />
           <channel id="8" />
         </channels>
-        <database sequence="0" lastUpdate="5/21/2025 12:22:46 PM" lastStatus="Synchronized" revision="0">
+        <database sequence="0" lastUpdate="5/28/2025 11:22:35 AM" lastStatus="Synchronized" revision="0">
           <record sequence="0">
-            <device address="AA.00.00" group="0" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="3370306110" />
+            <device address="AA.00.00" group="0" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="4148117982" />
           </record>
           <record sequence="1">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2967230135" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2740459449" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
           <p name="operatingFlags">
-            <device value="0x08" lastUpdate="5/21/2025 12:22:46 PM" />
+            <device value="0x08" lastUpdate="5/28/2025 11:22:35 AM" />
           </p>
         </properties>
       </device>
-      <device insteonID="44.55.66" category="1" subcategory="65" revision="72" engineVersion="2" status="connected" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="New device added by others" active="1">
-        <notes added="5/21/2025 12:22:46 PM" />
+      <device insteonID="44.55.66" category="1" subcategory="65" revision="72" engineVersion="2" status="connected" powerline="1" radio="1" hopIfModSyncFails="0" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="" displayName="New device added remotly" active="1">
+        <notes added="5/28/2025 11:22:35 AM" />
         <location />
         <channels>
           <channel id="1" />
@@ -3313,17 +3313,17 @@
           <channel id="7" />
           <channel id="8" />
         </channels>
-        <database sequence="0" lastUpdate="5/21/2025 12:22:46 PM" lastStatus="Synchronized" revision="0">
+        <database sequence="0" lastUpdate="5/28/2025 11:22:35 AM" lastStatus="Synchronized" revision="0">
           <record sequence="0">
-            <device address="AA.00.00" group="0" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="861433085" />
+            <device address="AA.00.00" group="0" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="1363001533" />
           </record>
           <record sequence="1">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2534339758" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2734176626" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
           <p name="operatingFlags">
-            <device value="0x08" lastUpdate="5/21/2025 12:22:46 PM" />
+            <device value="0x08" lastUpdate="5/28/2025 11:22:35 AM" />
           </p>
         </properties>
       </device>

@@ -41,8 +41,15 @@
     <Content Include="Refs\Changes\TestRemoveScene.xml" />
     <Content Include="Refs\Changes\TestReplaceDevice.xml" />
     <Content Include="Refs\Changes\TestReplaceDeviceWithChannels.xml" />
+    <Content Include="Refs\Merges\TestAddSceneWithMembersLocalAndRemote.xml" />
+    <Content Include="Refs\Merges\TestChangeDevicePropertiesLocalAndRemote.xml" />
+    <Content Include="Refs\Merges\TestAddDeviceLocalAddSameRemote.xml" />
     <Content Include="Refs\Merges\TestAddDeviceLocalAddAnotherRemote.xml" />
+    <Content Include="Refs\Merges\TestRemoveDeviceLocalRemoveSameRemote.xml" />
+    <Content Include="Refs\Merges\TestRemoveDeviceLocalRemoveAnotherRemote.xml" />
     <Content Include="Refs\Merges\TestAddDeviceLocalRemoveOneRemote.xml" />
+    <Content Include="Refs\Merges\TestRemoveSceneControllerLocalRemoveSameSceneResponderRemote.xml" />
+    <Content Include="Refs\Merges\TestAddSceneLocalAddAnotherRemote.xml" />
     <Content Include="Refs\Scenes2\TestExpandScene.xml" />
     <Content Include="Refs\Scenes2\TestRemoveDuplicateMembers.xml" />
     <Content Include="Refs\Scenes2\TestRemoveDuplicateMembersOneByOne.xml" />

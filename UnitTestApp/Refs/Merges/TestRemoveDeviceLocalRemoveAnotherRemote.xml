@@ -270,7 +270,7 @@
           <channel id="253" />
           <channel id="254" />
         </channels>
-        <database sequence="0" lastUpdate="5/29/2025 10:13:40 AM" lastStatus="Changed" revision="-1">
+        <database sequence="0" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="-1">
           <record sequence="0">
             <device address="BB.66.66" group="0" recordControl="226" data1="1" data2="65" data3="67" scene="0" syncstatus="synced" uid="3124031505" />
           </record>
@@ -329,13 +329,13 @@
             <device address="AA.FF.FF" group="0" recordControl="226" data1="1" data2="33" data3="65" scene="0" syncstatus="synced" uid="2216631156" />
           </record>
           <record sequence="19">
-            <device address="BB.11.11" group="0" recordControl="226" data1="1" data2="33" data3="65" scene="0" syncstatus="synced" uid="4043834357" />
+            <device address="BB.11.11" group="0" recordControl="98" data1="1" data2="33" data3="65" scene="0" syncstatus="changed" uid="544918082" />
           </record>
           <record sequence="20">
             <device address="AA.BB.BB" group="0" recordControl="226" data1="1" data2="65" data3="67" scene="0" syncstatus="synced" uid="3622893283" />
           </record>
           <record sequence="21">
-            <device address="BB.33.33" group="0" recordControl="234" data1="1" data2="0" data3="65" scene="0" syncstatus="synced" uid="3595809070" />
+            <device address="BB.33.33" group="0" recordControl="106" data1="1" data2="0" data3="65" scene="0" syncstatus="changed" uid="2421626591" />
           </record>
           <record sequence="22">
             <device address="AA.CC.CC" group="0" recordControl="226" data1="1" data2="42" data3="67" scene="0" syncstatus="synced" uid="830249150" />
@@ -366,12 +366,6 @@
           </record>
           <record sequence="31">
             <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="0" data3="4" scene="12" syncstatus="synced" uid="737273190" />
-          </record>
-          <record sequence="32">
-            <device address="11.22.33" group="0" recordControl="226" data1="1" data2="32" data3="65" scene="0" syncstatus="synced" uid="791946079" />
-          </record>
-          <record sequence="33">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="3285405309" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
@@ -1207,7 +1201,7 @@
             </rampRate>
           </channel>
         </channels>
-        <database sequence="1" lastUpdate="5/29/2025 10:13:40 AM" lastStatus="Changed" revision="24">
+        <database sequence="1" lastUpdate="1/31/2024 3:33:46 PM" lastStatus="Synchronized" revision="24">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.00.00" group="0" recordControl="170" data1="0" data2="28" data3="4" scene="0" syncstatus="synced" uid="1784632921" />
@@ -1342,16 +1336,7 @@
             <device address="BB.22.22" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="20" syncstatus="synced" uid="1161150174" />
           </record>
           <record sequence="44">
-            <device address="11.22.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="2" syncstatus="changed" uid="2530055760" />
-          </record>
-          <record sequence="45">
-            <device address="11.22.33" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="18" syncstatus="changed" uid="4157847222" />
-          </record>
-          <record sequence="46">
-            <device address="11.22.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="17" syncstatus="changed" uid="3253479111" />
-          </record>
-          <record sequence="47">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="2798743367" />
+            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2798743367" />
           </record>
         </database>
         <properties lastStatus="Synchronized">
@@ -1793,7 +1778,7 @@
         <channels>
           <channel id="1" />
         </channels>
-        <database sequence="1" lastUpdate="5/29/2025 10:13:40 AM" lastStatus="Changed" revision="2">
+        <database sequence="1" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="2">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.00.00" group="0" recordControl="162" data1="0" data2="0" data3="1" scene="0" syncstatus="synced" uid="79398351" />
@@ -2000,49 +1985,6 @@
           </p>
         </properties>
       </device>
-      <device insteonID="BB.11.11" category="1" subcategory="33" revision="65" status="connected" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="12" webDeviceID="0" webGatewayControllerGroup="0" driver="OutletLinc01DCS" displayName="Bed Lamp (His)" active="1">
-        <notes added="11/30/2014 12:36:12 PM" />
-        <location value="Right nightstand" room="Master Bedroom" />
-        <customProperties />
-        <channels>
-          <channel id="1" />
-        </channels>
-        <database sequence="1" lastUpdate="1/31/2024 3:33:46 PM" lastStatus="Synchronized" revision="2">
-          <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
-          <record sequence="0">
-            <device address="AA.00.00" group="0" recordControl="170" data1="0" data2="28" data3="0" scene="0" syncstatus="synced" uid="583030113" />
-          </record>
-          <record sequence="1">
-            <device address="BB.44.44" group="4" recordControl="162" data1="0" data2="28" data3="1" scene="9" syncstatus="synced" uid="1615523834" />
-          </record>
-          <record sequence="2">
-            <device address="BB.44.44" group="1" recordControl="162" data1="255" data2="28" data3="1" scene="0" syncstatus="synced" uid="759586149" />
-          </record>
-          <record sequence="3">
-            <device address="BB.22.22" group="8" recordControl="162" data1="0" data2="28" data3="1" scene="9" syncstatus="synced" uid="3266300181" />
-          </record>
-          <record sequence="4">
-            <device address="BB.55.55" group="4" recordControl="162" data1="0" data2="28" data3="1" scene="9" syncstatus="synced" uid="2313633066" />
-          </record>
-          <record sequence="5">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="2469312090" />
-          </record>
-        </database>
-        <properties lastStatus="Synchronized">
-          <p name="operatingFlags">
-            <device value="0x08" lastUpdate="10/26/2013 10:03:00 PM" />
-          </p>
-          <p name="X10House">
-            <device value="0x20" lastUpdate="10/26/2013 10:03:00 PM" />
-          </p>
-          <p name="X10Unit">
-            <device value="0x20" lastUpdate="10/26/2013 10:03:00 PM" />
-          </p>
-          <p name="rampRate">
-            <device value="0x1C" lastUpdate="10/26/2013 10:03:00 PM" />
-          </p>
-        </properties>
-      </device>
       <device insteonID="BB.22.22" category="1" subcategory="66" revision="67" status="connected" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="50" webDeviceID="0" webGatewayControllerGroup="0" driver="KeypadLinc03DCS" displayName="Keypad - Master Bedroom" active="1">
         <notes added="11/30/2014 12:36:12 PM" />
         <location value="Right of entry door" room="Master Bedroom" />
@@ -2185,7 +2127,7 @@
             </rampRate>
           </channel>
         </channels>
-        <database sequence="1" lastUpdate="1/31/2024 3:33:46 PM" lastStatus="Synchronized" revision="5">
+        <database sequence="1" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="5">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.00.00" group="0" recordControl="170" data1="0" data2="28" data3="5" scene="0" syncstatus="synced" uid="4085291214" />
@@ -2200,7 +2142,7 @@
             <device address="AA.00.00" group="5" recordControl="170" data1="255" data2="28" data3="6" scene="0" syncstatus="synced" uid="3049628545" />
           </record>
           <record sequence="4">
-            <device address="BB.33.33" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="0" syncstatus="synced" uid="423350001" />
+            <device address="BB.33.33" group="5" recordControl="98" data1="3" data2="28" data3="5" scene="0" syncstatus="changed" uid="749479230" />
           </record>
           <record sequence="5">
             <device address="BB.44.44" group="4" recordControl="162" data1="0" data2="28" data3="1" scene="9" syncstatus="synced" uid="2599682914" />
@@ -2257,7 +2199,7 @@
             <device address="AA.11.11" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="20" syncstatus="synced" uid="2134301513" />
           </record>
           <record sequence="23">
-            <device address="BB.33.33" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="3" syncstatus="synced" uid="3157010223" />
+            <device address="BB.33.33" group="7" recordControl="98" data1="3" data2="28" data3="7" scene="3" syncstatus="changed" uid="277082988" />
           </record>
           <record sequence="24">
             <device address="BB.44.44" group="4" recordControl="162" data1="255" data2="28" data3="8" scene="0" syncstatus="synced" uid="771356921" />
@@ -2269,7 +2211,7 @@
             <device address="AA.FF.FF" group="8" recordControl="226" data1="3" data2="28" data3="8" scene="9" syncstatus="synced" uid="3095043293" />
           </record>
           <record sequence="27">
-            <device address="BB.11.11" group="8" recordControl="226" data1="3" data2="28" data3="8" scene="9" syncstatus="synced" uid="3997769617" />
+            <device address="BB.11.11" group="8" recordControl="98" data1="3" data2="28" data3="8" scene="9" syncstatus="changed" uid="1193825902" />
           </record>
           <record sequence="28">
             <device address="AA.EE.EE" group="1" recordControl="162" data1="0" data2="28" data3="8" scene="7" syncstatus="synced" uid="2361216262" />
@@ -2480,7 +2422,7 @@
             </rampRate>
           </channel>
         </channels>
-        <database sequence="1" lastUpdate="1/31/2024 3:33:46 PM" lastStatus="Synchronized" revision="2">
+        <database sequence="1" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="2">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.00.00" group="0" recordControl="170" data1="0" data2="28" data3="0" scene="0" syncstatus="synced" uid="2867033475" />
@@ -2573,7 +2515,7 @@
             <device address="BB.22.22" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="3" syncstatus="synced" uid="631300945" />
           </record>
           <record sequence="30">
-            <device address="BB.33.33" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="3" syncstatus="synced" uid="2808362325" />
+            <device address="BB.33.33" group="7" recordControl="98" data1="3" data2="28" data3="7" scene="3" syncstatus="changed" uid="1475305490" />
           </record>
           <record sequence="31">
             <device address="AA.EE.EE" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="3" syncstatus="synced" uid="395652805" />
@@ -2645,55 +2587,6 @@
           </p>
           <p name="X10Unit">
             <device value="0x20" lastUpdate="10/26/2013 10:06:00 PM" />
-          </p>
-        </properties>
-      </device>
-      <device insteonID="BB.33.33" category="7" subcategory="0" revision="65" status="connected" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="-2" webDeviceID="0" webGatewayControllerGroup="0" driver="IOLinc02CS" displayName="Fireplace" active="1">
-        <notes added="11/30/2014 12:36:13 PM" />
-        <location value="Secondary Closet" room="Master Bedroom" />
-        <customProperties />
-        <channels>
-          <channel id="1" />
-        </channels>
-        <database sequence="1" lastUpdate="1/31/2024 3:33:46 PM" lastStatus="Synchronized" revision="2">
-          <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
-          <record sequence="0">
-            <device address="AA.00.00" group="0" recordControl="162" data1="0" data2="0" data3="1" scene="0" syncstatus="synced" uid="686709592" />
-          </record>
-          <record sequence="1">
-            <device address="BB.55.55" group="3" recordControl="162" data1="255" data2="28" data3="1" scene="3" syncstatus="synced" uid="3135614999" />
-          </record>
-          <record sequence="2">
-            <device address="AA.EE.EE" group="7" recordControl="162" data1="255" data2="28" data3="1" scene="3" syncstatus="synced" uid="1277828659" />
-          </record>
-          <record sequence="3">
-            <device address="AA.BB.BB" group="7" recordControl="162" data1="255" data2="28" data3="1" scene="3" syncstatus="synced" uid="838708404" />
-          </record>
-          <record sequence="4">
-            <device address="BB.44.44" group="3" recordControl="162" data1="255" data2="28" data3="1" scene="3" syncstatus="synced" uid="1897955883" />
-          </record>
-          <record sequence="5">
-            <device address="BB.22.22" group="7" recordControl="162" data1="255" data2="28" data3="1" scene="3" syncstatus="synced" uid="378946673" />
-          </record>
-          <record sequence="6">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="656500567" />
-          </record>
-        </database>
-        <properties lastStatus="Synchronized">
-          <p name="operatingFlags">
-            <device value="0x20" lastUpdate="10/26/2013 10:08:00 PM" />
-          </p>
-          <p name="delay">
-            <device value="0x14" lastUpdate="10/26/2013 10:08:00 PM" />
-          </p>
-          <p name="prescaler">
-            <device value="0x01" lastUpdate="10/26/2013 10:08:00 PM" />
-          </p>
-          <p name="X10House">
-            <device value="0x20" lastUpdate="10/26/2013 10:08:00 PM" />
-          </p>
-          <p name="X10Unit">
-            <device value="0x00" lastUpdate="10/26/2013 10:08:00 PM" />
           </p>
         </properties>
       </device>
@@ -2955,7 +2848,7 @@
             </rampRate>
           </channel>
         </channels>
-        <database sequence="1" lastUpdate="1/31/2024 3:33:46 PM" lastStatus="Synchronized" revision="0">
+        <database sequence="1" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.00.00" group="0" recordControl="170" data1="0" data2="28" data3="0" scene="0" syncstatus="synced" uid="1031151580" />
@@ -3024,7 +2917,7 @@
             <device address="AA.DD.DD" group="1" recordControl="162" data1="0" data2="28" data3="8" scene="7" syncstatus="synced" uid="1422847416" />
           </record>
           <record sequence="22">
-            <device address="BB.33.33" group="7" recordControl="226" data1="3" data2="28" data3="7" scene="3" syncstatus="synced" uid="2571438776" />
+            <device address="BB.33.33" group="7" recordControl="98" data1="3" data2="28" data3="7" scene="3" syncstatus="changed" uid="1413079389" />
           </record>
           <record sequence="23">
             <device address="AA.BB.BB" group="5" recordControl="226" data1="3" data2="28" data3="5" scene="7" syncstatus="synced" uid="4190722879" />
@@ -3133,19 +3026,19 @@
           <channel id="3" name="Fireplace" />
           <channel id="4" name="All Off" />
         </channels>
-        <database sequence="0" lastUpdate="5/29/2025 10:13:40 AM" revision="0">
+        <database sequence="0" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="BB.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="2329724910" />
           </record>
           <record sequence="1">
-            <device address="BB.33.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="2511701473" />
+            <device address="BB.33.33" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="3" syncstatus="changed" uid="2585317142" />
           </record>
           <record sequence="2">
             <device address="AA.FF.FF" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="9" uid="3995387984" />
           </record>
           <record sequence="3">
-            <device address="BB.11.11" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="9" uid="1065841983" />
+            <device address="BB.11.11" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="9" syncstatus="changed" uid="2017320619" />
           </record>
           <record sequence="4">
             <device address="BB.22.22" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="9" uid="9970394" />
@@ -3157,7 +3050,7 @@
             <device address="AA.BB.BB" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="3588905546" />
           </record>
           <record sequence="7">
-            <device address="BB.11.11" group="1" recordControl="226" data1="3" data2="31" data3="1" scene="0" uid="2954228148" />
+            <device address="BB.11.11" group="1" recordControl="98" data1="3" data2="31" data3="1" scene="0" syncstatus="changed" uid="2059618542" />
           </record>
           <record sequence="8">
             <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="synced" uid="1422829945" />
@@ -3182,7 +3075,7 @@
           <channel id="3" name="Fireplace" />
           <channel id="4" name="All Off" />
         </channels>
-        <database sequence="1" lastUpdate="5/29/2025 10:13:40 AM" revision="0">
+        <database sequence="1" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.EE.EE" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="161474824" />
@@ -3191,7 +3084,7 @@
             <device address="AA.BB.BB" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="3403543917" />
           </record>
           <record sequence="2">
-            <device address="BB.33.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="700579320" />
+            <device address="BB.33.33" group="3" recordControl="98" data1="3" data2="28" data3="3" scene="3" syncstatus="changed" uid="4275172901" />
           </record>
           <record sequence="3">
             <device address="BB.22.22" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="3" uid="257971019" />
@@ -3206,7 +3099,7 @@
             <device address="AA.FF.FF" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="9" uid="3896097730" />
           </record>
           <record sequence="7">
-            <device address="BB.11.11" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="9" uid="671519058" />
+            <device address="BB.11.11" group="4" recordControl="98" data1="3" data2="28" data3="4" scene="9" syncstatus="changed" uid="3719486601" />
           </record>
         </database>
         <properties>
@@ -3228,7 +3121,7 @@
           <channel id="3" name="Dim" />
           <channel id="4" name="Fireplace" />
         </channels>
-        <database sequence="1" lastUpdate="5/29/2025 10:13:40 AM" lastStatus="Changed" revision="0">
+        <database sequence="1" lastUpdate="5/26/2025 5:55:28 PM" lastStatus="Changed" revision="0">
           <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
           <record sequence="0">
             <device address="AA.11.11" group="4" recordControl="226" data1="3" data2="28" data3="4" scene="4" syncstatus="changed" uid="3167623054" />
@@ -3272,18 +3165,6 @@
           <record sequence="13">
             <device address="AA.44.44" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="0" uid="3999223805" />
           </record>
-          <record sequence="14">
-            <device address="11.22.33" group="2" recordControl="226" data1="3" data2="28" data3="2" scene="17" syncstatus="changed" uid="1541889422" />
-          </record>
-          <record sequence="15">
-            <device address="11.22.33" group="1" recordControl="226" data1="3" data2="28" data3="1" scene="2" syncstatus="changed" uid="2764845489" />
-          </record>
-          <record sequence="16">
-            <device address="11.22.33" group="3" recordControl="226" data1="3" data2="28" data3="3" scene="18" syncstatus="changed" uid="879778708" />
-          </record>
-          <record sequence="17">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="2515160412" />
-          </record>
         </database>
         <properties>
           <p name="syncRequest">
@@ -3291,55 +3172,6 @@
           </p>
           <p name="operatingFlags">
             <device value="0x00" lastUpdate="1/26/2014 7:56:00 PM" />
-          </p>
-        </properties>
-      </device>
-      <device insteonID="11.22.33" category="1" subcategory="32" revision="65" status="connected" powerline="1" radio="1" yakityYak="1" hopIfModSyncFails="1" ipk="00.00.00" wattage="0" webDeviceID="0" webGatewayControllerGroup="0" driver="SwitchLinc02DCS" displayName="Soffit Lights" active="1">
-        <notes added="11/30/2014 12:36:12 PM" />
-        <location value="Lower cabinet right of fireplace" room="Great Room" />
-        <channels />
-        <database sequence="1" lastUpdate="5/29/2025 10:13:40 AM" lastStatus="Changed" revision="10" nextRecordToRead="0">
-          <readResumeData timeStamp="1/1/0001 12:00:00 AM" sequence="0" lastSuccessIndex="0" />
-          <record sequence="0">
-            <device address="AA.00.00" group="0" recordControl="170" data1="0" data2="28" data3="0" scene="0" syncstatus="changed" uid="3398566785" />
-          </record>
-          <record sequence="1">
-            <device address="BB.66.66" group="3" recordControl="162" data1="102" data2="28" data3="1" scene="17" syncstatus="changed" uid="3916277261" />
-          </record>
-          <record sequence="2">
-            <device address="BB.66.66" group="1" recordControl="162" data1="153" data2="28" data3="1" scene="2" syncstatus="changed" uid="2693819909" />
-          </record>
-          <record sequence="3">
-            <device address="BB.66.66" group="5" recordControl="162" data1="102" data2="28" data3="1" scene="18" syncstatus="changed" uid="1867469283" />
-          </record>
-          <record sequence="4">
-            <device address="AA.AA.AA" group="1" recordControl="162" data1="153" data2="28" data3="1" scene="2" syncstatus="changed" uid="548653002" />
-          </record>
-          <record sequence="5">
-            <device address="AA.AA.AA" group="3" recordControl="162" data1="102" data2="28" data3="1" scene="18" syncstatus="changed" uid="1751487478" />
-          </record>
-          <record sequence="6">
-            <device address="AA.AA.AA" group="2" recordControl="162" data1="102" data2="28" data3="1" scene="17" syncstatus="changed" uid="424034803" />
-          </record>
-          <record sequence="7">
-            <device address="00.00.00" group="0" recordControl="0" data1="0" data2="0" data3="0" scene="0" syncstatus="changed" uid="4123410871" />
-          </record>
-        </database>
-        <properties lastStatus="Synchronized">
-          <p name="ledDimming">
-            <device value="0x3F" lastUpdate="5/29/2025 10:13:40 AM" />
-          </p>
-          <p name="X10House">
-            <device value="0x20" lastUpdate="5/29/2025 10:13:40 AM" />
-          </p>
-          <p name="X10Unit">
-            <device value="0x20" lastUpdate="5/29/2025 10:13:40 AM" />
-          </p>
-          <p name="onLevel">
-            <device value="0xFF" lastUpdate="5/29/2025 10:13:40 AM" />
-          </p>
-          <p name="rampRate">
-            <device value="0x1C" lastUpdate="5/29/2025 10:13:40 AM" />
           </p>
         </properties>
       </device>
@@ -3365,14 +3197,12 @@
           <member iid="BB.66.66" group="3" responder="1" data1="0" data2="28" data3="3" status="Awaiting Save" tag="33" />
           <member iid="BB.66.66" group="5" responder="1" data1="0" data2="28" data3="5" status="Awaiting Save" tag="33" />
           <member iid="AA.AA.AA" group="1" controller="1" data1="255" data2="28" data3="1" status="Done" tag="34" />
-          <member iid="11.22.33" group="1" responder="1" data1="153" data2="28" data3="1" status="Done" tag="1" />
         </members>
       </scene>
       <scene id="3" name="Master Bedroom - Fireplace" lastTrigger="02/09/2014 12:09:42 PM, Fast Off, Succeeded">
         <members>
           <member iid="AA.EE.EE" group="7" controller="1" responder="1" data1="255" data2="28" data3="7" status="Done" tag="35" />
           <member iid="AA.BB.BB" group="7" controller="1" responder="1" data1="255" data2="28" data3="7" status="Done" tag="35" />
-          <member iid="BB.33.33" group="1" responder="1" data1="255" data2="28" data3="1" status="Done" tag="1" />
           <member iid="BB.44.44" group="3" controller="1" data1="255" data2="28" data3="3" status="Done" tag="34" />
           <member iid="BB.55.55" group="3" controller="1" data1="255" data2="28" data3="3" status="Done" tag="34" />
           <member iid="BB.22.22" group="7" controller="1" responder="1" data1="255" data2="28" data3="7" status="Done" tag="35" />
@@ -3442,7 +3272,6 @@
       <scene id="9" name="Master Bedroom - Lights Off" lastTrigger="02/07/2014 09:02:07 AM, Off, Succeeded">
         <members>
           <member iid="AA.FF.FF" group="1" responder="1" data1="0" data2="28" data3="1" status="Done" tag="1" />
-          <member iid="BB.11.11" group="1" responder="1" data1="0" data2="28" data3="1" status="Done" tag="1" />
           <member iid="BB.22.22" group="1" responder="1" data1="0" data2="28" data3="1" status="Done" tag="33" />
           <member iid="BB.22.22" group="3" responder="1" data1="0" data2="28" data3="3" status="Done" tag="33" />
           <member iid="BB.44.44" group="4" controller="1" data1="255" data2="28" data3="4" status="Done" tag="34" />
@@ -3522,7 +3351,6 @@
           <member iid="BB.66.66" group="1" responder="1" data1="0" data2="28" data3="1" status="Awaiting Save" tag="33" />
           <member iid="BB.66.66" group="5" responder="1" data1="0" data2="28" data3="5" status="Awaiting Save" tag="33" />
           <member iid="AA.AA.AA" group="2" controller="1" data1="255" data2="28" data3="2" status="Done" tag="34" />
-          <member iid="11.22.33" group="1" responder="1" data1="102" data2="28" data3="1" status="Done" tag="1" />
         </members>
       </scene>
       <scene id="18" name="Great Room - Dim" lastTrigger="01/26/2014 08:32:14 PM, On, Succeeded">
@@ -3533,7 +3361,6 @@
           <member iid="AA.99.99" group="1" responder="1" data1="102" data2="28" data3="1" status="Done" tag="1" />
           <member iid="BB.66.66" group="1" responder="1" data1="51" data2="28" data3="1" status="Done" tag="33" />
           <member iid="AA.AA.AA" group="3" controller="1" data1="255" data2="28" data3="3" status="Done" tag="34" />
-          <member iid="11.22.33" group="1" responder="1" data1="102" data2="28" data3="1" status="Done" tag="1" />
         </members>
       </scene>
       <scene id="19" name="Dining - Dim" lastTrigger="11/24/2013 11:36:39 AM, On">
