@@ -26,7 +26,7 @@
             VerticalAlignment="Center"
             TextWrapping="Wrap"
             MinHeight="48"
-            MaxLines="2"/>
+            MaxLines="3"/>
         <Button
             Grid.Column="1"
             Tag="ConfirmUserAction"
