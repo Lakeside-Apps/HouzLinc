@@ -102,8 +102,7 @@ public sealed class SceneMember
     public int OnLevel { get => Data1; init => Data1 = (byte)value; }
     public int RampRate { get => Data2; init => Data2 = (byte)value; }
 
-    public int Tag { get; init; }
-
     // Not Used at this time. Only here to round-trip back to houselinc.xml
+    public int Tag { get; init; }
     public string Status { get; init; } = null!;
 }

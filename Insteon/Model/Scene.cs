@@ -350,9 +350,13 @@ public sealed class Scene
         }
         else
         {
-            // We are just editing the data in the existing scene member
+            // We are either expanding this member to controller and responder 
+            // (from either controller or responder), and/or changing the data.
+            Debug.Assert(newMember.IsController || newMember.IsResponder);
             newMember = new SceneMember(replacedMember)
             {
+                IsController = newMember.IsController,
+                IsResponder = newMember.IsResponder,
                 Data1 = newMember.Data1,
                 Data2 = newMember.Data2,
                 Data3 = newMember.Data3
