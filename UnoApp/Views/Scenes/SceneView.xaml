@@ -40,7 +40,7 @@
                 -->
                 <local:SceneHeaderView Content="{Binding}"/>
                 <ScrollViewer Grid.Row="1">
-                    <StackPanel Margin="0,5,10,0">
+                    <StackPanel Margin="0,5,0,0">
                         <ctkControls:SettingsCard Header="Room" MinHeight="48">
                             <ctkControls:SettingsCard.Resources>
                                 <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
@@ -67,7 +67,6 @@
                                 win:ToolTipService.ToolTip="Add a Member"
                                 win:ToolTipService.Placement="Bottom"
                                 VerticalAlignment="Top"
-                                Margin="0,0,3,0"
                                 Style="{ThemeResource SplitViewPaneButtonStyle}"
                                 Click="AddNewSceneMemberAsync">
                                 <SymbolIcon Symbol="Add"/>
