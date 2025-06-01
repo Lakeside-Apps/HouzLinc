@@ -266,4 +266,77 @@ public sealed class TestModelMerge : ModelTestsBase
         // Merge local and remote and check
         await PlayMergeAndCheck();
     }
+
+    [TestMethod]
+    public async Task TestMakeSceneMemberController()
+    {
+        await LoadModels("Changes1");
+
+        var scene = house.Scenes.GetSceneById(5);
+        Assert.IsNotNull(scene, "Scene not found in starting model");
+
+        var member = scene.Members[0];
+        Assert.IsNotNull(member, "Member not found in starting model");
+        Assert.IsTrue(!member.IsController, "Member is already a controller");
+
+        // Set the IsController property of the member
+        bool replaced = scene.ReplaceMember(
+            member,
+            new SceneMember(scene)
+            {
+                DeviceId = member.DeviceId,
+                Group = member.Group,
+                IsController = true,
+                IsResponder = member.IsResponder,
+                Data1 = member.Data1,
+                Data2 = member.Data2,
+                Data3 = member.Data3,
+                Status = member.Status,
+                Tag = member.Tag
+            }
+        );
+        Assert.IsTrue(replaced, "Failed to replace scene member");
+
+        scene.Expand();
+
+        // Merge local and remote and check
+        await PlayMergeAndCheck();
+    }
+
+    [TestMethod]
+    public async Task TestMakeSceneMemberResponder()
+    {
+        await LoadModels("Changes1");
+
+        var scene = house.Scenes.GetSceneById(3);
+        Assert.IsNotNull(scene, "Scene not found in starting model");
+
+        var member = scene.Members[3];
+        Assert.IsNotNull(member, "Member not found in starting model");
+        Assert.IsTrue(!member.IsResponder, "Member is already a responder");
+
+        // Set the IsResponder property of the member
+        bool replaced = scene.ReplaceMember(
+            member,
+            new SceneMember(scene)
+            {
+                DeviceId = member.DeviceId,
+                Group = member.Group,
+                IsController = member.IsController,
+                IsResponder = true,
+                Data1 = member.Data1,
+                Data2 = member.Data2,
+                Data3 = member.Data3,
+                Status = member.Status,
+                Tag = member.Tag
+            }
+        );
+        Assert.IsTrue(replaced, "Failed to replace scene member");
+
+        scene.Expand();
+
+        // Merge local and remote and check
+        await PlayMergeAndCheck();
+    }
+
 }
