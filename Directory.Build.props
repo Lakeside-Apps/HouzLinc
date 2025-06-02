@@ -17,8 +17,5 @@
   </PropertyGroup>
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
-  <PropertyGroup>
-    <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
-  </PropertyGroup>
 </Project>
 
