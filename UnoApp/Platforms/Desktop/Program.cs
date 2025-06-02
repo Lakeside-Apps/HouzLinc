@@ -13,24 +13,15 @@
    limitations under the License.
 */
 
-using Uno.UI.Runtime.Skia;
-
 namespace UnoApp;
 public class Program
 {
-    [STAThread]
-    public static void Main(string[] args)
+    private static App? _app;
+
+    public static int Main(string[] args)
     {
-        App.InitializeLogging();
+        Microsoft.UI.Xaml.Application.Start(_ => _app = new App());
 
-        var host = SkiaHostBuilder.Create()
-            .App(() => new App())
-            .UseX11()
-            .UseLinuxFrameBuffer()
-            .UseMacOS()
-            .UseWindows()
-            .Build();
-
-        host.Run();
+        return 0;
     }
 }
