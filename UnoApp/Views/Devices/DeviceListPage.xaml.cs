@@ -128,11 +128,19 @@ public sealed partial class DeviceListPage : DeviceListPageBase
                 break;
             }
 
-            // If we have a new device view model, select it and return
+            // If we have a new device view model, enesure it's shown, selected and in view
             var deviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, deviceId);
             if (deviceViewModel != null)
             {
+                // The NewDeviceDialog added the device to the model, but the DeviceListViewModel
+                // model observer might or might not have added to the list of device view models.
+                // If not, add it here, so that we can show it to the user.fl
+                if (!deviceListViewModel.Items.Contains(deviceViewModel))
+                {
+                    deviceListViewModel.Items.Add(deviceViewModel);
+                }
                 SelectedItem = deviceViewModel;
+                ItemListView.ScrollIntoView(SelectedItem);
                 break;
             }
 
@@ -184,11 +192,17 @@ public sealed partial class DeviceListPage : DeviceListPageBase
                 break;
 
             // If we have a view model for the replacement device, proceed with the replacement
-            var relacementDeviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, replacementDeviceId);
-            if (relacementDeviceViewModel != null && SelectedItem != null)
+            var replacementDeviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, replacementDeviceId);
+            if (replacementDeviceViewModel != null && SelectedItem != null)
             {
+                // See AddDevice_Click for comments
+                if (deviceListViewModel.Items.Contains(replacementDeviceViewModel))
+                {
+                    deviceListViewModel.Items.Add(replacementDeviceViewModel);
+                }
                 SelectedItem.ReplaceDevice(replacementDeviceId);
-                SelectedItem = relacementDeviceViewModel;
+                SelectedItem = replacementDeviceViewModel;
+                ItemListView.ScrollIntoView(SelectedItem);
                 break;
             }
 
@@ -205,7 +219,7 @@ public sealed partial class DeviceListPage : DeviceListPageBase
         InsteonID? copyDevice = null;
         while (true)
         {
-            // See ReplaceDevice_Click for comments
+            // See AddDevice_Click for comments
             copyDevice = await ShowNewDeviceDialog($"Copy {SelectedItem?.DisplayNameAndId} to Device", "Copy", copyDevice, showPriorError);
             if (copyDevice == null || copyDevice.IsNull)
                 break;
@@ -213,8 +227,13 @@ public sealed partial class DeviceListPage : DeviceListPageBase
             var copyDeviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, copyDevice);
             if (copyDeviceViewModel != null && SelectedItem != null)
             {
+                if (deviceListViewModel.Items.Contains(copyDeviceViewModel))
+                {
+                    deviceListViewModel.Items.Add(copyDeviceViewModel);
+                }
                 SelectedItem.CopyDevice(copyDevice);
                 SelectedItem = copyDeviceViewModel;
+                ItemListView.ScrollIntoView(SelectedItem);
                 break;
             }
 

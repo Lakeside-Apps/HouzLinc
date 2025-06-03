@@ -66,8 +66,18 @@ public sealed partial class SceneListPage : SceneListPageBase
         {
             throw new InvalidOperationException("XamlRoot is null");
         }
-        NewSceneDialog dialog = new NewSceneDialog(this.XamlRoot, sceneListViewModel);
-        await dialog.ShowAsync();
+        NewSceneDialog dialog = new NewSceneDialog(this.XamlRoot);
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        {
+            if (dialog.NewSceneName != null && dialog.NewSceneName != string.Empty)
+            {
+                // Add the scene to the model and the scene view model to this list,
+                // select it and bring it in view
+                var sceneViewModel = sceneListViewModel.AddNewScene(dialog.NewSceneName);
+                sceneListViewModel.SelectedItem = sceneViewModel;
+                ItemListView.ScrollIntoView(sceneViewModel);
+            }
+        }
     }
 
     private async void RemoveSceneBtnClick(object sender, RoutedEventArgs e)

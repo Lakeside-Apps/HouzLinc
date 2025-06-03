@@ -30,16 +30,14 @@ public sealed partial class NewSceneDialog : ContentDialog, INotifyPropertyChang
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public NewSceneDialog(XamlRoot xamlRoot, SceneListViewModel sceneListViewModel)
+    public NewSceneDialog(XamlRoot xamlRoot)
     {
         this.XamlRoot = xamlRoot;
         this.InitializeComponent();
-        this.sceneListViewModel = sceneListViewModel;
     }
 
     private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
-        sceneListViewModel.AddNewScene(NewSceneName);
     }
 
     private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -64,6 +62,4 @@ public sealed partial class NewSceneDialog : ContentDialog, INotifyPropertyChang
         }
     }
     private string newSceneName = string.Empty;
-
-    private SceneListViewModel sceneListViewModel;
 }
