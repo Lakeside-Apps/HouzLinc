@@ -130,13 +130,14 @@ public class SceneListViewModel : ItemListViewModel<SceneViewModel>, IScenesObse
     }
 
     /// <summary>
-    /// Add a new scene and sceneViewModel to this list
-    /// Notification coming through the observer will add the sceneViewModel to the list
+    /// Add a new scene to the model 
+    /// and let the observer add the sceneViewModel to this list
     /// </summary>
     /// <param name="name"></param>
-    public void AddNewScene(string name)
+    public SceneViewModel? AddNewScene(string name)
     {
         Scene scene = scenes.AddNewScene(name);
+        return GetSceneViewModelById(scene.Id);
     }
 
     /// <summary>

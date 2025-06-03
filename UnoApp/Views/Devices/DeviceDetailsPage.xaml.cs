@@ -91,7 +91,7 @@ public sealed partial class DeviceDetailsPage : DeviceDetailsPageBase
             var deviceViewModel = DeviceViewModel.GetOrCreateById(Holder.House, deviceId);
             if (deviceViewModel != null)
             {
-                // Navigate to the detail page for the copied device
+                // Navigate to the detail page for the new device
                 Frame.Navigate(typeof(DeviceDetailsPage), deviceViewModel.ItemKey, new DrillInNavigationTransitionInfo());
                 break;
             }
