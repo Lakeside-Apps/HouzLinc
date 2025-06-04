@@ -1604,14 +1604,11 @@ public sealed class Device : DeviceBase
     /// Whether this device needs synchronization with the physical device
     /// </summary>
     /// <returns></returns>
-    public bool DeviceNeedsSync =>
-        PropertiesSyncStatus == SyncStatus.Unknown ||
-        PropertiesSyncStatus == SyncStatus.Changed ||
-        (HasChannels && DeviceDriver.HasChannelProperties && 
-            Channels.Any(c => c.PropertiesSyncStatus == SyncStatus.Unknown || 
-                         c.PropertiesSyncStatus == SyncStatus.Changed)) ||
-        AllLinkDatabase.LastStatus == SyncStatus.Unknown ||
-        AllLinkDatabase.LastStatus == SyncStatus.Changed;
+    public bool NeedsSync =>
+        PropertiesSyncStatus != SyncStatus.Synced ||
+        (HasChannels && DeviceDriver.HasChannelProperties &&
+            Channels.Any(c => c.PropertiesSyncStatus != SyncStatus.Synced)) ||
+        AllLinkDatabase.LastStatus != SyncStatus.Synced;
 
     /// <summary>
     /// Schedule sync of properties, channels, or all-link database if needed (if not synchronized)
@@ -1622,15 +1619,27 @@ public sealed class Device : DeviceBase
     public object? ScheduleSync(Scheduler.JobCompletionCallback<bool>? completionCallback = null, object? group = null, TimeSpan delay = new TimeSpan(), 
         Scheduler.Priority priority = Scheduler.Priority.Medium, bool forceRead = false)
     {
-        if (!DeviceNeedsSync)
+        if (!NeedsSync)
         {
             return null;
         }
 
-        // If the device status is known to be unreachable, don't try to sync
-        // The user can go to the device view and attempt to connect it.
+        // If the device was last known to be unreachable, and was not snoozed by the user
+        // ping the device again and if that succeeds, notify the model that we need a new sync pass.
         if (connectionStatus == ConnectionStatus.Disconnected || connectionStatus == ConnectionStatus.GatewayError)
         {
+            if (!Snoozed)
+            {
+                ScheduleRetrieveConnectionStatus(callback: connectionStatus =>
+                {
+                    if (connectionStatus == ConnectionStatus.Connected)
+                    {
+                        House.ModelObserver.NotifyModelNeedsSync();
+                    }
+                },
+                force: true);
+            }
+
             return null;
         }
 
