@@ -612,7 +612,7 @@ public sealed class Devices : OrderedKeyedList<Device>
 
                     if (device != null)
                     {
-                        if (device.IsRemoteLinc && !device.Snoozed && device.DeviceNeedsSync)
+                        if (device.IsRemoteLinc && !device.Snoozed && device.NeedsSync)
                         {
                             // If the device needs sync but requires user action, ensure it's in the list of devices needing user action
                             if (!syncContext.devicesNeedingUserAction.Contains(device))
