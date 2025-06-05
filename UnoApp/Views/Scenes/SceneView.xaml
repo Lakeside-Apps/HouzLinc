@@ -39,7 +39,7 @@
                     Content="{Binding}" appears to work.
                 -->
                 <local:SceneHeaderView Content="{Binding}"/>
-                <ScrollViewer Grid.Row="1">
+                <ScrollViewer x:Name="SceneScrollViewer" Grid.Row="1">
                     <StackPanel Margin="0,5,0,0">
                         <ctkControls:SettingsCard Header="Room" MinHeight="48">
                             <ctkControls:SettingsCard.Resources>
@@ -72,7 +72,7 @@
                                 <SymbolIcon Symbol="Add"/>
                             </Button>
                         </Grid>
-                        <local:MemberListView/>
+                        <local:MemberListView x:Name="Members"/>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>

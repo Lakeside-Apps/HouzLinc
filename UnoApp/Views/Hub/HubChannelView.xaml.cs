@@ -29,6 +29,9 @@ public sealed partial class HubChannelView : ContentControl
 
     private void FocusNameBox(object sender, RoutedEventArgs e)
     {
-        XAMLUtils.FocusEditableTextBlock(sender, "ChannelNameBox");
+        if (sender is DependencyObject de)
+        {
+            XAMLHelpers.FocusEditableTextBlock(de, "ChannelNameBox");
+        }
     }
 }

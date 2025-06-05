@@ -26,6 +26,9 @@ public sealed partial class SceneHeaderView: ContentControl
 
     private void FocusNameBox(object sender, RoutedEventArgs e)
     {
-        XAMLUtils.FocusEditableTextBlock(sender, "SceneNameBox");
+        if (sender is DependencyObject de)
+        {
+            XAMLHelpers.FocusEditableTextBlock(de, "SceneNameBox");
+        }
     }
 }
