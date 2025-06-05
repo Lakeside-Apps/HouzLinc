@@ -68,6 +68,24 @@ public sealed class MemberViewModel : CollectionItemViewModel<MemberListViewMode
         Data3 = (byte)Group
     };
 
+    public override bool Equals(object? obj)
+    {
+        var other = obj as MemberViewModel;
+        return
+            other != null &&
+            DeviceId == other.DeviceId &&
+            Group == other.Group &&
+            IsController == other.IsController &&
+            IsResponder == other.IsResponder &&
+            OnLevel == other.OnLevel &&
+            RampRate == other.RampRate;
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
+    }
+
     public SceneViewModel SceneViewModel => containingList.SceneViewModel;
 
     /// <summary>

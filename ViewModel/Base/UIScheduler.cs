@@ -20,9 +20,9 @@ namespace ViewModel.Base;
 /// <summary>
 /// A class to schedule and execute async UI jobs
 /// </summary>
-class UIScheduler : Scheduler
+public class UIScheduler : Scheduler
 {
-    internal static UIScheduler Instance = new UIScheduler();
+    public static UIScheduler Instance = new UIScheduler();
 
     protected override string GetName()
     {

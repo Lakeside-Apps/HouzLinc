@@ -28,6 +28,9 @@ public sealed partial class DeviceHeaderView : ContentControl
 
     private void FocusNameBox(object sender, RoutedEventArgs e)
     {
-        XAMLUtils.FocusEditableTextBlock(sender, "DeviceNameBox");
+        if (sender is DependencyObject de)
+        {
+            XAMLHelpers.FocusEditableTextBlock(de, "DeviceNameBox");
+        }
     }
 }

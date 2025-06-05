@@ -15,6 +15,7 @@
 
 using UnoApp.Dialogs;
 using ViewModel.Scenes;
+using ViewModel.Base;
 
 namespace UnoApp.Views.Scenes;
 
@@ -43,6 +44,35 @@ public sealed partial class SceneView : ContentControl
             {
                 svm.SceneMembers.StoreSceneMemberLastUsedValues(newMember);
                 svm.SceneMembers.AddNewMember(newMember);
+
+                // AddNewMember created a different view model to add to the view model list,
+                // or might not have created any if it already existed.
+                // Either way, retrieve it from the list
+                var newMemberIdx = svm.SceneMembers.IndexOf(newMember);
+                if (newMemberIdx != -1)
+                {
+                    newMember = svm.SceneMembers[newMemberIdx];
+
+                    // Delay the scrolling a bit to let the UI catch up
+                    UIScheduler.Instance.AddJob("", () =>
+                    {
+                        // To bring the new member into view, this is the scroller we will scroll 
+                        var scrollViewer = XAMLHelpers.FindVisualAncestorByName(fe, "SceneScrollViewer") as ScrollViewer;
+                        if (scrollViewer != null)
+                        {
+                            // And this is the grid containing the member item.
+                            // The grid itself does not scroll, it rellies on SceneScrollViewer to scroll.
+                            var gridView = XAMLHelpers.FindElementByName(scrollViewer, "MemberGridView") as GridView;
+                            if (gridView != null)
+                            {
+                                gridView.SelectedItem = newMember;
+                                XAMLHelpers.ScrollItemIntoView(scrollViewer, gridView, newMember);
+                            }
+                        }
+                        return true;
+                    }, delay: TimeSpan.FromMilliseconds(100));
+
+                }
             }
         }
     }
