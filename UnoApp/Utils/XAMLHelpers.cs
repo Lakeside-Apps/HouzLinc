@@ -128,8 +128,8 @@ public static class XAMLHelpers
     }
 
     /// <summary>
-    /// Scroll an item into view within an ItemsControl using a ScrollViewer.
-    /// The scrollview can be the one of the ItemsControl or a parent of the ItemsControl.
+    /// Scroll an item of an ItemsControl into view using a either the ScrollViewer
+    /// of the ItemsControl or another one in its anscestor chain.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="scrollViewer"></param>
@@ -140,45 +140,71 @@ public static class XAMLHelpers
         if (itemsControl == null || item == null)
             return;
         
-        // Get the container for the item
+        // Get the framework element for the item
         var container = itemsControl.ContainerFromItem(item) as FrameworkElement;
         if (container != null)
         {
             // Scroll the item into view
-            ScrollContainerIntoView(scrollViewer, container);
+            ScrollElementIntoView(scrollViewer, container, ScrollIntoViewAlignment.Center);
         }
     }
 
     /// <summary>
+    /// Alignment options for scrolling an element into view within a ScrollViewer.
+    /// </summary>
+    public enum ScrollIntoViewAlignment
+    {
+        Top,
+        Bottom,
+        Center
+    }
+
+    /// <summary>
     /// Scroll a specific FrameworkElement within a ScrollViewer into view
+    /// with the option to align at the top, center, or bottom of the viewport
     /// </summary>
     /// <param name="scrollViewer"></param>
-    /// <param name="container"></param>
-    public static void ScrollContainerIntoView(ScrollViewer scrollViewer, FrameworkElement container)
+    /// <param name="element"></param>
+    /// <param name="alignment"></param>
+    public static void ScrollElementIntoView(ScrollViewer scrollViewer, FrameworkElement element, 
+        ScrollIntoViewAlignment alignment = ScrollIntoViewAlignment.Top)
     {
-        if (container != null && scrollViewer != null)
+        if (element != null && scrollViewer != null)
         {
-            Point? offset = XAMLHelpers.GetElementOffsetRelativeTo(container, scrollViewer);
+            Point? offset = XAMLHelpers.GetElementOffsetRelativeToScrollViewerContent(element, scrollViewer);
             if (offset != null)
             {
-                scrollViewer.ChangeView(offset.Value.X, offset.Value.Y, null);
+                Double X = offset.Value.X;
+                Double Y = offset.Value.Y;
+
+                if (alignment == ScrollIntoViewAlignment.Bottom )
+                {
+                    Y -= scrollViewer.ViewportHeight - element.ActualHeight;
+                }
+                else if (alignment == ScrollIntoViewAlignment.Center)
+                {
+                    Y -= (scrollViewer.ViewportHeight - element.ActualHeight) / 2;
+                }
+
+                scrollViewer.ChangeView(X, Y, null);
             }
         }
     }
 
     /// <summary>
-    /// Get the offset of a FrameworkElement relative to another FrameworkElement.
+    /// Get the offset of a FrameworkElement relative to the content of a ScrollViewer.
+    /// The returned value is not affected by the scrolling offsets of the ScrollViewer.
     /// </summary>
     /// <param name="element"></param>
-    /// <param name="relativeTo"></param>
+    /// <param name="scrollViewer"></param>
     /// <returns></returns>
-    public static Point? GetElementOffsetRelativeTo(FrameworkElement element, FrameworkElement relativeTo)
+    public static Point? GetElementOffsetRelativeToScrollViewerContent(FrameworkElement element, ScrollViewer scrollViewer)
     {
-        if (element == null || relativeTo == null)
+        if (element == null || scrollViewer == null)
             return null;
 
-        // Transform the top-left point (0,0) of the element to the coordinate space of 'relativeTo'
-        GeneralTransform transform = element.TransformToVisual(relativeTo);
+        // Transform the top-left point (0,0) of the element to the coordinate space of 'scrollViewer.Content'
+        GeneralTransform transform = element.TransformToVisual(scrollViewer.Content as FrameworkElement);
         Point offset = transform.TransformPoint(new Point(0, 0));
         return offset;
     }
