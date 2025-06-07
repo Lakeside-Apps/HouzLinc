@@ -30,7 +30,9 @@
     <ContentControl.ContentTemplate>
         <DataTemplate x:DataType="vm:DeviceViewModel">
             <StackPanel>
-                <StackPanel x:Name="DeviceStatusConnectedView" x:Load="{x:Bind IsConnected, Mode=OneWay}">
+                <!-- Using Visibility because with x:Load the binding to events LoadFullOn, LoadOn, LoadOff
+                does not work (https://github.com/Lakeside-Apps/HouzLinc/issues/124)-->
+                <StackPanel x:Name="DeviceStatusConnectedView" Visibility="{x:Bind IsConnected, Mode=OneWay}">
                     <Border
                         Background="{StaticResource DeviceStampColor}"
                         CornerRadius="10"
