@@ -70,25 +70,55 @@ public sealed partial class LoadController: UserControl, INotifyPropertyChanged
         DependencyProperty.Register(nameof(Level), typeof(double), typeof(LoadController), 
             new PropertyMetadata(0.0d, new PropertyChangedCallback(OnLevelChanged)));
 
-    public event RoutedEventHandler? LoadFullOn;
-    public event RoutedEventHandler? LoadOn;
-    public event RoutedEventHandler? LoadOff;
+    /// <summary>
+    /// Command to turn the load on to a given level
+    /// </summary>
+    public ICommand LoadOnCommand
+    {
+        get => (ICommand)GetValue(LoadOnCommandProperty);
+        set => SetValue(LoadOnCommandProperty, value);
+    }
+
+    public static readonly DependencyProperty LoadOnCommandProperty =
+    DependencyProperty.Register(
+        nameof(LoadOnCommand),
+        typeof(ICommand),
+        typeof(LoadController),
+        new PropertyMetadata(null)
+    );
+
+    /// <summary>
+    /// Command to turn the load off
+    /// </summary>
+    public ICommand LoadOffCommand
+    {
+        get => (ICommand)GetValue(LoadOffCommandProperty);
+        set => SetValue(LoadOffCommandProperty, value);
+    }
+
+    public static readonly DependencyProperty LoadOffCommandProperty =
+    DependencyProperty.Register(
+        nameof(LoadOffCommand),
+        typeof(ICommand),
+        typeof(LoadController),
+        new PropertyMetadata(null)
+    );
 
     private void RaiseLightOnEvent()
     {
-        LoadOn?.Invoke(this, null);
+        LoadOnCommand.Execute(Level);
     }
 
     private void RaiseLightOnFullEvent()
     {
         Level = 1.0;
-        LoadFullOn?.Invoke(this, null);
+        LoadOnCommand.Execute(Level);
     }
 
     private void RaiseLightOffEvent()
     {
         Level = 0;
-        LoadOff?.Invoke(this, null);
+        LoadOffCommand.Execute(null);
     }
 
     // Bindable to XAML UI

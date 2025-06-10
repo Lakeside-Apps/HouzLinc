@@ -30,9 +30,7 @@
     <ContentControl.ContentTemplate>
         <DataTemplate x:DataType="vm:DeviceViewModel">
             <StackPanel>
-                <!-- Using Visibility because with x:Load the binding to events LoadFullOn, LoadOn, LoadOff
-                does not work (https://github.com/Lakeside-Apps/HouzLinc/issues/124)-->
-                <StackPanel x:Name="DeviceStatusConnectedView" Visibility="{x:Bind IsConnected, Mode=OneWay}">
+                <StackPanel x:Name="DeviceStatusConnectedView" x:Load="{x:Bind IsConnected, Mode=OneWay}">
                     <Border
                         Background="{StaticResource DeviceStampColor}"
                         CornerRadius="10"
@@ -42,9 +40,8 @@
                         <ctl:LoadController
                             Margin="5,10,10,10"
                             IsSliderVisible="True"
-                            LoadFullOn="{x:Bind LightFullOn}"
-                            LoadOn="{x:Bind LightOn}"
-                            LoadOff="{x:Bind LightOff}"
+                            LoadOnCommand="{x:Bind LightOnCommand}"
+                            LoadOffCommand="{x:Bind LightOffCommand}"
                             Level="{x:Bind LightOnLevel, Mode=TwoWay}"/>
                     </Border>
                 </StackPanel>
