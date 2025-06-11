@@ -124,6 +124,7 @@
 
             <DataTemplate x:Key="DeviceLinkListView" x:DataType="vm:LinkHostViewModel">
                 <GridView
+                    x:Name="DeviceLinkGridView"
                     Margin="5,0,5,0"
                     ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
                     ItemTemplateSelector="{StaticResource LinkTemplateSelector}"

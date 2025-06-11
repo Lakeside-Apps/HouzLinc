@@ -202,6 +202,10 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
             {
                 linkListViewModel[index] = new LinkViewModel(linkListViewModel, newRecord);
             }
+            else
+            {
+                linkListViewModel.Add(new LinkViewModel(linkListViewModel, newRecord));
+            }
         }
         RecordListChanged();
     }
@@ -297,7 +301,6 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
                     ControllerLinks = await Task.Run(() => { return BuildLinkList(forControllers: true); });
                     controllerLinkJob = null;
                     ControllerLinks.Changed = false;
-                    Device.AllLinkDatabase.AddObserver(this);
                     return true;
                 },
                 completionCallback: null, group: null,
@@ -332,7 +335,6 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
                     ResponderLinks = await Task.Run(() => { return BuildLinkList(forControllers: false); });
                     responderLinkJob = null;
                     ResponderLinks.Changed = false;
-                    Device.AllLinkDatabase.AddObserver(this);
                     return true;
                 },
                 completionCallback: null, group: null,
@@ -377,7 +379,6 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
                         IsSourceGrouped = true
                     };
 
-                    Device.AllLinkDatabase.AddObserver(this);
                     linkJob = null;
                     return true;
                 },
@@ -421,6 +422,11 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
         if (IsActive)
         {
             ScheduleRebuildLinksIfNecessary(cancelPendingJob: true);
+            Device.AllLinkDatabase.AddObserver(this);
+        }
+        else
+        {
+            Device.AllLinkDatabase.RemoveObserver(this);
         }
     }
 

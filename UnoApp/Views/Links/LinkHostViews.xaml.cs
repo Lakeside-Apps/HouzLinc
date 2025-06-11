@@ -18,6 +18,7 @@ using UnoApp.Views.Devices;
 using UnoApp.Views.Hub;
 using Microsoft.UI.Xaml.Media.Animation;
 using ViewModel.Links;
+using ViewModel.Base;
 
 namespace UnoApp.Views.Links;
 
@@ -121,6 +122,7 @@ public sealed partial class LinkHostViews : ContentControl
             if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
                 lhvm.ControllerLinks.AddNewLink(newLink);
+                ShowNewLink(fe, lhvm, newLink, "ControllerLinkGridView");
             }
         }
     }
@@ -139,6 +141,7 @@ public sealed partial class LinkHostViews : ContentControl
             if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
                 lhvm.ResponderLinks.AddNewLink(newLink);
+                ShowNewLink(fe, lhvm, newLink, "ResponderLinkGridView");
             }
         }
     }
@@ -161,7 +164,38 @@ public sealed partial class LinkHostViews : ContentControl
             if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
                 lhvm.ResponderLinks.AddNewLink(newLink);
+                ShowNewLink(fe, lhvm, newLink, "DeviceLinkGridView");
             }
+        }
+    }
+
+    // Helper to bring into view and select a link in the list of LinkViewModels
+    private void ShowNewLink(FrameworkElement fe, LinkHostViewModel lhvm, LinkViewModel newLink, string gridViewName)
+    {
+        // Retrieve the actual LinkViewModel instance in the list of the newly added link.
+        var newLinkIdx = lhvm.ResponderLinks.IndexOf(newLink);
+        if (newLinkIdx != -1)
+        {
+            newLink = lhvm.ResponderLinks[newLinkIdx];
+
+            // Delay the scrolling a bit to let the UI catch up
+            UIScheduler.Instance.AddJob("Showing newly added link", () =>
+            {
+                // Find the scroll viewer and grid view
+                var scrollViewer = XAMLHelpers.FindVisualAncestor<ScrollViewer>(fe);
+                if (scrollViewer != null)
+                {
+                    var gridView = XAMLHelpers.FindElementByName(scrollViewer, gridViewName) as GridView;
+                    if (gridView != null)
+                    {
+                        gridView.SelectedItem = newLink;
+                        XAMLHelpers.ScrollItemIntoView(scrollViewer, gridView, newLink, 
+                            XAMLHelpers.ScrollIntoViewAlignment.Center);
+                    }
+                }
+                return true;
+            }, delay: TimeSpan.FromMilliseconds(100));
+
         }
     }
 
