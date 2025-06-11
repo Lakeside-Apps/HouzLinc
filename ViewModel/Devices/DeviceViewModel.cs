@@ -33,6 +33,8 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     // Please use GetOrCreate methods to create the proper type of view model
     public DeviceViewModel(Device device) : base(device)
     {
+        LightOnCommand = new RelayCommand(LightOn);
+        LightOffCommand = new RelayCommand(LightOff);
     }
 
     // Helper to create the proper DeviceViewModel type for a given device
@@ -645,19 +647,17 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     public bool IsGatewayError => DeviceConnectionStatus == Device.ConnectionStatus.GatewayError;
 
     /// <summary>
-    /// For a light controller device, turns light on at current requested level
+    /// Commands for load controller devices
     /// </summary>
-    public void LightOn()
-    {
-        Device.ScheduleLightOn(LightOnLevel);
-    }
+    public ICommand LightOnCommand { get; }
+    public ICommand LightOffCommand { get; }
 
     /// <summary>
-    /// For a light controller device, turns light on at full level
+    /// For a light controller device, turns light on at current requested level
     /// </summary>
-    public void LightFullOn()
+    public void LightOn(object? level)
     {
-        Device.ScheduleLightOn(1.0d);
+        Device.ScheduleLightOn((level != null) ? (double)level : 1.0d);
     }
 
     /// <summary>

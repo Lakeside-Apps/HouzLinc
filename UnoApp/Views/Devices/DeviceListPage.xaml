@@ -243,9 +243,8 @@
                             win:ToolTipService.ToolTip="Turn load on or off"
                             x:Load="{x:Bind IsOnOffButtonShown, Mode=OneWay}"
                             IsSliderVisible="False"
-                            LoadFullOn="{x:Bind LightFullOn}"
-                            LoadOn="{x:Bind LightOn}"
-                            LoadOff="{x:Bind LightOff}"/>
+                            LoadOnCommand="{x:Bind LightOnCommand}"
+                            LoadOffCommand="{x:Bind LightOffCommand}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
