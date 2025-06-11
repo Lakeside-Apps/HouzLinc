@@ -213,8 +213,8 @@
                             win:ToolTipService.ToolTip="Turn scene on or off"
                             Visibility="{x:Bind IsOnOffButtonShown, Mode=OneWay}"
                             IsSliderVisible="False"
-                            LoadFullOn="{x:Bind SceneFullOn}"
-                            LoadOff="{x:Bind SceneOff}"/>
+                            LoadOnCommand="{x:Bind SceneOnCommand}"
+                            LoadOffCommand="{x:Bind SceneOffCommand}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

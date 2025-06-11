@@ -26,6 +26,8 @@ public sealed class HubChannelViewModel : LinkHostViewModel, IChannelObserver
     private HubChannelViewModel(Device hub, Channel channel) : base(hub)
     {
         this.channel = channel;
+        SceneOnCommand = new RelayCommand(SceneOn);
+        SceneOffCommand = new RelayCommand(SceneOff);
     }
 
     /// <summary>
@@ -233,21 +235,20 @@ public sealed class HubChannelViewModel : LinkHostViewModel, IChannelObserver
         newLink.Group = channel.Id;
         return newLink;
     }
+
+    /// <summary>
+    /// Commands for load controller devices
+    /// </summary>
+    public ICommand SceneOnCommand { get; }
+    public ICommand SceneOffCommand { get; }
+
     /// <summary>
     /// Turn on the responders on this channel
     /// For now only full level is supported
     /// </summary>
-    public void SceneOn()
+    public void SceneOn(object? level)
     {
-        channel.ScheduleTurnOn(1.0f);
-    }
-
-    /// <summary>
-    /// Turn on the responders on this channel
-    /// </summary>
-    public void SceneFullOn()
-    {
-        channel.ScheduleTurnOn(1.0f);
+        channel.ScheduleTurnOn(level != null ? (double)level : 1.0d);
     }
 
     /// <summary>

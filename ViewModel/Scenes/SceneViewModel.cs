@@ -26,6 +26,8 @@ public sealed class SceneViewModel : ItemViewModel, ISceneObserver, IRoomsObserv
     private SceneViewModel(Scene scene)
     {
         this.Scene = scene;
+        SceneOnCommand = new RelayCommand(SceneOn);
+        SceneOffCommand = new RelayCommand(SceneOff);
     }
 
     /// <summary>
@@ -277,20 +279,18 @@ public sealed class SceneViewModel : ItemViewModel, ISceneObserver, IRoomsObserv
     }
 
     /// <summary>
-    /// Turn on the responders on this channel
-    /// For now, only full level is supported
+    /// Commands for load controller devices
     /// </summary>
-    public void SceneOn()
-    {
-        channel?.ScheduleTurnOn(1.0f);
-    }
+    public ICommand SceneOnCommand { get; }
+    public ICommand SceneOffCommand { get; }
 
     /// <summary>
     /// Turn on the responders on this channel
+    /// For now, only full level is supported
     /// </summary>
-    public void SceneFullOn()
+    public void SceneOn(object? level )
     {
-        channel?.ScheduleTurnOn(1.0f);
+        channel?.ScheduleTurnOn(level != null ? (double)level : 1.0d);
     }
 
     /// <summary>
