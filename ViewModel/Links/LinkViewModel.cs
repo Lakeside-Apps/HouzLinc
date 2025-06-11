@@ -99,6 +99,25 @@ public class LinkViewModel : CollectionItemViewModel<LinkListViewModel, LinkView
         SceneId = linkViewModel.SceneId;
     }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is LinkViewModel linkViewModel &&
+            DestDeviceId.Equals(linkViewModel.DestDeviceId) &&
+            Group == linkViewModel.Group &&
+            IsController == linkViewModel.IsController &&
+            IsRemoved == linkViewModel.IsRemoved &&
+            IsSynchronized == linkViewModel.IsSynchronized &&
+            data1 == linkViewModel.data1 &&
+            data2 == linkViewModel.data2 &&
+            data3 == linkViewModel.data3 &&
+            SceneId == linkViewModel.SceneId;
+    }
+
+    public override int GetHashCode()
+    {
+        return DestDeviceId.ToInt();
+    }
+
     /// <summary>
     /// Produces a LinkRecord from this LinkViewModel
     /// </summary>
@@ -522,5 +541,4 @@ public class LinkViewModel : CollectionItemViewModel<LinkListViewModel, LinkView
     {
         OnPropertyChanged(nameof(IsEditButtonShown));
     }
-
 }

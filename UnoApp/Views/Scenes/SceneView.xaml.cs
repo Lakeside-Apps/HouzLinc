@@ -54,7 +54,7 @@ public sealed partial class SceneView : ContentControl
                     newMember = svm.SceneMembers[newMemberIdx];
 
                     // Delay the scrolling a bit to let the UI catch up
-                    UIScheduler.Instance.AddJob("", () =>
+                    UIScheduler.Instance.AddJob("Showing newly added scene", () =>
                     {
                         // To bring the new member into view, this is the scroller we will scroll 
                         var scrollViewer = XAMLHelpers.FindVisualAncestorByName(fe, "SceneScrollViewer") as ScrollViewer;
@@ -66,7 +66,7 @@ public sealed partial class SceneView : ContentControl
                             if (gridView != null)
                             {
                                 gridView.SelectedItem = newMember;
-                                XAMLHelpers.ScrollItemIntoView(scrollViewer, gridView, newMember);
+                                XAMLHelpers.ScrollItemIntoView(scrollViewer, gridView, newMember, XAMLHelpers.ScrollIntoViewAlignment.Center);
                             }
                         }
                         return true;

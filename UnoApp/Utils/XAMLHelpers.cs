@@ -13,6 +13,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using Microsoft.UI.Dispatching;
 using UnoApp.Controls;
 using Windows.Foundation;
@@ -128,14 +129,26 @@ public static class XAMLHelpers
     }
 
     /// <summary>
+    /// Alignment options for scrolling an element into view within a ScrollViewer.
+    /// </summary>
+    public enum ScrollIntoViewAlignment
+    {
+        Top,
+        Bottom,
+        Center
+    }
+
+    /// <summary>
     /// Scroll an item of an ItemsControl into view using a either the ScrollViewer
     /// of the ItemsControl or another one in its anscestor chain.
+    /// Option to align at the top, center, or bottom of the viewport.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="scrollViewer"></param>
     /// <param name="itemsControl"></param>
     /// <param name="item"></param>
-    public static void ScrollItemIntoView<T>(ScrollViewer scrollViewer, ItemsControl itemsControl, T item)
+    /// <param name="alignment"></param>
+    public static void ScrollItemIntoView<T>(ScrollViewer scrollViewer, ItemsControl itemsControl, T item, ScrollIntoViewAlignment alignment)
     {
         if (itemsControl == null || item == null)
             return;
@@ -145,18 +158,8 @@ public static class XAMLHelpers
         if (container != null)
         {
             // Scroll the item into view
-            ScrollElementIntoView(scrollViewer, container, ScrollIntoViewAlignment.Center);
+            ScrollElementIntoView(scrollViewer, container, alignment);
         }
-    }
-
-    /// <summary>
-    /// Alignment options for scrolling an element into view within a ScrollViewer.
-    /// </summary>
-    public enum ScrollIntoViewAlignment
-    {
-        Top,
-        Bottom,
-        Center
     }
 
     /// <summary>

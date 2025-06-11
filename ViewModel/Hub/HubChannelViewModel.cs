@@ -110,14 +110,6 @@ public sealed class HubChannelViewModel : LinkHostViewModel, IChannelObserver
     {
         base.ActiveStateChanged();
         OnPropertyChanged(nameof(IsOnOffButtonShown));
-        if (IsActive)
-        {
-            channel.House.Hub?.AllLinkDatabase.AddObserver(this);
-        }
-        else
-        {
-            channel.House.Hub?.AllLinkDatabase.RemoveObserver(this);
-        }
     }
 
     // Channel this ViewModel is for

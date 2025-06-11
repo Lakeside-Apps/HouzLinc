@@ -70,20 +70,19 @@ public sealed class MemberViewModel : CollectionItemViewModel<MemberListViewMode
 
     public override bool Equals(object? obj)
     {
-        var other = obj as MemberViewModel;
         return
-            other != null &&
-            DeviceId == other.DeviceId &&
-            Group == other.Group &&
-            IsController == other.IsController &&
-            IsResponder == other.IsResponder &&
-            OnLevel == other.OnLevel &&
-            RampRate == other.RampRate;
+            obj is MemberViewModel memberViewModel &&
+            DeviceId == memberViewModel.DeviceId &&
+            Group == memberViewModel.Group &&
+            IsController == memberViewModel.IsController &&
+            IsResponder == memberViewModel.IsResponder &&
+            OnLevel == memberViewModel.OnLevel &&
+            RampRate == memberViewModel.RampRate;
     }
 
     public override int GetHashCode()
     {
-        throw new NotImplementedException();
+        return DeviceId.ToInt();
     }
 
     public SceneViewModel SceneViewModel => containingList.SceneViewModel;
