@@ -22,8 +22,6 @@ namespace Insteon.Model;
 /// </summary>
 public sealed class DeviceProperties : List<DeviceProperty>
 {
-    internal SyncStatus LastStatus;
-
     internal DeviceProperties() { }
 
     internal DeviceProperties(DeviceProperties properties)

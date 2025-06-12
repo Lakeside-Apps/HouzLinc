@@ -1619,7 +1619,7 @@ public sealed class Device : DeviceBase
     public object? ScheduleSync(Scheduler.JobCompletionCallback<bool>? completionCallback = null, object? group = null, TimeSpan delay = new TimeSpan(), 
         Scheduler.Priority priority = Scheduler.Priority.Medium, bool forceRead = false)
     {
-        if (!NeedsSync)
+        if (!NeedsSync && !forceRead)
         {
             return null;
         }
