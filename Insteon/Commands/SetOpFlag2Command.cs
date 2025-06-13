@@ -30,14 +30,14 @@ public sealed class SetOpFlag2Command : DeviceCommand
 
     enum CommandCode : byte
     {
-        TenDflagOn = 0x00,
-        TeDflagOff = 0x01,
-        X10OffflagOn = 0x02,
-        X10OffOfagOff = 0x03,
-        ErroBlinkOff = 0x04,
-        ErrorBlinkOn = 0x05,
-        CleanupReportOff = 0x06,
-        CleanupReportOn = 0x07,
+        TenDflagOn = 0x10,
+        TenDflagOff = 0x11,
+        X10OffflagOn = 0x12,
+        X10OffOfagOff = 0x13,
+        ErrorBlinkOff = 0x14,
+        ErrorBlinkOn = 0x15,
+        CleanupReportOff = 0x16,
+        CleanupReportOn = 0x17,
         DetachLoadOff = 0x1A,
         DetachLoadOn = 0x1B,
         StartHopsOfLastRxAck = 0x1C,

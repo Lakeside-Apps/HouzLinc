@@ -57,7 +57,14 @@
                         Level="{x:Bind LEDBrightness, Mode=TwoWay}"/>
                 </ctkControls:SettingsCard>
 
-                <ctkControls:SettingsCard Header="Resume Dim" Description="Device returns to last level used when turned on.">
+                <ctkControls:SettingsCard Header="Show Traffic" Description="LED flashes on data traffic.">
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <ToggleSwitch IsOn="{x:Bind LEDOnTx, Mode=TwoWay}" OffContent="No" OnContent="Yes"/>
+                </ctkControls:SettingsCard>
+
+              <ctkControls:SettingsCard Header="Resume Dim" Description="Device returns to last level used when turned on.">
                     <ctkControls:SettingsCard.Resources>
                         <x:Double x:Key="SettingsCardWrapThreshold">350</x:Double>
                     </ctkControls:SettingsCard.Resources>
