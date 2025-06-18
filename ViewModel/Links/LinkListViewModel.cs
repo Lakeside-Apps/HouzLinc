@@ -39,18 +39,6 @@ public class LinkListViewModel : ObservableCollection<LinkViewModel>
     private readonly LinkHostViewModel host;
     public Device Device => this.host.Device;
 
-    // Data binding support
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        // Let the base class handle it
-        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-    }
-
-    /// <summary>
-    /// Whether the underlying AllLinkDataBase has changed and this list needs to be rebuilt
-    /// </summary>
-    internal bool Changed;
-
     /// <summary>
     /// Get a LinkViewModel in this list by its AllLinkRecord using the record uid
     /// This will get the correct LinkViewModel even if there are duplicates of the record
@@ -62,7 +50,7 @@ public class LinkListViewModel : ObservableCollection<LinkViewModel>
         foreach (var linkViewModel in this)
         {
             if (linkViewModel.AllLinkRecord.Uid.Equals(record.Uid))
-                return linkViewModel;   
+                return linkViewModel;
         }
         return null;
     }
@@ -72,7 +60,7 @@ public class LinkListViewModel : ObservableCollection<LinkViewModel>
     /// </summary>
     /// <param name="record"></param>
     /// <returns></returns>
-    public int GetLinkIndex(AllLinkRecord record)
+    public int GetLinkViewModelIndex(AllLinkRecord record)
     {
         for (var i = 0; i < Count; i++)
         {
@@ -83,41 +71,6 @@ public class LinkListViewModel : ObservableCollection<LinkViewModel>
         }
         return -1;
     }
-
-    /// <summary>
-    /// Currently selected link in the list
-    /// </summary>
-    public LinkViewModel? SelectedLink
-    {
-        get => _selectedLink;
-        set
-        {
-            if (value != _selectedLink)
-            {
-                if (_selectedLink != null)
-                    _selectedLink.IsSelected = false;
-                _selectedLink = value;
-                if (_selectedLink != null)
-                    _selectedLink.IsSelected = true;
-                OnPropertyChanged();
-            }
-        }
-    }
-    private LinkViewModel? _selectedLink;
-
-    /// <summary>
-    /// LinkViewModel currently being edited when creating or editing a link
-    /// </summary>
-    public LinkViewModel? EditedLink
-    {
-        get => _editedLinkViewModel;
-        private set
-        {
-            _editedLinkViewModel = value;
-            OnPropertyChanged();
-        }
-    }
-    private LinkViewModel? _editedLinkViewModel;
 
     /// <summary>
     /// Add the link to the device database

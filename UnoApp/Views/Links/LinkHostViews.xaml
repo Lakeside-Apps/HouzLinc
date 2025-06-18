@@ -76,7 +76,7 @@
                         ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
                         ItemTemplate="{StaticResource ControllerLinkGridViewItem}"
                         ItemsSource="{x:Bind ControllerLinks, Mode=OneWay}"
-                        SelectedItem="{x:Bind ControllerLinks.SelectedLink, Mode=TwoWay}"
+                        SelectedItem="{x:Bind SelectedControllerLink, Mode=TwoWay}"
                         ItemClick="OnItemClick"
                         IsItemClickEnabled="True"/>
                 </StackPanel>
@@ -116,7 +116,7 @@
                         ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
                         ItemTemplate="{StaticResource ResponderLinkGridViewItem}"
                         ItemsSource="{x:Bind ResponderLinks, Mode=OneWay}"
-                        SelectedItem="{x:Bind ResponderLinks.SelectedLink, Mode=TwoWay}"
+                        SelectedItem="{x:Bind SelectedResponderLink, Mode=TwoWay}"
                         ItemClick="OnItemClick"
                         IsItemClickEnabled="True"/>
                 </StackPanel>
@@ -129,6 +129,7 @@
                     ItemContainerStyle="{StaticResource CustomGridViewItemExpanded}"
                     ItemTemplateSelector="{StaticResource LinkTemplateSelector}"
                     ItemsSource="{x:Bind Links.View, Mode=OneWay}"
+                    SelectedItem="{x:Bind SelectedLink, Mode=TwoWay}"
                     IsItemClickEnabled="True"
                     ItemClick="OnItemClick">
                     <GridView.GroupStyle>
