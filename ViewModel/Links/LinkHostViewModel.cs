@@ -27,9 +27,14 @@ namespace ViewModel.Links;
 public sealed class LinkGroup : LinkListViewModel
 {
     public LinkGroup(LinkHostViewModel linkHost, IEnumerable<LinkViewModel> links, bool isController) : base(linkHost, links)
-    { 
+    {
         this.LinkHost = linkHost;
         this.IsController = isController;
+    }
+
+    public LinkGroup(LinkHostViewModel linkHost, bool isController) :
+        this(linkHost, new LinkListViewModel(linkHost), isController)
+    {
     }
 
     public LinkHostViewModel LinkHost { get; private set; }
@@ -66,8 +71,8 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
         Device = d;
 
         // Create empty link lists to avoid having to check for null
-        controllerLinks = new LinkListViewModel(this) { Changed = true };
-        responderLinks = new LinkListViewModel(this) { Changed = true };
+        controllerLinks = new LinkListViewModel(this);
+        responderLinks = new LinkListViewModel(this);
         links = new CollectionViewSource();
     }
 
@@ -88,11 +93,12 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
     // To quote the channel name in the binding string ('' or \' or &apos; don't work)
     public string QuotedCurrentChannelName => $"'{CurrentChannelName}'";
 
-    // Whether the derived class uses a single grouped list with controllers and responders
+    // Whether the derived class uses a single grouped list (HubChannel)
+    // or two separate lists for controllers and responders (other devices)
     protected virtual bool UseGroupedLinkList { get; } = false;
 
     /// <summary>
-    /// List of responder links (LinkListViewModel) on this device, 
+    /// List of responder links (LinkListViewModel) on this device,
     /// For the current group/button for certain devices
     /// Bindable multiple times
     /// </summary>
@@ -156,7 +162,7 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
         // Clear the lists
         controllerLinks.Clear();
         responderLinks.Clear();
-        ScheduleRebuildLinksIfNecessary();
+        ScheduleRebuildLinksIfActive();
         RecordListChanged();
     }
 
@@ -164,6 +170,8 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
     {
         if (device == null) return;
         var linkListViewModel = GetLinkListViewModel(record);
+        // TODO: if we use a single grouped list, the new link should be inserted
+        // at the end of the controller group or the responder group depending on its type.
         linkListViewModel.Add(new LinkViewModel(linkListViewModel, record));
         RecordListChanged();
     }
@@ -178,7 +186,7 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
     void RemoveRecordFromList(AllLinkRecord record)
     {
         var linkListViewModel = GetLinkListViewModel(record);
-        var index = linkListViewModel.GetLinkIndex(record);
+        var index = linkListViewModel.GetLinkViewModelIndex(record);
         if (index >= 0)
             linkListViewModel.RemoveAt(index);
         RecordListChanged();
@@ -197,7 +205,7 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
         else
         {
             var linkListViewModel = GetLinkListViewModel(newRecord);
-            var index = linkListViewModel.GetLinkIndex(recordToReplace);
+            var index = linkListViewModel.GetLinkViewModelIndex(recordToReplace);
             if (index >= 0)
             {
                 linkListViewModel[index] = new LinkViewModel(linkListViewModel, newRecord);
@@ -220,7 +228,9 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
     LinkListViewModel GetLinkListViewModel(AllLinkRecord record)
     {
         if (UseGroupedLinkList)
-            return (Links.Source as ObservableCollection<LinkGroup>)!.FirstOrDefault(g => g.IsController == record.IsController) ?? new LinkListViewModel(this) { Changed = true };
+            // Using a grouped list, return the LinkListViewModel for the group that matches the record type
+            return (Links.Source as ObservableCollection<LinkGroup>)!
+                .FirstOrDefault(g => g.IsController == record.IsController) ?? new LinkListViewModel(this);
         else if (record.IsController)
             return controllerLinks;
         else
@@ -228,126 +238,78 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
     }
 
     /// <summary>
-    /// Schedule rebuilding all LinkViewModels if links have changed and this LinkHostViewModel is active.
+    /// If active, schedule rebuilding LinkViewModel(s) as needed.
+    /// If not active but force is true, we'll rebuild next time we are activated (see ActiveStateChange).
     /// This can optionally delay jobs by 250ms and cancel any pending job before scheduling a new run.
-    /// This helps keep performance up when the user is rapidely switching between devices.
+    /// This helps keep performance up when the user is rapidely switching between devices or channels.
     /// </summary>
     /// <param name="cancelPendingJob">See above</param>
-    internal void ScheduleRebuildLinksIfNecessary(bool cancelPendingJob = false)
-    {
-        if (IsActive)
-        {
-            if (!UseGroupedLinkList)
-            {
-                if (controllerLinks.Changed)
-                {
-                    ScheduleBuildControllerLinkListViewModel(cancelPendingJob);
-                }
-                if (responderLinks.Changed)
-                {
-                    ScheduleBuildResponderLinkListViewModel(cancelPendingJob);
-                }
-            }
-            else if (controllerLinks.Changed || responderLinks.Changed)
-            {
-                ScheduleBuildLinkListViewModel(cancelPendingJob);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Schedule rebuilding all LinkViewModels if this LinkHostViewModel is active.
-    /// </summary>
-    /// <param name="cancelPendingJob">See ScheduleRebuildLinksIfNecessary</param>
     internal void ScheduleRebuildLinksIfActive(bool cancelPendingJob = false)
     {
         if (IsActive)
         {
             if (!UseGroupedLinkList)
             {
-                ScheduleBuildControllerLinkListViewModel(cancelPendingJob);
-                ScheduleBuildResponderLinkListViewModel(cancelPendingJob);
+                ScheduleBuildLinkLists(cancelPendingJob);
             }
             else
             {
-                ScheduleBuildLinkListViewModel(cancelPendingJob);
+                ScheduleBuildGroupedLinkList(cancelPendingJob);
             }
         }
     }
 
-    // Helper to generate the list of responder LinkViewModel's on in this device database
-    // Links are build asynchronously and the results are stored in ControllerLinks.
-    // Jobs can be delayed by 1/4 second and cancelled when scheduling a new job. 
+    // Helper to generate the list of LinkViewModels in this device database.
+    // Links are build asynchronously and the results are stored in ControllerLinks and ResponderLinks.
+    // Jobs can be delayed by 250ms and cancelled when scheduling a new job.
     // This reduces uncessary work when switching between device rapidely.
-    private void ScheduleBuildControllerLinkListViewModel(bool cancelPendingJob)
+    private void ScheduleBuildLinkLists(bool cancelPendingJob)
     {
         // If asked to cancel a pending job and we have a previous job pending
         // for the same type of links, attempt to cancel it
         if (cancelPendingJob)
         {
-            if (controllerLinkJob != null)
+            if (linkJob != null)
             {
-                UIScheduler.Instance.CancelJob(controllerLinkJob);
-                controllerLinkJob = null;
+                UIScheduler.Instance.CancelJob(linkJob);
+                linkJob = null;
             }
         }
 
         // Don't rebuild the links if a rebuild is already pending
-        if (!UIScheduler.Instance.IsPending(controllerLinkJob))
+        if (!UIScheduler.Instance.IsPending(linkJob))
         {
-            controllerLinkJob = UIScheduler.Instance.AddAsyncJob("Rebuilding Controller Link Lists",
+            linkJob = UIScheduler.Instance.AddAsyncJob("Rebuilding Controller Link Lists",
                 async () =>
                 {
+                    // Capture and restore selection to prevent GridView from clearing it when ItemsSource changes
+                    var selectedLink = _selectedLink;
+
                     ControllerLinks = await Task.Run(() => { return BuildLinkList(forControllers: true); });
-                    controllerLinkJob = null;
-                    ControllerLinks.Changed = false;
-                    return true;
-                },
-                completionCallback: null, group: null,
-                delay: cancelPendingJob ? TimeSpan.FromMilliseconds(250) : TimeSpan.Zero);
-        }
-    }
-    private static object? controllerLinkJob;
-
-    // Helper to generate the list of responder LinkViewModel's on in this device database
-    // Links are build asynchronously and the results are stored in ResponderLinks.
-    // Jobs can be delayed by 1/4 second and cancelled when scheduling a new job. 
-    // This reduces uncessary work when switching between device rapidely.
-    private void ScheduleBuildResponderLinkListViewModel(bool cancelPendingJob)
-    {
-        // If asked to cancel a pending job and we have a previous job pending
-        // for the same type of links, attempt to cancel it
-        if (cancelPendingJob)
-        {
-            if (responderLinkJob != null)
-            {
-                UIScheduler.Instance.CancelJob(responderLinkJob);
-                responderLinkJob = null;
-            }
-        }
-
-        // Don't rebuild the links if a rebuild is already pending
-        if (!UIScheduler.Instance.IsPending(responderLinkJob))
-        {
-            responderLinkJob = UIScheduler.Instance.AddAsyncJob("Rebuilding Responder Link List",
-                async () =>
-                {
                     ResponderLinks = await Task.Run(() => { return BuildLinkList(forControllers: false); });
-                    responderLinkJob = null;
-                    ResponderLinks.Changed = false;
+                    linkJob = null;
+
+                    // Propagate the selected link to the new list if there was one
+                    if (selectedLink != null)
+                    {
+                        if (selectedLink.IsController)
+                            SelectedControllerLink = ControllerLinks.GetLinkViewModel(selectedLink.AllLinkRecord);
+                        else
+                            SelectedResponderLink = ResponderLinks.GetLinkViewModel(selectedLink.AllLinkRecord);
+                    }
+
                     return true;
                 },
                 completionCallback: null, group: null,
                 delay: cancelPendingJob ? TimeSpan.FromMilliseconds(250) : TimeSpan.Zero);
         }
     }
-    private static object? responderLinkJob;
 
-    // Helper to generate the list of all LinkViewModel's (controllers or responders) on in this device database
+    // Helper to generate the list of all LinkViewModel's (controllers or responders) in this device database.
     // This returns a CollectionViewSource that can be used to group the links by type (controller or responder)
-    // This is currently only used by the HubHostViewModel
+    // This is currently only used by the HubHostViewModel.
     // Links are build asynchronously and the results are stored in Links
-    private void ScheduleBuildLinkListViewModel(bool cancelPendingJob)
+    private void ScheduleBuildGroupedLinkList(bool cancelPendingJob)
     {
         if (cancelPendingJob)
         {
@@ -364,32 +326,54 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
             linkJob = UIScheduler.Instance.AddAsyncJob("Rebuilding Link Lists",
                 async () =>
                 {
+                    // Capture and restore selection to prevent GridView from clearing it when ItemsSource changes
+                    var selectedLink = _selectedLink;
+
                     var groupedLinks = await Task.Run(() =>
                     {
                         var query = from link in BuildLinkList()
                                     group link by link.IsController into g
                                     orderby g.Key ascending
                                     select new LinkGroup(this, links: g, isController: g.Key);
-                        return new ObservableCollection<LinkGroup>(query);
+
+                        var gl = new ObservableCollection<LinkGroup>(query);
+                        // Ensure that both group headers are shown
+                        if (gl.Count == 0)
+                        {
+                            gl.Add(new LinkGroup(this, isController: false));
+                            gl.Add(new LinkGroup(this, isController: true));
+                        }
+                        else if (gl.Count == 1)
+                        {
+                            if (gl[0].IsController)
+                                gl.Insert(0, new LinkGroup(this, isController: false));
+                            else
+                                gl.Add(new LinkGroup(this, isController: true));
+                        }
+                        return gl;
                     });
 
-                    Links = new CollectionViewSource
-                    {
-                        Source = groupedLinks,
-                        IsSourceGrouped = true
-                    };
-
+                    Links = new CollectionViewSource { Source = groupedLinks, IsSourceGrouped = true };
                     linkJob = null;
+
+                    // Propagate the selected link to the new list if there was one
+                    if (selectedLink != null)
+                    {
+                        var linkListViewModel = GetLinkListViewModel(selectedLink.AllLinkRecord);
+                        SelectedLink = linkListViewModel.GetLinkViewModel(selectedLink.AllLinkRecord);
+                    }
                     return true;
                 },
                 completionCallback: null, group: null,
                 delay: cancelPendingJob ? TimeSpan.FromMilliseconds(250) : TimeSpan.Zero);
         }
     }
+
     private static object? linkJob;
 
-
     // Helper to build the list of LinkViewModels
+    // Depending on forController, this can build the list of controllers, responders,
+    // or all links matching the filter criteria.
     internal LinkListViewModel BuildLinkList(bool? forControllers = null)
     {
         var linkListViewModel = new LinkListViewModel(this);
@@ -412,6 +396,67 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
     }
 
     /// <summary>
+    /// This tracks the selected link in the grouped list
+    /// </summary>
+    public LinkViewModel? SelectedLink
+    {
+        get => _selectedLink;
+        set
+        {
+            if (_selectedLink != value)
+            {
+                SwapSelectedLink(value);
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// This tracks the last selected link in either the responder
+    /// or the controller link list
+    /// </summary>
+    public LinkViewModel? SelectedResponderLink
+    {
+        get => _selectedLink;
+        set
+        {
+            if ((!isControllerLinkSelected || value != null) && _selectedLink != value)
+            {
+                isControllerLinkSelected = false;
+                SwapSelectedLink(value);
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public LinkViewModel? SelectedControllerLink
+    {
+        get => _selectedLink;
+        set
+        {
+            if ((isControllerLinkSelected || value != null) && _selectedLink != value)
+            {
+                isControllerLinkSelected = true;
+                SwapSelectedLink(value);
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    // Helper to swap the selected link
+    private void SwapSelectedLink(LinkViewModel? value)
+    {
+        if (_selectedLink != null)
+            _selectedLink.IsSelected = false;
+        _selectedLink = value;
+        if (_selectedLink != null)
+            _selectedLink.IsSelected = true;
+    }
+
+    private LinkViewModel? _selectedLink;
+    bool isControllerLinkSelected = false;
+
+    /// <summary>
     /// Notifies this LinkHostViewModel that it is active (presented on screen) or inactive
     /// Also called when the connected state changes (IsConnected)
     /// </summary>
@@ -421,7 +466,7 @@ public abstract class LinkHostViewModel : ItemViewModel, IAllLinkDatabaseObserve
 
         if (IsActive)
         {
-            ScheduleRebuildLinksIfNecessary(cancelPendingJob: true);
+            ScheduleRebuildLinksIfActive(cancelPendingJob: true);
             Device.AllLinkDatabase.AddObserver(this);
         }
         else
