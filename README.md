@@ -72,7 +72,7 @@ Look for Visual Studio solution file `HouzLinc.sln` at the root of the repo.
 ### Building and Running the App for Development on Windows
 
 #### Building in Visual Studio
-Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)` as the profile. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger. Once built, Visual Studio will deploy the app locally and run it. Once deployed, you can run that build directly from the Start menu.
+Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)` as the launch profile. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger. Once built, Visual Studio will deploy the app locally and run it. Once deployed, you can run that build directly from the Start menu.
 
 #### Building an Unsigned App Package for Sideloading on Windows
 Using Visual Studio `msbuild`, you can create an MSIX installer package that can be sideloaded on any Windows machine with developer mode turned on. Proceed as follows (see [here](https://platform.uno/docs/articles/uno-publishing-windows-packaged-unsigned.html) for more details):
@@ -101,19 +101,44 @@ TBD
 To build and deply on the Android Emulator on in Visual Studio:
 1. First make sure that you have the `.Net Multi-Platform App UI Development` workload installed in Visual Studio. If not, run the Visual Studio installer and modify the installation to include this workload.
 1. Access the Device Manager in Visual Studio with Tools|Android|Android Device Manager. Once there, create a new Android Virtual Device (AVD).
-1. In Visual Studio, select `Any CPU` for the architecture, Release or Debug for the configuration, and select the virtual device you created under `Android Emulator` for the profile.
-1. Hit F5 to build, deploy and run the app on the emulator.
+1. In Visual Studio, select `Any CPU` for the architecture, Release or Debug for the configuration, and select the virtual device you created under `Android Emulator` for the launch profile.
+1. Hit F5 or the green "Play" button to build, deploy and run the app on the emulator.
 
 #### Android Physical Device
-To build and deploy on an Android physical device, select the device under `Android Local Devices` for the profile. Make sure that USB debugging is enabled on the device. Connect the device to the computer with a USB cable. Hit F5 to build, deploy and run the app on the device.
+To build and deploy on an Android physical device:
+1. Connect the device to your develepment computer via USB. 
+2. Make sure that USB debugging is enabled on the device.
+3. Select the device under `Android Local Devices` as the launch profile.
+4. Build, run and deploy HouzLinc to your device by pressing F5 in Visual Studio or the green "Play button".
+
+#### Building and deploying from the command line and Adb
+You can also build and deploy HouzLinc to an Android device from the command line using `dotnet` and deploy to your emulator or device using `Adb`. Here is how to do it:
+1. If you are deploying to a device, connect it to your computer via USB and make sure USB debugging is enabled on the device.
+2. Open a command prompt and navigate to the `UnoApp` folder where the `UnoApp.csproj` project file is located.
+3. Build and publish the app using the following command:
+```
+    dotnet publish -f net8.0-android -c Release -o ./publish
+```
+4. Once this completed successfully, you will find the app package in the `publish` folder.
+5. To install this package on your device, use a command prompt with Adb in your path (accessible via "Tools > Android > Android Adb Command Prompt" in Visual Studio 2022). First, verify your device is connected by running:
+```
+    adb devices
+```
+6. You should see your device or emualator listed, e.g. `e539f4b2`. If you do not see your device, make sure USB debugging is enabled and the device is connected.
+7. Navigate to the `UnoApp` folder again and run the following command to install the app on the device, replacing `<yourdevice>` with the device id you obtained in the previous step:
+```
+    adb -s <yourdevice> install publish\com.lakesideapps.houzlinc-Signed.apk
+```
+8. HouzLinc should now be installed on your device. You can run it from the app drawer or home screen.
 
 ### Other platforms
-HouzLinc can be build for and run on frameworks Desktop and WebAssembly (WASM). Just select these profiles in Visual Studio. If built for Desktop, it will run on Windows, but instead of using Windows App SDK / WinUI3, it will use the Uno implementation backed by Skia for rendering. This offers an easy to deploy environment to test the Uno implementation of the Windows App SDK.
+HouzLinc can be built for and run on frameworks Desktop and WebAssembly (WASM). Just select these launch profiles in Visual Studio.
 
-I am working on making this avaiable on MacOS as well.
+If built for Desktop, it will run on Windows, but instead of using Windows App SDK / WinUI3, it will use the Uno implementation backed by Skia for rendering. This offers an easy to deploy environment to test the Uno implementation of the Windows App SDK.
 
-It is also posisble to build for WebAssembly and run HouzLinc in your favorite browser.
+When built for WebAssembly, HouzLinc will run in your favorite browser.
 
+I am also working on making HouzLinc run on MacOS and iOS.
 
 ### App Configuration
 #### Enabling OneDrive sign-in
