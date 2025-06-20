@@ -13,15 +13,24 @@
    limitations under the License.
 */
 
+using Microsoft.Extensions.Hosting;
+using Uno.UI.Hosting;
+
 namespace UnoApp;
 public class Program
 {
     private static App? _app;
 
-    public static int Main(string[] args)
+    public static void Main(string[] args)
     {
-        Microsoft.UI.Xaml.Application.Start(_ => _app = new App());
+        var host = UnoPlatformHostBuilder.Create()
+            .App(() => new App())
+            .UseX11()
+            .UseLinuxFrameBuffer()
+            .UseMacOS()
+            .UseWin32()
+            .Build();
 
-        return 0;
+        host.Run();
     }
 }
