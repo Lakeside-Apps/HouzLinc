@@ -84,7 +84,7 @@ msbuild /r /t:Restore /p:Configuration=Release /v:minimal
 ```
 3. Then run the following to build the package:
 ```
-msbuild /p:TargetFramework=net8.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
+msbuild /p:TargetFramework=net9.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
 ```
 4. This creates an `.msix` file in the specificed `<output directory>`, (e.g., `c:\temp\output\`), which you can install on your machine or any other machine with developer mode turned on. To install, open a vanilla Powershell window **running as administrator** and run the following:
 ```
@@ -132,11 +132,9 @@ You can also build and deploy HouzLinc to an Android device from the command lin
 8. HouzLinc should now be installed on your device. You can run it from the app drawer or home screen.
 
 ### Other platforms
-HouzLinc can be built for and run on frameworks Desktop and WebAssembly (WASM). Just select these launch profiles in Visual Studio.
+HouzLinc can be built for the Desktop framework and run on Windows or Mac that way. On Windows, just select the `HouseLinc(Destop)` launch profile in Visual Studio. Instead of using Windows App SDK / WinUI3, HouzLinc will use the Uno implementation of that framework. This offers a convenient environment to test on the Uno implementation of the Windows App SDK framework.
 
-If built for Desktop, it will run on Windows, but instead of using Windows App SDK / WinUI3, it will use the Uno implementation backed by Skia for rendering. This offers an easy to deploy environment to test the Uno implementation of the Windows App SDK.
-
-When built for WebAssembly, HouzLinc will run in your favorite browser.
+HouzLinc can also be built for WebAssembly and run in your favorite browser. Simply use the `HouseLinc(WebAssembly)` launch configration in Visual Studio. However [limitations on cross-site behavior](https://platform.uno/docs/articles/interop/MSAL.html) prevent signing in to OneDrive at this time. This means that HouzLinc cannot access the OneDrive configuration file when running in a browser, only local files. The Uno team proposes workarounds (see link above) that I have not yet tested.
 
 I am also working on making HouzLinc run on MacOS and iOS.
 
@@ -184,7 +182,7 @@ The project currently contains some non-UI unit tests for the Insteon layer. The
 
 Tests can also be built from the command line using msbuild. Navigate to UnitTestApp folder under the root of the repo and run the following command:
 ```
-msbuild /p:TargetFramework=net8.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
+msbuild /p:TargetFramework=net9.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
 ```
 
 ### Contribution

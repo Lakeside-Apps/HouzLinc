@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>
-      net8.0-android;
-      net8.0-ios;
-      net8.0-maccatalyst;
-      net8.0-windows10.0.26100;
-      net8.0-desktop;
-      net8.0-browserwasm;
-    </TargetFrameworks>
+  <TargetFrameworks>
+    net9.0-android;
+    net9.0-ios;
+    net9.0-windows10.0.26100;
+    net9.0-browserwasm;
+    net9.0-desktop;net9.0
+  </TargetFrameworks>
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
@@ -89,23 +88,23 @@
   Platform specific properties and dependencies
   -->
   <Choose>
-    <When Condition="'$(TargetFramework)'=='net8.0-ios'">
+    <When Condition="'$(TargetFramework)'=='net9.0-ios'">
     </When>
-    <When Condition="'$(TargetFramework)'=='net8.0-android'">
+    <When Condition="'$(TargetFramework)'=='net9.0-android'">
       <PropertyGroup>
         <SupportedOSPlatformVersion>33.0</SupportedOSPlatformVersion>
       </PropertyGroup>
     </When>
-    <When Condition="'$(TargetFramework)'=='net8.0-maccatalyst'">
+    <When Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
     </When>
-    <When Condition="'$(TargetFramework)'=='net8.0-windows10.0.19041'">
+    <When Condition="'$(TargetFramework)'=='net9.0-windows10.0.19041'">
       <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
       </ItemGroup>
     </When>
-    <When Condition="'$(TargetFramework)'=='net8.0-desktop'">
+    <When Condition="'$(TargetFramework)'=='net9.0-desktop'">
     </When>
-    <When Condition="'$(TargetFramework)'=='net8.0-browserwasm'">
+    <When Condition="'$(TargetFramework)'=='net9.0-browserwasm'">
     </When>
   </Choose>
 

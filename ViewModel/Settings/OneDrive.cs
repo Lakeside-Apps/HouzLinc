@@ -97,11 +97,6 @@ public sealed class OneDrive
     // Redicrect URI registered with the application
 #if __ANDROID__
     private string redirectUri1 = null!;
-#elif DESKTOP
-    // TODO: need to understand why on Desktop the redirectUri is supposed to be localhost
-    // TODO: Consider switching to Uno's MSALAuthenticationProvider
-    // TODO: use #if DESKTOP once this code is moved to the main project
-    private const string redirectUri1 = "http://localhost:44321/";
 #elif __WASM__
     private const string redirectUri1 = "http://localhost:5000/authentication/login-callback.htm";
 #elif WINDOWS
@@ -111,9 +106,14 @@ public sealed class OneDrive
     // To get around this, we try the nativeclient url first, and loopback if that fails.
     private const string redirectUri1 = "https://login.microsoftonline.com/common/oauth2/nativeclient";
     private const string redirectUri2 = "http://localhost:44321/";
-#else
+#elif __iOS__
     // TODO: figure out the redirectUri for iOS
     private const string redirectUri1 = "";
+#else // DESKTOP
+    // TODO: need to understand why on Desktop the redirectUri is supposed to be localhost
+    // TODO: Consider switching to Uno's MSALAuthenticationProvider
+    // TODO: use #if DESKTOP once this code is moved to the main project
+    private const string redirectUri1 = "http://localhost:44321/";
 #endif
 
     // Use Instance to acquire the singleton instance of OneDrive
