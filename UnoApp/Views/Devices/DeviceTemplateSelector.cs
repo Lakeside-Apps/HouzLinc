@@ -23,14 +23,14 @@ public sealed class DeviceTemplateSelector : DataTemplateSelector
     {
         if (item != null && item is DeviceViewModel dvm)
         {
-#if DESKTOP || __WASM__
-            // On Desktop and WASM, "container" is the ContentPresenter.
+#if HAS_UNO_SKIA
+            // On Uno, "container" is the ContentPresenter.
             // Either its TemplatedParent or Parent contains the DeviceView with the template resource.
             // Note that TemplatedParent and Parent can sometimes be null (not sure exactly when).
             // We ignore the call and return null in that case. We will get called back.
             var dv = (container is ContentPresenter cp) ? (cp.TemplatedParent ?? cp.Parent) as DeviceView : null;
 #else
-            // On WindowsAppSDK, Android, iOS, "container" is the DeviceViews content control
+            // On WindowsAppSDK, "container" is the DeviceViews content control
             var dv = container as DeviceView;
 #endif
             if (dv != null)

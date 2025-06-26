@@ -25,12 +25,13 @@ public class Program
     {
         var host = UnoPlatformHostBuilder.Create()
             .App(() => new App())
+#if HAS_UNO_SKIA
             .UseX11()
             .UseLinuxFrameBuffer()
             .UseMacOS()
             .UseWin32()
+#endif
             .Build();
-
         host.Run();
     }
 }
