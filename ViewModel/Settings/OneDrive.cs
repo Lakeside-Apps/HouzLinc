@@ -179,9 +179,15 @@ public sealed class OneDrive
                     .WithAuthority(AzureCloudInstance.None, "consumers")
                     .WithRedirectUri(redirectUri)
 #if __IOS__
-                .WithIosKeychainSecurityGroup("com.microsoft.adalcache")
+                    .WithIosKeychainSecurityGroup("com.microsoft.adalcache")
 #endif
                     .WithUnoHelpers()
+#if __ANDROID__ // && HAS_UNO_SKIA
+                    // See bug #20601. https://github.com/unoplatform/uno/issues/20601
+                    // This workaroud is really only needed when using SkiaRenderer.
+                    // But HAS_UNO_SKIA is not defined here in the ViewModel project.
+                    .WithParentActivityOrWindow(() => ContextHelper.Current as Android.App.Activity)
+#endif
                     .Build();
             }
             catch (Exception ex)
@@ -222,7 +228,7 @@ public sealed class OneDrive
                 Task completedTask = await Task.WhenAny(task, delay);
                 if (completedTask == delay)
                 {
-                    Common.Logger.Log.Error("OneDrive: authentication request timed out!");
+                    Common.Logger.Log.Error("OneDrive: silent authentication request timed out!");
                     return false;
                 }
                 session = task.Result;
@@ -239,7 +245,7 @@ public sealed class OneDrive
                 }
                 catch (MsalException msalex)
                 {
-                    Common.Logger.Log.Debug($"OneDrive: Error Acquiring Token:{System.Environment.NewLine}{msalex}");
+                    Common.Logger.Log.Error($"OneDrive: error acquiring token:{System.Environment.NewLine}{msalex}");
 #if WINDOWS
                     // On Windows, if we get this exception, try the loopback URL instead (see above notes)
                     if (msalex.ErrorCode == "loopback_redirect_uri")
@@ -251,7 +257,7 @@ public sealed class OneDrive
                 }
                 catch (Exception ex)
                 {
-                    Common.Logger.Log.Debug($"OneDrive: Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
+                    Common.Logger.Log.Error($"OneDrive: error acquiring token interactively:{System.Environment.NewLine}{ex}");
                     return false;
                 }
             }
@@ -267,6 +273,7 @@ public sealed class OneDrive
 
         return success;
     }
+
 
     /// <summary>
     /// Save a file to a path in the specified root folder of the default drive
