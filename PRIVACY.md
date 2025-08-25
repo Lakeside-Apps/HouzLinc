@@ -1,7 +1,6 @@
 # HouzLinc Privacy Policy
 
-**Effective Date:** December 2024  
-**Last Updated:** December 2024
+**Last Updated:** August 25, 2025
 
 ## Overview
 
