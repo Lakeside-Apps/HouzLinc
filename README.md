@@ -117,7 +117,7 @@ You can also build and deploy HouzLinc to an Android device from the command lin
 2. Open a command prompt and navigate to the `UnoApp` folder where the `UnoApp.csproj` project file is located.
 3. Build and publish the app using the following command:
 ```
-    dotnet publish -f net8.0-android -c Release -o ./publish
+    dotnet publish -f net9.0-android -c Release -o ./publish
 ```
 4. Once this completed successfully, you will find the app package in the `publish` folder.
 5. To install this package on your device, use a command prompt with Adb in your path (accessible via "Tools > Android > Android Adb Command Prompt" in Visual Studio 2022). First, verify your device is connected by running:
