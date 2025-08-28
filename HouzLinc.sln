@@ -6,12 +6,18 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{623197BF-95BB-47BC-A166-9B9E0703F562}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		androidview-color.jpg = androidview-color.jpg
+		androidview.jpg = androidview.jpg
 		Architecture.jpg = Architecture.jpg
+		deviceview-color.png = deviceview-color.png
+		deviceview.png = deviceview.png
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
+		narrowview.png = narrowview.png
 		README.md = README.md
+		sceneview-color.png = sceneview-color.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestApp", "UnitTestApp\UnitTestApp.csproj", "{73E33108-372F-40EC-B776-834A2B787B16}"
@@ -135,6 +141,7 @@ Global
 		{B93062F5-53E3-26C6-4EA9-087D535B383E}.Release|ARM64.Build.0 = Release|Any CPU
 		{B93062F5-53E3-26C6-4EA9-087D535B383E}.Release|x64.ActiveCfg = Release|Any CPU
 		{B93062F5-53E3-26C6-4EA9-087D535B383E}.Release|x64.Build.0 = Release|Any CPU
+		{B93062F5-53E3-26C6-4EA9-087D535B383E}.Release|x64.Deploy.0 = Release|Any CPU
 		{B93062F5-53E3-26C6-4EA9-087D535B383E}.Release|x86.ActiveCfg = Release|Any CPU
 		{B93062F5-53E3-26C6-4EA9-087D535B383E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
