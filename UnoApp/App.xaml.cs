@@ -100,6 +100,17 @@ public partial class App : Application
             }
             timer.Start();
         };
+
+        // Set the window icon using AppWindow (Uno 6.2+ approach)
+        try 
+        {
+            appWindow.SetIcon("Assets/appicon.ico"); // Update path to your icon file
+        }
+        catch (Exception ex)
+        {
+            // Log the error but don't fail the app startup
+            System.Diagnostics.Debug.WriteLine($"Failed to set window icon: {ex.Message}");
+        }
 #endif
 
         // TODO: Uno Single Project: This was the original code
@@ -121,8 +132,6 @@ public partial class App : Application
             // Place our app shell in the current Window
             MainWindow.Content = shell;
         }
-
-        MainWindow.SetWindowIcon();
 
         // Ensure the current window is active
         MainWindow.Activate();
