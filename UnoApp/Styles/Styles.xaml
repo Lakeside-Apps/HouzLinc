@@ -27,15 +27,14 @@
             <StaticResource x:Key="GridViewItemForegroundSelectedPointerOver" ResourceKey="ListViewItemForegroundSelectedPointerOver"/>
             <StaticResource x:Key="GridViewItemForegroundSelectedPressed" ResourceKey="ListViewItemForegroundSelectedPressed"/>
 
-            <!-- Item Stamp Colors -->
-            <!--<StaticResource x:Key="DeviceStampColor" ResourceKey="AccentFillColorDefaultBrush"/>-->
-            <SolidColorBrush x:Key="DeviceStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FFB0D0C8"/>
-            <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FFA0C0D0"/>
-            <SolidColorBrush x:Key="HubChannelStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="HubChannelMemberStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="SceneStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="SceneMemberStampColor" Color="LightBlue"/>
+            <!-- Item Stamp Colors - Toned down palette -->
+            <SolidColorBrush x:Key="DeviceStampColor" Color="#FF6B9BD1"/>
+            <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FF5A8FBA"/>
+            <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FF7BB8D3"/>
+            <SolidColorBrush x:Key="HubChannelStampColor" Color="#FF9F7FB8"/>
+            <SolidColorBrush x:Key="HubChannelMemberStampColor" Color="#FF9370B3"/>
+            <SolidColorBrush x:Key="SceneStampColor" Color="#FFCC8B56"/>
+            <SolidColorBrush x:Key="SceneMemberStampColor" Color="#FF6BA3CD"/>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
@@ -50,13 +49,13 @@
             <StaticResource x:Key="GridViewItemForegroundSelectedPointerOver" ResourceKey="ListViewItemForegroundSelectedPointerOver"/>
             <StaticResource x:Key="GridViewItemForegroundSelectedPressed" ResourceKey="ListViewItemForegroundSelectedPressed"/>
 
-            <!-- Item Stamp Colors -->
-            <SolidColorBrush x:Key="DeviceStampColor" Color="#FF808080"/>
-            <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FF80A098"/>
-            <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FF8090A0"/>
-            <SolidColorBrush x:Key="HubChannelStampColor" Color="#FF808080"/>
-            <SolidColorBrush x:Key="SceneStampColor" Color="#FF808080"/>
-            <SolidColorBrush x:Key="SceneMemberStampColor" Color="#FF808890"/>
+            <!-- Item Stamp Colors - Toned down palette (dark mode) -->
+            <SolidColorBrush x:Key="DeviceStampColor" Color="#FF7BB8D3"/>
+            <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FF6BA3CD"/>
+            <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FF9BCAE0"/>
+            <SolidColorBrush x:Key="HubChannelStampColor" Color="#FFB396C7"/>
+            <SolidColorBrush x:Key="SceneStampColor" Color="#FFD4A574"/>
+            <SolidColorBrush x:Key="SceneMemberStampColor" Color="#FF9BCAE0"/>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="HighContrast">
@@ -71,15 +70,14 @@
             <StaticResource x:Key="GridViewItemForegroundSelectedPointerOver" ResourceKey="ListViewItemForegroundSelectedPointerOver"/>
             <StaticResource x:Key="GridViewItemForegroundSelectedPressed" ResourceKey="ListViewItemForegroundSelectedPressed"/>
 
-            <!-- Item Stamp Colors -->
-            <!-- TODO: Pick theme colors that work in all high contrast themes -->
-            <SolidColorBrush x:Key="DeviceStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FFB0D0C8"/>
-            <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FFA0C0D0"/>
-            <SolidColorBrush x:Key="HubChannelStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="HubChannelMemberStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="SceneStampColor" Color="#FFC0C8D0"/>
-            <SolidColorBrush x:Key="SceneMemberStampColor" Color="LightBlue"/>
+            <!-- Item Stamp Colors - High contrast remains strong for accessibility -->
+            <SolidColorBrush x:Key="DeviceStampColor" Color="#FF0078D4"/>
+            <SolidColorBrush x:Key="ResponderLinkStampColor" Color="#FF004578"/>
+            <SolidColorBrush x:Key="ControllerLinkStampColor" Color="#FF40E0D0"/>
+            <SolidColorBrush x:Key="HubChannelStampColor" Color="#FF8764B8"/>
+            <SolidColorBrush x:Key="HubChannelMemberStampColor" Color="#FF744DA9"/>
+            <SolidColorBrush x:Key="SceneStampColor" Color="#FFFF8C00"/>
+            <SolidColorBrush x:Key="SceneMemberStampColor" Color="#FF0078D4"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -348,7 +346,7 @@
 
                             </VisualStateGroup>
 
-                        </VisualStateManager.VisualStateGroups>
+                            </VisualStateManager.VisualStateGroups>
                     </Grid>
 
                 </ControlTemplate>
@@ -524,7 +522,7 @@
 
                             </VisualStateGroup>
 
-                        </VisualStateManager.VisualStateGroups>
+                            </VisualStateManager.VisualStateGroups>
                     </Grid>
 
                 </ControlTemplate>
