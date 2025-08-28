@@ -5,6 +5,6 @@
     "Uno.Sdk": "6.2.29"
   },
   "sdk": {
-    "allowPrerelease": false,
+    "allowPrerelease": false
   }
 }
