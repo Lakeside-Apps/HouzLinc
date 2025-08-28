@@ -5,10 +5,6 @@
     "Uno.Sdk": "6.2.29"
   },
   "sdk": {
-    // TODO: Revert to allowPrerelease line below when https://github.com/dotnet/sdk/issues/49180 is resolved.
-    "version": "9.0.204",
-    "rollForward": "latestPatch"
-
-    //"allowPrerelease": false,
+    "allowPrerelease": false,
   }
 }
