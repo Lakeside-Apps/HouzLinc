@@ -61,7 +61,7 @@ I am currently working on deploying the first version of this app to the relevan
 ### Repository and toolchain
 First, you need to install the development environment, including the Uno Platform. Refer to the [Uno Platform documentation](https://platform.uno/docs/articles/getting-started.html) to get started with Uno Platform.
 
-I used Visual Studio 2022, version 17.8.0 and up. You can download Visual Studio Community from [here](https://visualstudio.microsoft.com/vs/community/). In theory, you should also be able to use VSCode if you prefer that IDE, but I have not had a chance to try it yet.
+I used Visual Studio 2022 (currently, version 17.14.13). You can download Visual Studio Community from [here](https://visualstudio.microsoft.com/vs/community/). In theory, you should also be able to use VSCode if you prefer that IDE, but I have not had a chance to try it yet on this project.
 
 Once your development environment is set up, clone the HouzLinc repository:
 ```
@@ -72,7 +72,9 @@ Look for Visual Studio solution file `HouzLinc.sln` at the root of the repo.
 ### Building and Running the App for Development on Windows
 
 #### Building in Visual Studio
-Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)` as the launch profile. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger. Once built, Visual Studio will deploy the app locally and run it. Once deployed, you can run that build directly from the Start menu.
+Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)`  or 'HouseLinc (WinAppSDK Unpackaged) as the launch profile depending on whether you want to build a packaged or unpackaged app. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger.
+- Packaged app: once built, Visual Studio will deploy the app locally and run it. Once deployed, you can run that build directly from the Start menu.
+- Unpackaged app: Visual Studio will build and run the app directly from the output directory (e.g., UnoApp\bin\Release\net9.0-windows10.0.26100). No installation is required. You can run the app directly from that folder by launching UnoApp.exe.
 
 #### Building an Unsigned App Package for Sideloading on Windows
 Using Visual Studio `msbuild`, you can create an MSIX installer package that can be sideloaded on any Windows machine with developer mode turned on. Proceed as follows (see [here](https://platform.uno/docs/articles/uno-publishing-windows-packaged-unsigned.html) for more details):
@@ -92,7 +94,7 @@ Add-AppPackage -AllowUnsigned -path "<path to msix file>"
 ```
 5. Then run HouzLinc by searching for it in the Start menu.
 
-#### Building a Signed App Package
+#### Building a Signed App Package (e.g., for Microsoft Store submission)
 TBD
 
 ### Building and Running the App for Development on Android
