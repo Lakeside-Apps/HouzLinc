@@ -95,7 +95,11 @@ Add-AppPackage -AllowUnsigned -path "<path to msix file>"
 5. Then run HouzLinc by searching for it in the Start menu.
 
 #### Building a Signed App Package (e.g., for Microsoft Store submission)
-TBD
+To build a signed app package for Microsoft Store submission, use the following command instead of the one above:
+```
+msbuild /r /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:GenerateAppxPackageOnBuild=true /p:AppxBundle=Never /p:BuildForStore=true /p:AppxPackageDir="C:/temp/output/" /p:AppxPackageSigningEnabled=true
+```
+
 
 ### Building and Running the App for Development on Android
 
