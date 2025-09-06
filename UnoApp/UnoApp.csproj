@@ -11,6 +11,10 @@
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
+    
+    <!-- ADD THESE MISSING PROPERTIES FOR MSIX PACKAGING -->
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
 
     <!-- Display name -->
     <ApplicationTitle>HouzLinc</ApplicationTitle>
@@ -65,13 +69,24 @@
   - To create a signed package, we need to specify a Publisher CN (Common name)
     that matches the certificate used to sign the package (not done yet!).
  -->
+  
+  <!-- Default properties for Visual Studio development (F5/Ctrl+F5) -->
   <PropertyGroup>
     <Publisher>CN=LakesideApps</Publisher>
     <Namespace>
       <Namespace Prefix="dn" Uri="http://schemas.microsoft.com/appx/manifest/foundation/windows10" />
     </Namespace>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
   </PropertyGroup>
 
+  <!-- Configuration for unsigned package builds (for sideloading) -->
   <PropertyGroup Condition=" '$(PublishUnsignedPackage)' == 'true' ">
     <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
     <AppxBundle>Never</AppxBundle>
@@ -79,6 +94,18 @@
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <Publisher>CN=LakesideApps, OID.2.25.311729368913984317654407730594956997722=1</Publisher>
   </PropertyGroup>
+
+  <!-- Configuration for Microsoft Store builds (uses Package.StoreAssociation.xml) -->
+  <PropertyGroup Condition=" '$(BuildForStore)' == 'true' ">
+    <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
+    <AppxBundle>Always</AppxBundle>
+    <UapAppxPackageBuildMode>StoreUpload</UapAppxPackageBuildMode>
+  </PropertyGroup>
+
+  <!-- Include the Store Association file when building for store -->
+  <ItemGroup Condition=" '$(BuildForStore)' == 'true' ">
+    <None Include="Package.StoreAssociation.xml" />
+  </ItemGroup>
 
   <Target Name="UpdateAppxManifest" BeforeTargets="GenerateManifests" Outputs=".\Package.appmanifest">
     <XmlPoke XmlInputPath=".\Package.appxmanifest" Query="/dn:Package/dn:Identity/@Publisher" Namespaces="$(Namespace)" Value="$(Publisher)" />
@@ -119,6 +146,24 @@
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 
+  <!-- ADD THESE MISSING SECTIONS FOR MSIX SUPPORT -->
+  <!-- 
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <!-- 
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
 
   <ItemGroup>
     <!-- https://platform.uno/docs/articles/external/uno.resizetizer/doc/using-uno-resizetizer.html?tabs=singleproject%2CAndroid -->
