@@ -106,16 +106,37 @@ msbuild /r /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release 
 #### Android Emulator
 To build and deply on the Android Emulator on in Visual Studio:
 1. First make sure that you have the `.Net Multi-Platform App UI Development` workload installed in Visual Studio. If not, run the Visual Studio installer and modify the installation to include this workload.
-1. Access the Device Manager in Visual Studio with Tools|Android|Android Device Manager. Once there, create a new Android Virtual Device (AVD).
+1. Access the Device Manager in Visual Studio with Tools>Android>Android>Device Manager. Once there, create a new Android Virtual Device (AVD).
 1. In Visual Studio, select `Any CPU` for the architecture, Release or Debug for the configuration, and select the virtual device you created under `Android Emulator` for the launch profile.
 1. Hit F5 or the green "Play" button to build, deploy and run the app on the emulator.
 
 #### Android Physical Device
-To build and deploy on an Android physical device:
-1. Connect the device to your develepment computer via USB. 
-2. Make sure that USB debugging is enabled on the device.
-3. Select the device under `Android Local Devices` as the launch profile.
-4. Build, run and deploy HouzLinc to your device by pressing F5 in Visual Studio or the green "Play button".
+##### Connecting via USB
+1. Physically connect the device to your develepment computer via a USB cable.
+2. Enable `Developer options` and enable `USB debugging` on the device
+
+##### Connecting via Wifi
+1. Make sure that the device and your development computer are on the same wifi network.
+2. Enable `Developer options` and `Wireless debugging` on the device.
+3. In the Wireless debugging options, click Pair device with paring code, note the IP address and port, and from a command window obtained in Visual Studio 2022 via Tools>Android>Android Adb Command Prompt, run:
+```
+adb pair <ip-address>:<port>
+```
+4. Now with the IP address and port indicated under `Wireless debugging`:
+```
+adb connect <ip-address>:<port>
+```
+##### Verifying the connection
+Using a command window obtained in Visual Studio 2022 via Tools>Android>Android Adb Command Prompt:
+```
+adb devices
+```
+Ensure that your device is in the returned list.
+
+#### Building and deploying from Visual Studio
+
+1. Select the device under `Android Local Devices` as the launch profile.
+2. Build, run and deploy HouzLinc to your device by pressing F5 in Visual Studio or the green "Play button".
 
 #### Building and deploying from the command line and Adb
 You can also build and deploy HouzLinc to an Android device from the command line using `dotnet` and deploy to your emulator or device using `Adb`. Here is how to do it:
