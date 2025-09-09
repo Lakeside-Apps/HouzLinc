@@ -25,7 +25,7 @@ Here is a screenshots of the app running on Windows:
 
 And on Android:
 
-<img src="androidview-color.jpg" width="300">
+<img src="androidview-color.jpg" width="200">
 
 ## Architecture
 HouzLinc is written as a C# application for the [Uno Platform](https://platform.uno/). Uno Platform allows creating single-codebase, cross-platform applications that can run on iOS, Android, Web, macOS, Linux and Windows. Uno achieves this by implementing the Windows App SDK on these other platforms. Uno apps use the Windows App SDK on Windows, and Uno's implementation of the same functionality on other platforms. All code is in C# and the UI is in XAML. The code and UI are virtually the same on all platforms.
