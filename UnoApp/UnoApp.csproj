@@ -46,7 +46,6 @@
       Material;
       Navigation;
       Toolkit;
-      SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
 
