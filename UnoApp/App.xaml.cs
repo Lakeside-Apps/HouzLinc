@@ -1,10 +1,9 @@
 using Windows.Foundation;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
-using Uno.Resizetizer;
 using ViewModel.Settings;
 using ViewModel.Console;
-using Microsoft.Extensions.Hosting;
+using System.Runtime.InteropServices;
 
 namespace UnoApp;
 
@@ -16,9 +15,95 @@ public partial class App : Application
     /// </summary>
     public App()
     {
+        // Check runtime dependencies before initialization
+        CheckRuntimeDependencies();
+        
         this.InitializeComponent();
         InitializeLogging();
     }
+
+    private static void CheckRuntimeDependencies()
+    {
+#if WINDOWS
+        try
+        {
+            // Try to access a Windows App SDK API to verify it's available
+            // This will throw if Windows App SDK is not installed
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            
+            // Additional check: Try to create a basic WinUI component
+            var testWindow = new Microsoft.UI.Xaml.Window();
+            testWindow = null; // Just testing availability
+        }
+        catch (System.IO.FileNotFoundException ex) when (ex.Message.Contains("WinRT"))
+        {
+            ShowRuntimeError("Windows App SDK", 
+                "Windows App SDK runtime is not installed.", ex);
+            Environment.Exit(1);
+        }
+        catch (System.DllNotFoundException ex)
+        {
+            ShowRuntimeError("Windows App SDK", 
+                "Required Windows App SDK libraries are missing.", ex);
+            Environment.Exit(1);
+        }
+        catch (Exception ex) when (ex.HResult == unchecked((int)0x80040154)) // REGDB_E_CLASSNOTREG
+        {
+            ShowRuntimeError("Windows App SDK", 
+                "Windows App SDK components are not properly registered.", ex);
+            Environment.Exit(1);
+        }
+
+        // Check .NET Desktop Runtime
+        try
+        {
+            var netVersion = Environment.Version;
+            if (true) // netVersion.Major < 9
+            {
+                ShowRuntimeError(".NET Runtime", 
+                    $"This application requires .NET 9 or later. Found: .NET {netVersion}", null);
+                Environment.Exit(1);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowRuntimeError(".NET Runtime", 
+                ".NET Desktop Runtime check failed.", ex);
+            Environment.Exit(1);
+        }
+#endif
+    }
+
+    private static void ShowRuntimeError(string component, string message, Exception? ex)
+    {
+        var fullMessage = $"HouzLinc cannot start because {component} is not available.\n\n" +
+                         $"{message}\n\n" +
+                         $"Please install the required components:\n" +
+                         $"• .NET 9 Desktop Runtime: https://dotnet.microsoft.com/download/dotnet/9.0\n" +
+                         $"• Windows App SDK: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads\n\n";
+
+        if (ex != null)
+        {
+            fullMessage += $"Technical details: {ex.Message}";
+        }
+
+        // Use native Windows MessageBox to avoid WinUI dependencies
+        try
+        {
+            MessageBox(IntPtr.Zero, fullMessage, "HouzLinc - Missing Runtime", 0x10); // MB_ICONERROR
+        }
+        catch
+        {
+            // Fallback to console if MessageBox fails
+            Console.WriteLine(fullMessage);
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+        }
+    }
+
+    // Native Windows MessageBox for error display
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
 
     public static Window MainWindow { get; private set; } = null!;
 
