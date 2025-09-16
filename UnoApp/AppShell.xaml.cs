@@ -148,9 +148,15 @@ public sealed partial class AppShell : Page, INotifyPropertyChanged
     /// </summary>
     public void SetTitleBar()
     {
+#if DESKTOP
+        // Custom title bar is not supported on Desktop
+        // It would appear below the OS title bar, wasting space, so hide it
         // https://github.com/unoplatform/uno/issues/15789
+        AppTitleBar.Visibility = Visibility.Collapsed;
+#else
         App.MainWindow.ExtendsContentIntoTitleBar = true;
         App.MainWindow.SetTitleBar(AppTitleBar);
+#endif
     }
 
     // We use the width of the NavView pane in the compact form as the height of the titlebar,

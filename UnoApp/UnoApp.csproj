@@ -172,4 +172,8 @@
     <UnoSplashScreen Include="Assets\SplashScreen\splash_screen.svg" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-desktop' OR '$(TargetFramework)' == 'net9.0'">
+    <DefineConstants>$(DefineConstants);DESKTOP</DefineConstants>
+  </PropertyGroup>
+
 </Project>
