@@ -98,7 +98,10 @@ public sealed class OneDrive
 #if __ANDROID__
     private string redirectUri1 = null!;
 #elif __WASM__
-    private const string redirectUri1 = "http://localhost:5000/authentication/login-callback.htm";
+    // Due to cross-site limitations, MSAL does not work on WebAssembly unless hosted on server or PWA
+    // This solution does not yet contain a server project or PWA manifest.
+    // https://platform.uno/docs/articles/interop/MSAL.html
+    // https://platform.uno/docs/articles/getting-started/wizard/using-wizard.html#server
 #elif WINDOWS
     // Sometimes Microsoft requires the localhost URL instead of the nativeclient one.
     // I am not sure when and why and in any case both are registered with the app on Azure.
