@@ -19,8 +19,6 @@ using Uno.UI.Hosting;
 namespace UnoApp;
 public class Program
 {
-    private static App? _app;
-
     public static void Main(string[] args)
     {
         var host = UnoPlatformHostBuilder.Create()
