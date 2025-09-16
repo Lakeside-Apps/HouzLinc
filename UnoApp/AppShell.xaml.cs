@@ -148,11 +148,9 @@ public sealed partial class AppShell : Page, INotifyPropertyChanged
     /// </summary>
     public void SetTitleBar()
     {
-#if !DESKTOP
         // https://github.com/unoplatform/uno/issues/15789
         App.MainWindow.ExtendsContentIntoTitleBar = true;
         App.MainWindow.SetTitleBar(AppTitleBar);
-#endif
     }
 
     // We use the width of the NavView pane in the compact form as the height of the titlebar,
