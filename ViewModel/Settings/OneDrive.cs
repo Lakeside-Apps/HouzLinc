@@ -102,6 +102,7 @@ public sealed class OneDrive
     // This solution does not yet contain a server project or PWA manifest.
     // https://platform.uno/docs/articles/interop/MSAL.html
     // https://platform.uno/docs/articles/getting-started/wizard/using-wizard.html#server
+    private const string redirectUri1 = "http://localhost:5000/authentication/login-callback.htm";
 #elif WINDOWS
     // Sometimes Microsoft requires the localhost URL instead of the nativeclient one.
     // I am not sure when and why and in any case both are registered with the app on Azure.
@@ -115,8 +116,7 @@ public sealed class OneDrive
 #else
     // TODO: need to understand why on Desktop the redirectUri is supposed to be localhost
     // TODO: Consider switching to Uno's MSALAuthenticationProvider
-    private const string redirectUri1 = "https://login.microsoftonline.com/common/oauth2/nativeclient";
-    private const string redirectUri2 = "http://localhost:44321/";
+    private const string redirectUri1 = "http://localhost:44321/";
 #endif
 
     // Use Instance to acquire the singleton instance of OneDrive
