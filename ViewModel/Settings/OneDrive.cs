@@ -20,7 +20,7 @@ using Uno.UI.MSAL;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 
-#if WINDOWS
+#if !__iOS__ && !__ANDROID__
 using Microsoft.Identity.Client.Extensions.Msal;
 #endif
 
@@ -87,7 +87,7 @@ public sealed class OneDrive
     // see https://learn.microsoft.com/en-us/onedrive/developer/rest-api/concepts/permissions_reference?view=odsp-graph-online#files-permissions
     private string[] scopes = ["Files.ReadWrite.AppFolder"];
 
-#if WINDOWS
+#if !__IOS__ && !__ANDROID__
     // MSAL Cache persistence on Windows.
     // On Android and iOS the cache persistence is handled by the platform.
     private const string CacheFileName = "ehouse_msal_cache.txt";
@@ -109,11 +109,11 @@ public sealed class OneDrive
 #elif __iOS__
     // TODO: figure out the redirectUri for iOS
     private const string redirectUri1 = "";
-#else // DESKTOP
+#else
     // TODO: need to understand why on Desktop the redirectUri is supposed to be localhost
     // TODO: Consider switching to Uno's MSALAuthenticationProvider
-    // TODO: use #if DESKTOP once this code is moved to the main project
-    private const string redirectUri1 = "http://localhost:44321/";
+    private const string redirectUri1 = "https://login.microsoftonline.com/common/oauth2/nativeclient";
+    private const string redirectUri2 = "http://localhost:44321/";
 #endif
 
     // Use Instance to acquire the singleton instance of OneDrive
@@ -196,7 +196,7 @@ public sealed class OneDrive
                 return false;
             }
 
-#if WINDOWS
+#if !__IOS__ && !__ANDROID__
             // On Android and iOS the MSAL cache persistence is handled by the platform.
             // On Windows we need to handle it ourselves.
 
