@@ -346,7 +346,7 @@
 
                             </VisualStateGroup>
 
-                            </VisualStateManager.VisualStateGroups>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
 
                 </ControlTemplate>
@@ -522,7 +522,7 @@
 
                             </VisualStateGroup>
 
-                            </VisualStateManager.VisualStateGroups>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
 
                 </ControlTemplate>

@@ -17,5 +17,17 @@
   </PropertyGroup>
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
+
+  <!--
+    Version numbers shared between all projects/assemblies.
+    Change ProductVersion to update all other version numbers
+  -->
+  <PropertyGroup>
+    <ProductVersion>0.9.4</ProductVersion> <!-- keep in one place -->
+    <Version>$(ProductVersion)</Version>
+    <AssemblyVersion>$(ProductVersion).0</AssemblyVersion>
+    <FileVersion>$(ProductVersion).0</FileVersion>
+    <InformationalVersion>$(ProductVersion)</InformationalVersion>
+  </PropertyGroup>
 </Project>
 

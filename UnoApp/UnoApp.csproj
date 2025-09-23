@@ -11,8 +11,7 @@
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
-    
-    <!-- ADD THESE MISSING PROPERTIES FOR MSIX PACKAGING -->
+
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
 
@@ -20,9 +19,25 @@
     <ApplicationTitle>HouzLinc</ApplicationTitle>
     <!-- App Identifier -->
     <ApplicationId>com.lakesideapps.houzlinc</ApplicationId>
-    <!-- Versions -->
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+
+    <!-- ApplicationDisplayVersion and ApplicationVersion:
+      MSIX/app install version used by Windows packaging (and Uno).
+      Identity.Version = Major.Minor.Build.Revision is composed as:
+      - ApplicationDisplayVersion = Major.Minor.Build (3-part)
+      - ApplicationVersion = Revision (4th part; must be 0 for Store)
+      This is what users see and what Partner Center validates. 
+    -->
+    <!-- Use central ProductVersion in Directory.Build.props -->
+    <ApplicationDisplayVersion>$(ProductVersion)</ApplicationDisplayVersion>
+    <ApplicationVersion>0</ApplicationVersion>
+
+    <!-- Publisher -->
+    <ApplicationPublisher>CN=LakesideApps</ApplicationPublisher>
+
+    <!-- NuGet package version (optional here since IsPackable=false, i.e., we do not produce a NUget package) -->
+    <PackageVersion>$(ProductVersion)</PackageVersion>
+    <IsPackable>false</IsPackable>
+
     <!--
       If you encounter this error message:
 
@@ -36,7 +51,7 @@
     <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
 
     <!--
-      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      UnoFeatures let you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
     -->
     <UnoFeatures>
@@ -45,7 +60,7 @@
       Configuration;
       Material;
       Navigation;
-      Toolkit;
+      Toolkit
     </UnoFeatures>
   </PropertyGroup>
 
@@ -56,21 +71,34 @@
     <UnoDisableVSWarnDesktopNotFirst>true</UnoDisableVSWarnDesktopNotFirst>
   </PropertyGroup>
 
-<!-- 
- The following sections set packaging attributes based on how the build is run and
- what the expected output is. In particular this writes the Publisher attribute in the
- Package.appxmanifest file as follows:
-  - For Visual Studio local installs (F5, Ctrl F5), OID should not be present in the
-    publisher (Package.appxmanifest/Package/Identity/Provider) or Visual Studio
-    will not be able to deploy the package.
-  - To create an unsigned package, we use the magic OID specified below in the Publisher.
-    This is a special value that indicates that the Publisher is in the unsigned namespace,
-    see: https://github.com/MicrosoftDocs/msix-docs/issues/365.
-  - To create a signed package, we need to specify a Publisher CN (Common name)
-    that matches the certificate used to sign the package (not done yet!).
- -->
-  
-  <!-- Default properties for Visual Studio development (F5/Ctrl+F5) -->
+  <!-- Define msbuild parameters controlling the configuration so was to avoid editor warning -->
+  <PropertyGroup>
+    <BuildForStore Condition="'$(BuildForStore)'==''">false</BuildForStore>
+    <PublishUnsignedPackage Condition="'$(PublishUnsignedPackage)'==''">false</PublishUnsignedPackage>
+  </PropertyGroup>
+
+  <Target Name="EchoPackagingFlags" BeforeTargets="UpdateAppxManifest">
+    <Message Importance="High" Text="BuildForStore=$(BuildForStore); PublishUnsignedPackage=$(PublishUnsignedPackage)" />
+  </Target>
+
+  <!-- 
+    The following sets the properties for building and packaging for Windows based on the desired configuration.
+    Some of these properties, e.g., Publisher, Identity and Version are propagaed to the Package.appxmanifest.
+  -->
+
+  <!--
+    Publisher is determined as follow:
+    - For Visual Studio local installs (F5, Ctrl F5), OID should not be present in the
+      publisher (Package.appxmanifest/Package/Identity/Provider) or Visual Studio
+      will not be able to deploy the package.
+    - To create an unsigned package, we use the magic OID specified below in the Publisher.
+      This is a special value that indicates that the Publisher is in the unsigned namespace,
+      see: https://github.com/MicrosoftDocs/msix-docs/issues/365.
+    - To create a signed package, we need to specify a Publisher CN (Common name)
+      that matches the certificate used to sign the package (not done yet!).
+   -->
+
+  <!-- Visual Studio development (F5/Ctrl+F5) / Unpackaged builds / Desktop builds -->
   <PropertyGroup>
     <Publisher>CN=LakesideApps</Publisher>
     <Namespace>
@@ -86,8 +114,8 @@
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
   </PropertyGroup>
 
-  <!-- Configuration for unsigned package builds (for sideloading) -->
-  <PropertyGroup Condition=" '$(PublishUnsignedPackage)' == 'true' ">
+  <!-- Unsigned packaged builds (for sideloading) -->
+  <PropertyGroup Condition="'$(PublishUnsignedPackage)'=='true'">
     <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
     <AppxBundle>Never</AppxBundle>
     <UapAppxPackageBuildMode>Sideloading</UapAppxPackageBuildMode>
@@ -95,33 +123,81 @@
     <Publisher>CN=LakesideApps, OID.2.25.311729368913984317654407730594956997722=1</Publisher>
   </PropertyGroup>
 
-  <!-- Configuration for Microsoft Store builds (uses Package.StoreAssociation.xml) -->
+  <!-- Microsoft Store builds (uses Package.StoreAssociation.xml) -->
   <PropertyGroup Condition=" '$(BuildForStore)' == 'true' ">
     <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle> <!-- Uno recommendation -->
     <UapAppxPackageBuildMode>StoreUpload</UapAppxPackageBuildMode>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <!-- Set the Store publisher and identity name expected by Partner Center -->
+    <Publisher>CN=79C1AE62-9FA2-42F6-912A-9CBC6F4260D8</Publisher>
+    <StorePackageIdentityName>LakesideApps.HouzLinc</StorePackageIdentityName>
+    <!-- Optional but recommended to produce .appxupload -->
+    <GenerateAppxUploadOnBuild>true</GenerateAppxUploadOnBuild>
+    <AppxUploadSkipPdbFiles>true</AppxUploadSkipPdbFiles>
   </PropertyGroup>
 
-  <!-- Include the Store Association file when building for store -->
-  <ItemGroup Condition=" '$(BuildForStore)' == 'true' ">
-    <None Include="Package.StoreAssociation.xml" />
-  </ItemGroup>
+<!-- Ensure our appxmanifest edits run before Uno copies/derives the manifest -->
+<PropertyGroup>
+  <UnoGeneratePackageAppxManifestDependsOn>
+    UpdateAppxManifest;$(UnoGeneratePackageAppxManifestDependsOn)
+  </UnoGeneratePackageAppxManifestDependsOn>
+</PropertyGroup>
 
-  <Target Name="UpdateAppxManifest" BeforeTargets="GenerateManifests" Outputs=".\Package.appmanifest">
-    <XmlPoke XmlInputPath=".\Package.appxmanifest" Query="/dn:Package/dn:Identity/@Publisher" Namespaces="$(Namespace)" Value="$(Publisher)" />
-    <Message Importance="High" Text="Setting Package.appxmanifest/Package/Identity/Publisher to: $(Publisher)" />
+<!-- Validate Store build properties -->
+  <Target Name="ValidateStoreVersion"
+          BeforeTargets="UpdateAppxManifest"
+          Condition="'$(BuildForStore)'=='true' and '$(TargetFramework)'=='net9.0-windows10.0.26100'">
+    <Error Condition="'$(ApplicationVersion)' != '0'"
+           Text="For Store uploads, ApplicationVersion (revision) must be 0. Current: $(ApplicationVersion)"/>
+    <Error Condition="'$(StorePackageIdentityName)' == ''"
+           Text="For Store uploads, StorePackageIdentityName must be set."/>
+    <Error Condition="'$(Publisher)' == ''"
+           Text="For store uploads, Publisher must be set."/>
+  </Target>
+
+  <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
+  <Target Name="UpdateAppxManifest"
+          BeforeTargets="UnoGeneratePackageAppxManifest;GeneratePackageAppxManifest;GenerateManifests"
+          Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
+
+    <!-- Publisher -->
+    <XmlPoke XmlInputPath=".\Package.appxmanifest"
+             Query="/dn:Package/dn:Identity/@Publisher"
+             Namespaces="$(Namespace)"
+             Value="$(Publisher)" />
+    <Message Importance="High"
+             Text="Setting Identity Publisher: $(Publisher)" />
+
+    <!-- Identity Name (Store builds) -->
+    <XmlPoke Condition=" '$(BuildForStore)' == 'true' "
+             XmlInputPath=".\Package.appxmanifest"
+             Query="/dn:Package/dn:Identity/@Name"
+             Namespaces="$(Namespace)"
+             Value="$(StorePackageIdentityName)" />
+    <Message Condition=" '$(BuildForStore)' == 'true' " Importance="High"
+             Text="Setting Identity Name: $(StorePackageIdentityName)" />
+
+    <!-- Version -->
+    <XmlPoke XmlInputPath=".\Package.appxmanifest"
+             Query="/dn:Package/dn:Identity/@Version"
+             Namespaces="$(Namespace)"
+             Value="$(ApplicationDisplayVersion).$(ApplicationVersion)" />
+    <Message Importance="High"
+             Text="Setting Identity Version: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
   </Target>
 
   <!--
-  Platform specific properties and dependencies
+    Platform specific properties and dependencies
+    Consider putting the net9.0-windows10.0.26100 specific stuff above in the corresponding When block below
   -->
   <Choose>
     <When Condition="'$(TargetFramework)'=='net9.0-ios'">
     </When>
     <When Condition="'$(TargetFramework)'=='net9.0-android'">
       <PropertyGroup>
-        <SupportedOSPlatformVersion>33.0</SupportedOSPlatformVersion>
-      </PropertyGroup>
+        <SupportedOSPlatformVersion>35.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
     </When>
     <When Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">
     </When>
@@ -146,7 +222,6 @@
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 
-  <!-- ADD THESE MISSING SECTIONS FOR MSIX SUPPORT -->
   <!-- 
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
@@ -165,10 +240,15 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
+  <!-- Works around the editor insisting on an int in ForegroundScale value -->
+  <PropertyGroup>
+    <IconForegroundScale>0.65</IconForegroundScale>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- https://platform.uno/docs/articles/external/uno.resizetizer/doc/using-uno-resizetizer.html?tabs=singleproject%2CAndroid -->
     <UnoImage Include="Assets\Images\*" />
-    <UnoIcon Include="Assets\Icons\appicon.svg" ForegroundFile="Assets\Icons\appicon_foreground.svg" ForegroundScale="0.65" />
+    <UnoIcon Include="Assets\Icons\appicon.svg" ForegroundFile="Assets\Icons\appicon_foreground.svg" ForegroundScale="$(IconForegroundScale)"/>
     <UnoSplashScreen Include="Assets\SplashScreen\splash_screen.svg" />
   </ItemGroup>
 
