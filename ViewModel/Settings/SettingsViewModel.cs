@@ -903,4 +903,8 @@ public class SettingsViewModel : PageViewModel
         // Push the new gateway/hub
         Holder.House.SchedulePushNewGateway(hubMacAddress, hubIPHostName, hubIPAddress, hubIPPort, hubUsername, hubPassword, completionCallback, maxRunCount: maxRunCount);
     }
+
+    public string AppVersion => VersionInfo.Current;          // e.g., "0.9.0.1"
+    // Or if you prefer only the first three parts shown in UI:
+    // public string AppVersion => VersionInfo.Current3Part;   // e.g., "0.9.0"
 }

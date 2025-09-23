@@ -59,7 +59,7 @@ There is an abstraction of Storage Providers (`StorageProvider` and derived clas
 I am currently working on deploying the first version of this app to the relevant stores for public consumption. In the meantime, if you want to try out HouzLinc, you will need to build it yourself. You can build it on a Windows machine using Visual Studio 2022, and then either deploy it locally on that machine, or create a MSIX package and install it on any Windows machine with developer mode turned on. You can also build it for Android and deploy it to a phone or an emulator using Visual Studio 2022.
 
 ### Repository and toolchain
-First, you need to install the development environment, including the Uno Platform. Refer to the [Uno Platform documentation](https://platform.uno/docs/articles/getting-started.html) to get started with Uno Platform.
+First, you need to install the development environment, including the Uno Platform. Refer to the [Uno Platform documentation](https://platform.uno/docs/articles/get-started.html?tabs=windows) to get started with Uno Platform.
 
 I used Visual Studio 2022 (currently, version 17.14.13). You can download Visual Studio Community from [here](https://visualstudio.microsoft.com/vs/community/). In theory, you should also be able to use VSCode if you prefer that IDE, but I have not had a chance to try it yet on this project.
 
@@ -69,45 +69,46 @@ git clone https://github.com/christianfo/houzlinc.git
 ```
 Look for Visual Studio solution file `HouzLinc.sln` at the root of the repo.
 
-### Building and Running the App for Development on Windows
+### Building, Running, and Debugging on Windows
 
-#### Building in Visual Studio
-Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)`  or 'HouseLinc (WinAppSDK Unpackaged) as the launch profile depending on whether you want to build a packaged or unpackaged app. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger.
+#### Building and debugging in Visual Studio
+Building and running the app in Visual Studio is straightforeward: select a configuration (`Debug` or `Release`), select `Any CPU` as the architecture and `HouzLinc (WinAppSDK Packaged)`  or `HouseLinc (WinAppSDK Unpackaged)` as the launch profile depending on whether you want to build a packaged or unpackaged app. Press F5 to build, deploy and debug the app, or Ctrl F5 to run without the debugger.
 - Packaged app: once built, Visual Studio will deploy the app locally and run it. Once deployed, you can run that build directly from the Start menu.
 - Unpackaged app: Visual Studio will build and run the app directly from the output directory (e.g., UnoApp\bin\Release\net9.0-windows10.0.26100). No installation is required. You can run the app directly from that folder by launching UnoApp.exe.
 
-#### Building an Unsigned App Package for Sideloading on Windows
+#### Building from the command line
+##### Building an Unsigned App Package for Sideloading on Windows
 Using Visual Studio `msbuild`, you can create an MSIX installer package that can be sideloaded on any Windows machine with developer mode turned on. Proceed as follows (see [here](https://platform.uno/docs/articles/uno-publishing-windows-packaged-unsigned.html) for more details):
 
 1. In a Developer Powershell window (either View|Terminal or Tools|Command Line|Developer Powershell), navigate to the `UnoApp` folder where the `UnoApp.csproj` project file is located.
 2. Run the following command to restore the correct dependency packages:
 ```
-msbuild /r /t:Restore /p:Configuration=Release /v:minimal
+msbuild /r /t:Restore /p:Configuration=Release
 ```
 3. Then run the following to build the package:
 ```
-msbuild /p:TargetFramework=net9.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
+msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>"
 ```
-4. This creates an `.msix` file in the specificed `<output directory>`, (e.g., `c:\temp\output\`), which you can install on your machine or any other machine with developer mode turned on. To install, open a vanilla Powershell window **running as administrator** and run the following:
+4. This creates an `.msix` file in the specified `<output directory>`, (e.g., `c:\temp\output\`), which you can install on your machine or any other machine with developer mode turned on. To install, open a vanilla Powershell window **running as administrator** and run the following:
 ```
 Add-AppPackage -AllowUnsigned -path "<path to msix file>"
 ```
 5. Then run HouzLinc by searching for it in the Start menu.
 
-#### Building a Signed App Package (e.g., for Microsoft Store submission)
+##### Building a App Package for Microsoft Store submission
 To build a signed app package for Microsoft Store submission, use the following command instead of the one above:
 ```
-msbuild /r /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:GenerateAppxPackageOnBuild=true /p:AppxBundle=Never /p:BuildForStore=true /p:AppxPackageDir="C:/temp/output/" /p:AppxPackageSigningEnabled=true
+msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:BuildForStore=true /p:AppxPackageDir="C:/temp/output/"
 ```
+This creates an `.msix` file in the specified `<output directory>`, (e.g., `c:\temp\output\`), which you can upload to the Microsoft Partner Center.
 
-
-### Building and Running the App for Development on Android
+### Building, Running and Debugging on Android
 
 #### Android Emulator
-To build and deply on the Android Emulator on in Visual Studio:
+To build and deploy on the Android Emulator on in Visual Studio:
 1. First make sure that you have the `.Net Multi-Platform App UI Development` workload installed in Visual Studio. If not, run the Visual Studio installer and modify the installation to include this workload.
 1. Access the Device Manager in Visual Studio with Tools>Android>Android>Device Manager. Once there, create a new Android Virtual Device (AVD).
-1. In Visual Studio, select `Any CPU` for the architecture, Release or Debug for the configuration, and select the virtual device you created under `Android Emulator` for the launch profile.
+1. In Visual Studio, select `Any CPU` for the architecture, `Release` or `Debug` for the configuration, and select the virtual device you created under `Android Emulator` for the launch profile.
 1. Hit F5 or the green "Play" button to build, deploy and run the app on the emulator.
 
 #### Android Physical Device
@@ -157,6 +158,9 @@ You can also build and deploy HouzLinc to an Android device from the command lin
     adb -s <yourdevice> install publish\com.lakesideapps.houzlinc-Signed.apk
 ```
 8. HouzLinc should now be installed on your device. You can run it from the app drawer or home screen.
+
+### Building, Running and Debugging on iOS
+Comming soon!
 
 ### Other platforms
 HouzLinc can be built for the Desktop framework and run on Windows or Mac that way. On Windows, just select the `HouseLinc(Destop)` launch profile in Visual Studio. Instead of using Windows App SDK / WinUI3, HouzLinc will use the Uno implementation of that framework. This offers a convenient environment to test on the Uno implementation of the Windows App SDK framework.
@@ -209,7 +213,7 @@ The project currently contains some non-UI unit tests for the Insteon layer. The
 
 Tests can also be built from the command line using msbuild. Navigate to UnitTestApp folder under the root of the repo and run the following command:
 ```
-msbuild /p:TargetFramework=net9.0-windows10.0.22621 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
+msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
 ```
 
 ### Contribution
