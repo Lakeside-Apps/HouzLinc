@@ -83,7 +83,11 @@
                 </ctkControls:SettingsCard>
 
                 <ctkControls:SettingsCard Description="Version" Header="About HouzLinc">
-                    <TextBlock Text="{x:Bind SettingsViewModel.AppVersion, Mode=OneWay}" TextWrapping="Wrap" MaxWidth="300"/>
+                    <ctkControls:SettingsCard.Resources>
+                        <x:Double x:Key="SettingsCardWrapThreshold">300</x:Double>
+                        <x:Double x:Key="SettingsCardWrapNoIconThreshold">200</x:Double>
+                    </ctkControls:SettingsCard.Resources>
+                    <TextBlock Text="{x:Bind SettingsViewModel.AppVersion, Mode=OneWay}" TextWrapping="Wrap"/>
                 </ctkControls:SettingsCard>
 
                 <Button Margin="0,20,0,0" Content="Clear all Settings (Debug Only)" Click="{x:Bind SettingsViewModel.ClearAllSettings}"/>
