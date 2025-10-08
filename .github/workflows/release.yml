@@ -19,6 +19,10 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+        working-directory: UnoApp
+
       - name: Restore packages
         run: msbuild /r /t:Restore /p:Configuration=Release
         working-directory: UnoApp
@@ -42,6 +46,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+        working-directory: UnoApp
 
       - name: Build and publish Android APK
         run: dotnet publish -f net9.0-android -c Release -o ./publish
