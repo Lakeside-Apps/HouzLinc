@@ -19,6 +19,16 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Install Uno Platform
+        run: dotnet new install Uno.Platform.Templates
+
+      - name: Install uno-check
+        run: dotnet tool install --global uno.check
+
+      - name: Run uno-check
+        run: uno-check --ci --non-interactive --fix --skip xcode --skip androidsdk --skip androidemulator
+        continue-on-error: true
+
       - name: Restore .NET workloads
         run: dotnet workload restore
         working-directory: UnoApp
@@ -46,6 +56,19 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Uno Platform
+        run: dotnet new install Uno.Platform.Templates
+
+      - name: Install uno-check
+        run: dotnet tool install --global uno.check
+
+      - name: Run uno-check
+        run: uno-check --ci --non-interactive --fix --skip xcode --skip winui --skip winsdk --skip vswin --skip vsmac
+        continue-on-error: true
 
       - name: Restore .NET workloads
         run: dotnet workload restore
