@@ -19,7 +19,7 @@ HouzLinc also offers the following:
 This project is open source with an Apache license. As it is still in development, it contains bugs and limitations and usability can be improved in certain places. It has not been pushed to an app store yet, so it has to be built and side-loaded on Windows or Android. Contributions to fix issues, enhance or add functionality are welcome!
 
 ## Screenshots
-Here is a screenshots of the app running on Windows:
+Here is a screenshot of the app running on Windows:
 
 <img src= "deviceview-color.png" width="600"><br>
 
