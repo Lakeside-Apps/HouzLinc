@@ -1,5 +1,10 @@
 name: Build and Release
 
+# This builds the project for Windows and Android, then creates a GitHub release
+# with the built artifacts whenever:
+# - a tag matching 'v*' is pushed in any branch, or
+# - a branch matching 'release-v*' is pushed.
+
 on:
   push:
     tags:
