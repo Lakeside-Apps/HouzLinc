@@ -7,6 +7,10 @@ on:
     branches:
       - 'release-v*'
 
+permissions:
+  contents: write  # Required to create releases
+  packages: read   # May be needed for some operations
+
 jobs:
   build-windows:
     runs-on: windows-latest
