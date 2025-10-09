@@ -24,6 +24,9 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: list-runtimes
+        run: dotnet --list-runtimes
+
       - name: Install uno-check
         run: dotnet tool install --global uno.check
 
