@@ -24,9 +24,6 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: list-runtimes
-        run: dotnet --list-runtimes
-
       - name: Install uno-check
         run: dotnet tool install --global uno.check
 
@@ -43,7 +40,7 @@ jobs:
         working-directory: UnoApp
 
       - name: Build Windows MSIX package
-        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
+        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
         working-directory: UnoApp
 
       - name: Upload Windows artifact
