@@ -1,9 +1,20 @@
 name: Build and Release
 
+# This builds the project for Windows and Android, then creates a GitHub release
+# with the built artifacts whenever:
+# - a tag matching 'v*' is pushed in any branch, or
+# - a branch matching 'release-v*' is pushed.
+
 on:
   push:
     tags:
       - 'v*'
+    branches:
+      - 'release-v*'
+
+permissions:
+  contents: write  # Required to create releases
+  packages: read   # May be needed for some operations
 
 jobs:
   build-windows:
@@ -19,9 +30,6 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Install Uno Platform
-        run: dotnet new install Uno.Platform.Templates
-
       - name: Install uno-check
         run: dotnet tool install --global uno.check
 
@@ -34,18 +42,18 @@ jobs:
         working-directory: UnoApp
 
       - name: Restore packages
-        run: msbuild /r /t:Restore /p:Configuration=Release
+        run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
         working-directory: UnoApp
 
       - name: Build Windows MSIX package
-        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
+        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
         working-directory: UnoApp
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: HouzLinc-Windows
-          path: UnoApp/publish/*.msix
+          path: UnoApp/publish/**/*.msix
 
   build-android:
     runs-on: ubuntu-latest
@@ -59,9 +67,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Install Uno Platform
-        run: dotnet new install Uno.Platform.Templates
 
       - name: Install uno-check
         run: dotnet tool install --global uno.check
