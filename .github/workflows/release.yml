@@ -36,7 +36,7 @@ jobs:
         working-directory: UnoApp
 
       - name: Restore packages
-        run: msbuild /r /t:Restore /p:Configuration=Release
+        run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
         working-directory: UnoApp
 
       - name: Build Windows MSIX package
