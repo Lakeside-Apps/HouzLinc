@@ -16,6 +16,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Install Windows SDK
+        run: choco install windows-sdk-10.0
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
