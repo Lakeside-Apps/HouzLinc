@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HouzLinc-Windows
-          path: UnoApp/publish/**/*.msix
+          path: UnoApp/publish/**/*.msix  # the msix file is in a subdirectory
 
   build-android:
     runs-on: ubuntu-latest
@@ -92,6 +92,7 @@ jobs:
   create-release:
     needs: [build-windows, build-android]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')  # Only create release for tags
     steps:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
@@ -109,9 +110,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./artifacts/windows/*.msix
+            ./artifacts/windows/**/*.msix
             ./artifacts/android/*.apk
           draft: false
-          prerelease: false
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
