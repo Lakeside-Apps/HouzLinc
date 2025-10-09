@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HouzLinc-Windows
-          path: UnoApp/publish/*.msix
+          path: UnoApp/publish/**/*.msix
 
   build-android:
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HouzLinc-Android
-          path: UnoApp/publish/*.apk
+          path: UnoApp/publish/**/*.apk
 
   create-release:
     needs: [build-windows, build-android]
