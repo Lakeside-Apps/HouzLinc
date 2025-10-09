@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - 'christian/test-release'
 
 jobs:
   build-windows:
@@ -18,9 +20,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-
-      - name: Install Uno Platform
-        run: dotnet new install Uno.Platform.Templates
 
       - name: Install uno-check
         run: dotnet tool install --global uno.check
@@ -59,9 +58,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Install Uno Platform
-        run: dotnet new install Uno.Platform.Templates
 
       - name: Install uno-check
         run: dotnet tool install --global uno.check
