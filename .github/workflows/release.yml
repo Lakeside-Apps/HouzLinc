@@ -49,11 +49,43 @@ jobs:
         run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
         working-directory: UnoApp
 
+      - name: Prepare and rename artifact
+        run: |
+          # Create staging directory
+          New-Item -ItemType Directory -Path "./artifacts" -Force
+          
+          # Find the generated MSIX file(s)
+          $msixFiles = Get-ChildItem -Path "./publish" -Recurse -Include "*.msix"
+          if ($msixFiles.Count -eq 0) {
+            Write-Host "No MSIX files found!"
+            exit 1
+          }
+          
+          # Get version for filenames
+          $version = "$(ApplicationDisplayVersion).$(ApplicationVersion)"
+          if ([string]::IsNullOrEmpty($version) -or $version -eq ".") {
+            $version = "1.0.0.0"
+          }
+          
+          # Copy and rename to HouzLinc_version_x64.msix
+          $sourceFile = $msixFiles[0]
+          $newFileName = "HouzLinc_${version}_x64.msix"
+          $destPath = "./artifacts/$newFileName"
+          
+          Write-Host "Renaming $($sourceFile.Name) to $newFileName"
+          Copy-Item $sourceFile.FullName -Destination $destPath
+          
+          # Show what we created
+          Write-Host "Created artifact:"
+          Get-ChildItem "./artifacts" | Format-Table Name, Length
+        working-directory: UnoApp
+        shell: pwsh
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: HouzLinc-Windows
-          path: UnoApp/publish/**/*.msix  # the msix file is in a subdirectory
+          path: UnoApp/artifacts/*.msix  # the msix file is in a subdirectory
 
   build-android:
     runs-on: ubuntu-latest
