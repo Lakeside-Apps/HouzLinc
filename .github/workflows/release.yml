@@ -49,11 +49,39 @@ jobs:
         run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
         working-directory: UnoApp
 
+      - name: Prepare and rename artifact
+        run: |
+          # Create staging directory
+          New-Item -ItemType Directory -Path "./artifacts" -Force
+          
+          # Find the generated MSIX file(s)
+          $msixFiles = Get-ChildItem -Path "./publish" -Recurse -Include "*.msix"
+          if ($msixFiles.Count -eq 0) {
+            Write-Host "No MSIX files found!"
+            exit 1
+          }
+          
+          # Copy and rename: replace "UnoApp" with "HouzLinc" in filename
+          foreach ($sourceFile in $msixFiles) {
+            $originalName = $sourceFile.Name
+            $newFileName = $originalName -replace "UnoApp", "HouzLinc"
+            $destPath = "./artifacts/$newFileName"
+            
+            Write-Host "Renaming '$originalName' to '$newFileName'"
+            Copy-Item $sourceFile.FullName -Destination $destPath
+          }
+          
+          # Show what we created
+          Write-Host "Created artifacts:"
+          Get-ChildItem "./artifacts" | Format-Table Name, Length
+        working-directory: UnoApp
+        shell: pwsh
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: HouzLinc-Windows
-          path: UnoApp/publish/**/*.msix
+          path: UnoApp/artifacts/*.msix
 
   build-android:
     runs-on: ubuntu-latest
@@ -92,6 +120,7 @@ jobs:
   create-release:
     needs: [build-windows, build-android]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')  # Only create release for tags
     steps:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
@@ -112,6 +141,6 @@ jobs:
             ./artifacts/windows/*.msix
             ./artifacts/android/*.apk
           draft: false
-          prerelease: false
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
