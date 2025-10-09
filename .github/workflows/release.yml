@@ -61,22 +61,18 @@ jobs:
             exit 1
           }
           
-          # Get version for filenames
-          $version = "$(ApplicationDisplayVersion).$(ApplicationVersion)"
-          if ([string]::IsNullOrEmpty($version) -or $version -eq ".") {
-            $version = "1.0.0.0"
+          # Copy and rename: replace "UnoApp" with "HouzLinc" in filename
+          foreach ($sourceFile in $msixFiles) {
+            $originalName = $sourceFile.Name
+            $newFileName = $originalName -replace "UnoApp", "HouzLinc"
+            $destPath = "./artifacts/$newFileName"
+            
+            Write-Host "Renaming '$originalName' to '$newFileName'"
+            Copy-Item $sourceFile.FullName -Destination $destPath
           }
           
-          # Copy and rename to HouzLinc_version_x64.msix
-          $sourceFile = $msixFiles[0]
-          $newFileName = "HouzLinc_${version}_x64.msix"
-          $destPath = "./artifacts/$newFileName"
-          
-          Write-Host "Renaming $($sourceFile.Name) to $newFileName"
-          Copy-Item $sourceFile.FullName -Destination $destPath
-          
           # Show what we created
-          Write-Host "Created artifact:"
+          Write-Host "Created artifacts:"
           Get-ChildItem "./artifacts" | Format-Table Name, Length
         working-directory: UnoApp
         shell: pwsh
