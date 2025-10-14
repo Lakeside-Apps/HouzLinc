@@ -1,0 +1,41 @@
+name: Notify Website of New Release
+
+# This workflow triggers a repository dispatch event to the HouzLinc-website
+# repository whenever a new release is published in this repository.
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify-website:
+    runs-on: ubuntu-latest
+    name: Trigger Website Sync
+    steps:
+      - name: Trigger website repository dispatch
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.WEBSITE_SYNC_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            https://api.github.com/repos/Lakeside-Apps/HouzLinc-website/dispatches \
+            -d "{
+              \"event_type\": \"new-release\",
+              \"client_payload\": {
+                \"repository\": \"${{ github.repository }}\",
+                \"tag\": \"${{ github.event.release.tag_name }}\",
+                \"release_name\": \"${{ github.event.release.name }}\",
+                \"published_at\": \"${{ github.event.release.published_at }}\"
+              }
+            }"
+
+      - name: Log trigger details
+        run: |
+          echo "## 🔄 Website Sync Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "Successfully triggered sync for release: **${{ github.event.release.tag_name }}**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release**: ${{ github.event.release.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target**: HouzLinc-website repository" >> $GITHUB_STEP_SUMMARY
+          echo "- **Event**: repository_dispatch -> new-release" >> $GITHUB_STEP_SUMMARY
