@@ -83,6 +83,72 @@ jobs:
           name: HouzLinc-Windows
           path: UnoApp/artifacts/*.msix
 
+  build-windows-store:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install uno-check
+        run: dotnet tool install --global uno.check
+
+      - name: Run uno-check
+        run: uno-check --ci --non-interactive --fix --skip xcode --skip androidsdk --skip androidemulator
+        continue-on-error: true
+
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+        working-directory: UnoApp
+
+      - name: Restore packages
+        run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
+        working-directory: UnoApp
+
+      - name: Build Microsoft Store MSIX package
+        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:BuildForStore=true /p:AppxPackageDir="./publish-store/"
+        working-directory: UnoApp
+
+      - name: Prepare and rename Microsoft Store artifact
+        run: |
+          # Create staging directory
+          New-Item -ItemType Directory -Path "./artifacts-store" -Force
+          
+          # Find the generated MSIX file(s)
+          $msixFiles = Get-ChildItem -Path "./publish-store" -Recurse -Include "*.msix"
+          if ($msixFiles.Count -eq 0) {
+            Write-Host "No Microsoft Store MSIX files found!"
+            exit 1
+          }
+          
+          # Copy and rename: replace "UnoApp" with "HouzLinc" and add "Store" suffix
+          foreach ($sourceFile in $msixFiles) {
+            $originalName = $sourceFile.Name
+            $newFileName = $originalName -replace "UnoApp", "HouzLinc-Store"
+            $destPath = "./artifacts-store/$newFileName"
+            
+            Write-Host "Renaming '$originalName' to '$newFileName'"
+            Copy-Item $sourceFile.FullName -Destination $destPath
+          }
+          
+          # Show what we created
+          Write-Host "Created Microsoft Store artifacts:"
+          Get-ChildItem "./artifacts-store" | Format-Table Name, Length
+        working-directory: UnoApp
+        shell: pwsh
+
+      - name: Upload Microsoft Store artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HouzLinc-Windows-Store
+          path: UnoApp/artifacts-store/*.msix
+
   build-android:
     runs-on: ubuntu-latest
     steps:
@@ -118,7 +184,7 @@ jobs:
           path: UnoApp/publish/*.apk
 
   create-release:
-    needs: [build-windows, build-android]
+    needs: [build-windows, build-windows-store, build-android]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')  # Only create release for tags
     steps:
@@ -127,6 +193,12 @@ jobs:
         with:
           name: HouzLinc-Windows
           path: ./artifacts/windows
+
+      - name: Download Microsoft Store artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: HouzLinc-Windows-Store
+          path: ./artifacts/windows-store
 
       - name: Download Android artifact
         uses: actions/download-artifact@v4
@@ -139,6 +211,7 @@ jobs:
         with:
           files: |
             ./artifacts/windows/*.msix
+            ./artifacts/windows-store/*.msix
             ./artifacts/android/*.apk
           draft: false
           prerelease: true
