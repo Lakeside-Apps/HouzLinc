@@ -19,6 +19,21 @@ permissions:
 jobs:
   build-windows:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        build-type:
+          - name: "sideload"
+            build-params: "/p:PublishUnsignedPackage=true"
+            output-dir: "publish/"
+            artifact-dir: "artifacts/"
+            artifact-name: "HouzLinc-Windows"
+            file-suffix: ""
+          - name: "store"
+            build-params: "/p:BuildForStore=true"
+            output-dir: "publish-store/"
+            artifact-dir: "artifacts-store/"
+            artifact-name: "HouzLinc-Windows-Store"
+            file-suffix: "-Store"
     steps:
       - uses: actions/checkout@v4
 
@@ -45,109 +60,43 @@ jobs:
         run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
         working-directory: UnoApp
 
-      - name: Build Windows MSIX package
-        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="./publish/"
+      - name: Build ${{ matrix.build-type.name }} MSIX package
+        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 ${{ matrix.build-type.build-params }} /p:AppxPackageDir="${{ matrix.build-type.output-dir }}"
         working-directory: UnoApp
 
-      - name: Prepare and rename artifact
+      - name: Prepare and rename ${{ matrix.build-type.name }} artifact
         run: |
           # Create staging directory
-          New-Item -ItemType Directory -Path "./artifacts" -Force
+          New-Item -ItemType Directory -Path "${{ matrix.build-type.artifact-dir }}" -Force
           
           # Find the generated MSIX file(s)
-          $msixFiles = Get-ChildItem -Path "./publish" -Recurse -Include "*.msix"
+          $msixFiles = Get-ChildItem -Path "${{ matrix.build-type.output-dir }}" -Recurse -Include "*.msix"
           if ($msixFiles.Count -eq 0) {
-            Write-Host "No MSIX files found!"
+            Write-Host "No MSIX files found for ${{ matrix.build-type.name }}!"
             exit 1
           }
           
-          # Copy and rename: replace "UnoApp" with "HouzLinc" in filename
+          # Copy and rename: replace "UnoApp" with "HouzLinc" and add suffix if needed
           foreach ($sourceFile in $msixFiles) {
             $originalName = $sourceFile.Name
-            $newFileName = $originalName -replace "UnoApp", "HouzLinc"
-            $destPath = "./artifacts/$newFileName"
+            $newFileName = $originalName -replace "UnoApp", "HouzLinc${{ matrix.build-type.file-suffix }}"
+            $destPath = "${{ matrix.build-type.artifact-dir }}/$newFileName"
             
             Write-Host "Renaming '$originalName' to '$newFileName'"
             Copy-Item $sourceFile.FullName -Destination $destPath
           }
           
           # Show what we created
-          Write-Host "Created artifacts:"
-          Get-ChildItem "./artifacts" | Format-Table Name, Length
+          Write-Host "Created ${{ matrix.build-type.name }} artifacts:"
+          Get-ChildItem "${{ matrix.build-type.artifact-dir }}" | Format-Table Name, Length
         working-directory: UnoApp
         shell: pwsh
 
-      - name: Upload Windows artifact
+      - name: Upload ${{ matrix.build-type.name }} artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HouzLinc-Windows
-          path: UnoApp/artifacts/*.msix
-
-  build-windows-store:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
-
-      - name: Install uno-check
-        run: dotnet tool install --global uno.check
-
-      - name: Run uno-check
-        run: uno-check --ci --non-interactive --fix --skip xcode --skip androidsdk --skip androidemulator
-        continue-on-error: true
-
-      - name: Restore .NET workloads
-        run: dotnet workload restore
-        working-directory: UnoApp
-
-      - name: Restore packages
-        run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
-        working-directory: UnoApp
-
-      - name: Build Microsoft Store MSIX package
-        run: msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:BuildForStore=true /p:AppxPackageDir="./publish-store/"
-        working-directory: UnoApp
-
-      - name: Prepare and rename Microsoft Store artifact
-        run: |
-          # Create staging directory
-          New-Item -ItemType Directory -Path "./artifacts-store" -Force
-          
-          # Find the generated MSIX file(s)
-          $msixFiles = Get-ChildItem -Path "./publish-store" -Recurse -Include "*.msix"
-          if ($msixFiles.Count -eq 0) {
-            Write-Host "No Microsoft Store MSIX files found!"
-            exit 1
-          }
-          
-          # Copy and rename: replace "UnoApp" with "HouzLinc" and add "Store" suffix
-          foreach ($sourceFile in $msixFiles) {
-            $originalName = $sourceFile.Name
-            $newFileName = $originalName -replace "UnoApp", "HouzLinc-Store"
-            $destPath = "./artifacts-store/$newFileName"
-            
-            Write-Host "Renaming '$originalName' to '$newFileName'"
-            Copy-Item $sourceFile.FullName -Destination $destPath
-          }
-          
-          # Show what we created
-          Write-Host "Created Microsoft Store artifacts:"
-          Get-ChildItem "./artifacts-store" | Format-Table Name, Length
-        working-directory: UnoApp
-        shell: pwsh
-
-      - name: Upload Microsoft Store artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: HouzLinc-Windows-Store
-          path: UnoApp/artifacts-store/*.msix
+          name: ${{ matrix.build-type.artifact-name }}
+          path: UnoApp/${{ matrix.build-type.artifact-dir }}*.msix
 
   build-android:
     runs-on: ubuntu-latest
@@ -184,7 +133,7 @@ jobs:
           path: UnoApp/publish/*.apk
 
   create-release:
-    needs: [build-windows, build-windows-store, build-android]
+    needs: [build-windows, build-android]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')  # Only create release for tags
     steps:
