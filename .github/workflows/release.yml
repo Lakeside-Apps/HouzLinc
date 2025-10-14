@@ -96,7 +96,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.build-type.artifact-name }}
-          path: UnoApp${{ matrix.build-type.artifact-dir }}*.msix
+          path: UnoApp/${{ matrix.build-type.artifact-dir }}*.msix
 
   build-android:
     runs-on: ubuntu-latest
