@@ -24,14 +24,14 @@ jobs:
         build-type:
           - name: "sideload"
             build-params: "/p:PublishUnsignedPackage=true"
-            output-dir: "./publish/"
-            artifact-dir: "./artifacts/"
+            output-dir: "publish/"
+            artifact-dir: "artifacts/"
             artifact-name: "HouzLinc-Windows"
             file-suffix: ""
           - name: "store"
             build-params: "/p:BuildForStore=true"
-            output-dir: "./publish-store/"
-            artifact-dir: "./artifacts-store/"
+            output-dir: "publish-store/"
+            artifact-dir: "artifacts-store/"
             artifact-name: "HouzLinc-Windows-Store"
             file-suffix: "-Store"
     steps:
