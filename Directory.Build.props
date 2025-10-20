@@ -17,29 +17,46 @@
 
     <!-- MinVer configuration -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
-    <MinVerDefaultPreReleaseIdentifiers>preview; beta</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerDefaultPreReleaseIdentifiers>preview;beta</MinVerDefaultPreReleaseIdentifiers>
     <MinVerVerbosity>minimal</MinVerVerbosity>
   </PropertyGroup>
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
 
-  <!--
-    Version numbers shared between all projects/assemblies.
-    Change ProductVersion to update all other version numbers
-  -->
-  <PropertyGroup>
-    <Version>$(Version)</Version>
-    <AssemblyVersion>$(Version).0</AssemblyVersion>
-    <FileVersion>$(Version).0</FileVersion>
-    <InformationalVersion>$(Version)</InformationalVersion>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="MinVer" Version="5.0.0">
+    <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <!--
+    Version numbers shared between all projects/assemblies.
+    Change ProductVersion to update all other version numbers
+  -->
+  <Target Name="SetVersionProperties"
+          DependsOnTargets="MinVer"
+          BeforeTargets="UpdateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
+    <PropertyGroup>
+      <ProductVersion>$(MinVerVersion)</ProductVersion>
+      <Version>$(MinVerVersion)</Version>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</AssemblyVersion>
+      <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</FileVersion>
+      <InformationalVersion>$(MinVerVersion)</InformationalVersion>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="========================================" />
+    <Message Importance="High" Text="MinVerVersion: $(MinVerVersion)" />
+    <Message Importance="High" Text="MinVerMajor: $(MinVerMajor)" />
+    <Message Importance="High" Text="MinVerMinor: $(MinVerMinor)" />
+    <Message Importance="High" Text="MinVerPatch: $(MinVerPatch)" />
+    <Message Importance="High" Text="Version: $(Version)" />
+    <Message Importance="High" Text="ProductVersion: $(ProductVersion)" />
+    <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
+    <Message Importance="High" Text="FileVersion: $(FileVersion)" />
+    <Message Importance="High" Text="InformationalVersion: $(InformationalVersion)" />
+    <Message Importance="High" Text="========================================" />
+  </Target>
 
 </Project>
 
