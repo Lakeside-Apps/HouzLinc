@@ -14,6 +14,11 @@
 
     <!-- We need this because of https://github.com/unoplatform/uno/issues/18464 -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!-- MinVer configuration -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerDefaultPreReleaseIdentifiers>preview; beta</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerVerbosity>minimal</MinVerVerbosity>
   </PropertyGroup>
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
@@ -23,11 +28,18 @@
     Change ProductVersion to update all other version numbers
   -->
   <PropertyGroup>
-    <ProductVersion>0.9.4</ProductVersion> <!-- keep in one place -->
-    <Version>$(ProductVersion)</Version>
-    <AssemblyVersion>$(ProductVersion).0</AssemblyVersion>
-    <FileVersion>$(ProductVersion).0</FileVersion>
-    <InformationalVersion>$(ProductVersion)</InformationalVersion>
+    <Version>$(Version)</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <InformationalVersion>$(Version)</InformationalVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>
 
