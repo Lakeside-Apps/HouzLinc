@@ -87,9 +87,9 @@ msbuild /r /t:Restore /p:Configuration=Release
 ```
 3. Then run the following to build the package:
 ```
-msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>"
+msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="C:/temp/output/"
 ```
-4. This creates an `.msix` file in the specified `<output directory>`, (e.g., `c:\temp\output\`), which you can install on your machine or any other machine with developer mode turned on. To install, open a vanilla Powershell window **running as administrator** and run the following:
+4. This creates an `.msix` file in the specified `AppxPackageDir>`, (e.g., `c:/temp/output/`), which you can install on your machine or any other machine with developer mode turned on. To install, open a vanilla Powershell window **running as administrator** and run the following:
 ```
 Add-AppPackage -AllowUnsigned -path "<path to msix file>"
 ```
@@ -100,7 +100,7 @@ To build a signed app package for Microsoft Store submission, use the following 
 ```
 msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:BuildForStore=true /p:AppxPackageDir="C:/temp/output/"
 ```
-This creates an `.msix` file in the specified `<output directory>`, (e.g., `c:\temp\output\`), which you can upload to the Microsoft Partner Center.
+This creates an `.msix` file in the specified `AppxPackageDir`, (e.g., `c:/temp/output/`), which you can upload to the Microsoft Partner Center.
 
 ### Building, Running and Debugging on Android
 

@@ -20,23 +20,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.lakesideapps.houzlinc</ApplicationId>
 
-    <!-- ApplicationDisplayVersion and ApplicationVersion:
-      MSIX/app install version used by Windows packaging (and Uno).
-      Identity.Version = Major.Minor.Build.Revision is composed as:
-      - ApplicationDisplayVersion = Major.Minor.Build (3-part)
-      - ApplicationVersion = Revision (4th part; must be 0 for Store)
-      This is what users see and what Partner Center validates. 
-    -->
-    <!-- Use central ProductVersion in Directory.Build.props -->
-    <ApplicationDisplayVersion>$(ProductVersion)</ApplicationDisplayVersion>
-    <ApplicationVersion>0</ApplicationVersion>
-
     <!-- Publisher -->
     <ApplicationPublisher>CN=LakesideApps</ApplicationPublisher>
-
-    <!-- NuGet package version (optional here since IsPackable=false, i.e., we do not produce a NUget package) -->
-    <PackageVersion>$(ProductVersion)</PackageVersion>
-    <IsPackable>false</IsPackable>
 
     <!--
       If you encounter this error message:
@@ -78,7 +63,7 @@
   </PropertyGroup>
 
   <Target Name="EchoPackagingFlags" BeforeTargets="UpdateAppxManifest">
-    <Message Importance="High" Text="BuildForStore=$(BuildForStore); PublishUnsignedPackage=$(PublishUnsignedPackage)" />
+    <Message Importance="High" Text="BuildForStore=$(BuildForStore), PublishUnsignedPackage=$(PublishUnsignedPackage)" />
   </Target>
 
   <!-- 
@@ -137,15 +122,27 @@
     <AppxUploadSkipPdbFiles>true</AppxUploadSkipPdbFiles>
   </PropertyGroup>
 
-<!-- Ensure our appxmanifest edits run before Uno copies/derives the manifest -->
-<PropertyGroup>
-  <UnoGeneratePackageAppxManifestDependsOn>
-    UpdateAppxManifest;$(UnoGeneratePackageAppxManifestDependsOn)
-  </UnoGeneratePackageAppxManifestDependsOn>
-</PropertyGroup>
+  <!-- ApplicationDisplayVersion and ApplicationVersion:
+    MSIX/app install version used by Windows packaging (and Uno).
+    Identity.Version = Major.Minor.Build.Revision is composed of:
+    - ApplicationDisplayVersion = Major.Minor.Build (3-part)
+    - ApplicationVersion = Revision (4th part; must be 0 for Store)
+    This is what users see and what Partner Center validates. 
+    Derive from central ProductVersion set in Directory.Build.props 
+  -->
+  <Target Name="SetApplicationDisplayVersion"
+          DependsOnTargets="SetVersionProperties"
+          BeforeTargets="ValidateStoreVersion;UpdateAppxManifest">
+    <PropertyGroup>
+      <ApplicationDisplayVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ApplicationDisplayVersion>
+      <ApplicationVersion>0</ApplicationVersion>
+    </PropertyGroup>
+    <Message Importance="High" Text="ApplicationDisplayVersion set to: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
+  </Target>
 
-<!-- Validate Store build properties -->
+  <!-- Validate Store build properties -->
   <Target Name="ValidateStoreVersion"
+          DependsOnTargets="SetApplicationDisplayVersion"
           BeforeTargets="UpdateAppxManifest"
           Condition="'$(BuildForStore)'=='true' and '$(TargetFramework)'=='net9.0-windows10.0.26100'">
     <Error Condition="'$(ApplicationVersion)' != '0'"
@@ -158,7 +155,8 @@
 
   <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
   <Target Name="UpdateAppxManifest"
-          BeforeTargets="UnoGeneratePackageAppxManifest;GeneratePackageAppxManifest;GenerateManifests"
+          DependsOnTargets="ValidateStoreVersion"
+          BeforeTargets="GenerateAppxPackageFile;GeneratePackageAppxManifest;GenerateManifests"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
 
     <!-- Publisher -->

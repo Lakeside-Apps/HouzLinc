@@ -10,6 +10,7 @@
     <PackageVersion Include="MSTest.TestFramework" Version="3.2.2" />
     <PackageVersion Include="Microsoft.TestPlatform.TestHost" Version="17.9.0" />
     <PackageVersion Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
+    <PackageVersion Include="MinVer" Version="5.0.0" />
     <!-- Add more community toolkit references here -->
   </ItemGroup>
 </Project>

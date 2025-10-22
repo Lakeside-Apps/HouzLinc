@@ -14,20 +14,41 @@
 
     <!-- We need this because of https://github.com/unoplatform/uno/issues/18464 -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!-- MinVer configuration -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerDefaultPreReleaseIdentifiers>preview;beta</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerVerbosity>minimal</MinVerVerbosity>
+    <MinVerIgnoreHeight>true</MinVerIgnoreHeight>
   </PropertyGroup>
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
 
+  <!-- MinVer package reference to enable automatic versioning based on Git tags -->
+  <ItemGroup>
+    <PackageReference Include="MinVer">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <!--
-    Version numbers shared between all projects/assemblies.
-    Change ProductVersion to update all other version numbers
+    Let MinVer set the version numbers and log them for visibility.
+    https://learn.microsoft.com/en-ca/dotnet/standard/library-guidance/versioning#version-numbers
   -->
-  <PropertyGroup>
-    <ProductVersion>0.9.4</ProductVersion> <!-- keep in one place -->
-    <Version>$(ProductVersion)</Version>
-    <AssemblyVersion>$(ProductVersion).0</AssemblyVersion>
-    <FileVersion>$(ProductVersion).0</FileVersion>
-    <InformationalVersion>$(ProductVersion)</InformationalVersion>
-  </PropertyGroup>
+  <Target Name="SetVersionProperties"
+          DependsOnTargets="MinVer"
+          BeforeTargets="UpdateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
+
+    <Message Importance="High" Text="MinVerVersion: $(MinVerVersion)" />
+    <Message Importance="High" Text="MinVerMajor: $(MinVerMajor)" />
+    <Message Importance="High" Text="MinVerMinor: $(MinVerMinor)" />
+    <Message Importance="High" Text="MinVerPatch: $(MinVerPatch)" />
+    <Message Importance="High" Text="Version: $(Version)" />
+    <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
+    <Message Importance="High" Text="FileVersion: $(FileVersion)" />
+    <Message Importance="High" Text="InformationalVersion: $(InformationalVersion)" />
+  </Target>
+
 </Project>
 
