@@ -156,7 +156,7 @@
   <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
   <Target Name="UpdateAppxManifest"
           DependsOnTargets="ValidateStoreVersion"
-          BeforeTargets="GeneratePackageAppxManifest;GenerateManifests"
+          BeforeTargets="GenerateAppxPackageFile;GeneratePackageAppxManifest;GenerateManifests"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
 
     <!-- Publisher -->
