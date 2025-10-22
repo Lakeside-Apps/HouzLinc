@@ -24,6 +24,7 @@
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
 
+  <!-- MinVer package reference to enable automatic versioning based on Git tags -->
   <ItemGroup>
     <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>
@@ -32,27 +33,21 @@
   </ItemGroup>
 
   <!--
-    Version numbers shared between all projects/assemblies.
+    Let MinVer set the version numbers and log them for visibility.
     https://learn.microsoft.com/en-ca/dotnet/standard/library-guidance/versioning#version-numbers
   -->
   <Target Name="SetVersionProperties"
           DependsOnTargets="MinVer"
           BeforeTargets="UpdateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
-    <PropertyGroup>
-      <ProductVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ProductVersion>
-    </PropertyGroup>
 
-    <Message Importance="High" Text="========================================" />
     <Message Importance="High" Text="MinVerVersion: $(MinVerVersion)" />
     <Message Importance="High" Text="MinVerMajor: $(MinVerMajor)" />
     <Message Importance="High" Text="MinVerMinor: $(MinVerMinor)" />
     <Message Importance="High" Text="MinVerPatch: $(MinVerPatch)" />
     <Message Importance="High" Text="Version: $(Version)" />
-    <Message Importance="High" Text="ProductVersion: $(ProductVersion)" />
     <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
     <Message Importance="High" Text="FileVersion: $(FileVersion)" />
     <Message Importance="High" Text="InformationalVersion: $(InformationalVersion)" />
-    <Message Importance="High" Text="========================================" />
   </Target>
 
 </Project>

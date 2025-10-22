@@ -23,10 +23,6 @@
     <!-- Publisher -->
     <ApplicationPublisher>CN=LakesideApps</ApplicationPublisher>
 
-    <!-- NuGet package version (optional here since IsPackable=false, i.e., we do not produce a NUget package) -->
-    <PackageVersion>$(ProductVersion)</PackageVersion>
-    <IsPackable>false</IsPackable>
-
     <!--
       If you encounter this error message:
 
@@ -138,7 +134,7 @@
           DependsOnTargets="SetVersionProperties"
           BeforeTargets="ValidateStoreVersion;UpdateAppxManifest">
     <PropertyGroup>
-      <ApplicationDisplayVersion>$(ProductVersion)</ApplicationDisplayVersion>
+      <ApplicationDisplayVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ApplicationDisplayVersion>
       <ApplicationVersion>0</ApplicationVersion>
     </PropertyGroup>
     <Message Importance="High" Text="ApplicationDisplayVersion set to: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
@@ -146,7 +142,7 @@
 
   <!-- Validate Store build properties -->
   <Target Name="ValidateStoreVersion"
-          AfterTargets="SetApplicationDisplayVersion"
+          DependsOnTargets="SetApplicationDisplayVersion"
           BeforeTargets="UpdateAppxManifest"
           Condition="'$(BuildForStore)'=='true' and '$(TargetFramework)'=='net9.0-windows10.0.26100'">
     <Error Condition="'$(ApplicationVersion)' != '0'"
@@ -159,7 +155,7 @@
 
   <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
   <Target Name="UpdateAppxManifest"
-          AfterTargets="ValidateStoreVersion"
+          DependsOnTargets="ValidateStoreVersion"
           BeforeTargets="GeneratePackageAppxManifest;GenerateManifests"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
 
