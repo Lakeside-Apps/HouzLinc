@@ -19,6 +19,7 @@
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerDefaultPreReleaseIdentifiers>preview;beta</MinVerDefaultPreReleaseIdentifiers>
     <MinVerVerbosity>minimal</MinVerVerbosity>
+    <MinVerIgnoreHeight>true</MinVerIgnoreHeight>
   </PropertyGroup>
 
   <!-- See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages version properties. -->
@@ -32,17 +33,13 @@
 
   <!--
     Version numbers shared between all projects/assemblies.
-    Change ProductVersion to update all other version numbers
+    https://learn.microsoft.com/en-ca/dotnet/standard/library-guidance/versioning#version-numbers
   -->
   <Target Name="SetVersionProperties"
           DependsOnTargets="MinVer"
           BeforeTargets="UpdateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
     <PropertyGroup>
-      <ProductVersion>$(MinVerVersion)</ProductVersion>
-      <Version>$(MinVerVersion)</Version>
-      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</AssemblyVersion>
-      <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</FileVersion>
-      <InformationalVersion>$(MinVerVersion)</InformationalVersion>
+      <ProductVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ProductVersion>
     </PropertyGroup>
 
     <Message Importance="High" Text="========================================" />

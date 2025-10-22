@@ -67,7 +67,7 @@
   </PropertyGroup>
 
   <Target Name="EchoPackagingFlags" BeforeTargets="UpdateAppxManifest">
-    <Message Importance="High" Text="BuildForStore=$(BuildForStore); PublishUnsignedPackage=$(PublishUnsignedPackage)" />
+    <Message Importance="High" Text="BuildForStore=$(BuildForStore), PublishUnsignedPackage=$(PublishUnsignedPackage)" />
   </Target>
 
   <!-- 
@@ -160,7 +160,7 @@
   <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
   <Target Name="UpdateAppxManifest"
           AfterTargets="ValidateStoreVersion"
-          BeforeTargets="UnoGeneratePackageAppxManifest;GenerateManifests"
+          BeforeTargets="GeneratePackageAppxManifest;GenerateManifests"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
 
     <!-- Publisher -->
