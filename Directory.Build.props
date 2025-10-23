@@ -38,7 +38,7 @@
   -->
   <Target Name="SetVersionProperties"
           DependsOnTargets="MinVer"
-          BeforeTargets="UpdateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
+          BeforeTargets="GenerateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
 
     <Message Importance="High" Text="MinVerVersion: $(MinVerVersion)" />
     <Message Importance="High" Text="MinVerMajor: $(MinVerMajor)" />

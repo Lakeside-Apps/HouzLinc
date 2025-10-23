@@ -62,7 +62,7 @@
     <PublishUnsignedPackage Condition="'$(PublishUnsignedPackage)'==''">false</PublishUnsignedPackage>
   </PropertyGroup>
 
-  <Target Name="EchoPackagingFlags" BeforeTargets="UpdateAppxManifest">
+  <Target Name="EchoPackagingFlags" BeforeTargets="GenerateAppxManifest">
     <Message Importance="High" Text="BuildForStore=$(BuildForStore), PublishUnsignedPackage=$(PublishUnsignedPackage)" />
   </Target>
 
@@ -86,9 +86,6 @@
   <!-- Visual Studio development (F5/Ctrl+F5) / Unpackaged builds / Desktop builds -->
   <PropertyGroup>
     <Publisher>CN=LakesideApps</Publisher>
-    <Namespace>
-      <Namespace Prefix="dn" Uri="http://schemas.microsoft.com/appx/manifest/foundation/windows10" />
-    </Namespace>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
@@ -132,7 +129,7 @@
   -->
   <Target Name="SetApplicationDisplayVersion"
           DependsOnTargets="SetVersionProperties"
-          BeforeTargets="ValidateStoreVersion;UpdateAppxManifest">
+          BeforeTargets="ValidateStoreVersion;GenerateAppxManifest">
     <PropertyGroup>
       <ApplicationDisplayVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ApplicationDisplayVersion>
       <ApplicationVersion>0</ApplicationVersion>
@@ -143,7 +140,7 @@
   <!-- Validate Store build properties -->
   <Target Name="ValidateStoreVersion"
           DependsOnTargets="SetApplicationDisplayVersion"
-          BeforeTargets="UpdateAppxManifest"
+          BeforeTargets="GenerateAppxManifest"
           Condition="'$(BuildForStore)'=='true' and '$(TargetFramework)'=='net9.0-windows10.0.26100'">
     <Error Condition="'$(ApplicationVersion)' != '0'"
            Text="For Store uploads, ApplicationVersion (revision) must be 0. Current: $(ApplicationVersion)"/>
@@ -154,15 +151,21 @@
   </Target>
 
   <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
-  <Target Name="UpdateAppxManifest"
+  <Target Name="GenerateAppxManifest"
           DependsOnTargets="ValidateStoreVersion"
           BeforeTargets="GenerateAppxPackageFile;GeneratePackageAppxManifest;GenerateManifests"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
 
+    <!-- Copy source manifest template to generated manifest -->
+    <Copy SourceFiles="Package.template.appxmanifest" 
+          DestinationFiles="Package.appxmanifest" 
+          SkipUnchangedFiles="false" />
+
+    <!-- Update the generated manifest -->
     <!-- Publisher -->
     <XmlPoke XmlInputPath=".\Package.appxmanifest"
              Query="/dn:Package/dn:Identity/@Publisher"
-             Namespaces="$(Namespace)"
+             Namespaces="&lt;Namespace Prefix='dn' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;"
              Value="$(Publisher)" />
     <Message Importance="High"
              Text="Setting Identity Publisher: $(Publisher)" />
@@ -171,7 +174,7 @@
     <XmlPoke Condition=" '$(BuildForStore)' == 'true' "
              XmlInputPath=".\Package.appxmanifest"
              Query="/dn:Package/dn:Identity/@Name"
-             Namespaces="$(Namespace)"
+             Namespaces="&lt;Namespace Prefix='dn' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;"
              Value="$(StorePackageIdentityName)" />
     <Message Condition=" '$(BuildForStore)' == 'true' " Importance="High"
              Text="Setting Identity Name: $(StorePackageIdentityName)" />
@@ -179,7 +182,7 @@
     <!-- Version -->
     <XmlPoke XmlInputPath=".\Package.appxmanifest"
              Query="/dn:Package/dn:Identity/@Version"
-             Namespaces="$(Namespace)"
+             Namespaces="&lt;Namespace Prefix='dn' Uri='http://schemas.microsoft.com/appx/manifest/foundation/windows10' /&gt;"
              Value="$(ApplicationDisplayVersion).$(ApplicationVersion)" />
     <Message Importance="High"
              Text="Setting Identity Version: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
