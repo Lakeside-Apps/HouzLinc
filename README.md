@@ -188,7 +188,7 @@ Containing the following section:
     "AndroidRedirectURI": <Your Android Redirect URI>"
 }
 ```
-Where you enter your client Id and redirect URI for Android obtain from your Azure app registration.
+Where you enter your client Id and redirect URI for Android obtained from your Azure app registration.
 
 Make sure to "Rebuild" the solution to ensure the build is picking up the new appsettings.json file.
 
