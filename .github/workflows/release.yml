@@ -58,7 +58,8 @@ jobs:
 
       - name: Create appsettings.json with secrets
         run: |
-          cat > appsettings.json << EOF {
+          cat > appsettings.json << EOF
+          {
             "Msal": {
               "ClientId": "${{ secrets.MSAL_CLIENT_ID }}",
               "AndroidRedirectUri": "${{ secrets.MSAL_ANDROID_REDIRECT_URI }}"
@@ -135,7 +136,8 @@ jobs:
 
       - name: Create appsettings.json with secrets
         run: |
-          cat > appsettings.json << EOF {
+          cat > appsettings.json << EOF
+          {
             "Msal": {
               "ClientId": "${{ secrets.MSAL_CLIENT_ID }}",
               "AndroidRedirectUri": "${{ secrets.MSAL_ANDROID_REDIRECT_URI }}"
