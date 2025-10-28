@@ -171,7 +171,11 @@ I am also working on making HouzLinc run on MacOS and iOS.
 
 ### App Configuration
 #### Enabling OneDrive sign-in
-HouzLinc enables you to store the house configuration on OneDrive. If you are building HouzLinc yourself and want to enable this functionality, you will need to register an application with Microsoft Entra ID to obtain a Client Id and, on certain platforms, a redirect URI. This is necessary to allow users to sign-in to OneDrive to let Houzlinc access the configuration file. Go to the [Azure portal](https://portal.azure.com/) and [register a new app](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) for Microsoft Entra ID. If you already have an application registered with Microsoft Entra, you can use that one instead. You will need the client Id and the redirect URI for a mobile app (Android, iOS).
+HouzLinc enables you to store the house configuration on OneDrive.
+
+When GitHub builds the app from the repository using `release.yml`, it uses an application registration in Microsoft Entra ID (formerly Azure AD) to enable OneDrive sign-in. The client ID and redirect URI of that application registration are stored as GitHub secrets and injected into the build at build time by `release.yml`. Only people with permission to run the GitHub Actions workflow can access those secrets.
+
+If you are building HouzLinc on your machine and want to enable saving the house configuration to OneDrive in your private build, you will need to register an application with Microsoft Entra ID to obtain a Client Id and, on certain platforms, a redirect URI. This is necessary to allow users to sign-in to OneDrive to grant Houzlinc access the house configuration file. Go to the [Azure portal](https://portal.azure.com/) and [register a new app](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) for Microsoft Entra ID. If you already have an application registered with Microsoft Entra, you can use that one instead. You will need the client Id and the redirect URI for a mobile app (Android, iOS).
 
 Create a file named appsettings.json in the project UnoApp folder under your repo root:
 ```
@@ -192,7 +196,7 @@ Note that HouzLinc only asks for access to the `App\HouzLinc` folder in your One
 
 If you do not wish to use OneDrive, either do not create appsettings.json or leave out the Msal section.
 
-The appsettings.json file contains developer-specific application configuration settings. Over time, more settings are likely to be added. Note that this file is not part of the repository since it contains custom settings which should remain private to you, and in certain cases should not be exposed (such as your Microsoft Entra Client Id).
+The appsettings.json file contains developer-specific application configuration settings. Over time, more settings are likely to be added. Note that this file is not part of the repository (git ignored) since it contains custom settings which should remain private to you and should not be exposed (such as your Microsoft Entra Client Id).
 
 #### Sync and Save buttons
 As an optional feature, it is possible to show "Sync" and "Save" buttons on the bottom right of the window to force user confirmation when syncing the house configuration with network devices or saving the house configuration to a local or online file. These buttons are designed to help developers confirm the state before syncing or saving when working on new features.

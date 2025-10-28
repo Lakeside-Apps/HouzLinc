@@ -56,6 +56,17 @@ jobs:
         run: dotnet workload restore
         working-directory: UnoApp
 
+      - name: Create appsettings.json with secrets
+        run: |
+          cat > appsettings.json << EOF {
+            "Msal": {
+              "ClientId": "${{ secrets.MSAL_CLIENT_ID }}",
+              "AndroidRedirectUri": "${{ secrets.MSAL_ANDROID_REDIRECT_URI }}"
+            }
+          }
+          EOF
+        working-directory: UnoApp
+
       - name: Restore packages
         run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
         working-directory: UnoApp
@@ -120,6 +131,17 @@ jobs:
 
       - name: Restore .NET workloads
         run: dotnet workload restore
+        working-directory: UnoApp
+
+      - name: Create appsettings.json with secrets
+        run: |
+          cat > appsettings.json << EOF {
+            "Msal": {
+              "ClientId": "${{ secrets.MSAL_CLIENT_ID }}",
+              "AndroidRedirectUri": "${{ secrets.MSAL_ANDROID_REDIRECT_URI }}"
+            }
+          }
+          EOF
         working-directory: UnoApp
 
       - name: Build and publish Android APK
