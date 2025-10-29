@@ -223,9 +223,6 @@ _pkginfo.txt
 *.appxbundle
 *.appxupload
 
-# Generated appxmanifest file
-**/Package.appxmanifest
-
 # Visual Studio cache files
 # files ending in .cache can be ignored
 *.[Cc]ache
