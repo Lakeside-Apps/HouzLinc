@@ -58,15 +58,16 @@ jobs:
 
       - name: Create appsettings.json with secrets
         run: |
-          cat > appsettings.json << EOF
+          @"
           {
             "Msal": {
               "ClientId": "${{ secrets.MSAL_CLIENT_ID }}",
               "AndroidRedirectUri": "${{ secrets.MSAL_ANDROID_REDIRECT_URI }}"
             }
           }
-          EOF
+          "@ | Out-File -FilePath appsettings.json -Encoding utf8
         working-directory: UnoApp
+        shell: pwsh
 
       - name: Restore packages
         run: msbuild /r /t:Restore /p:Configuration=Release /p:PublishReadyToRun=true
