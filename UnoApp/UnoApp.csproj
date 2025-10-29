@@ -153,7 +153,7 @@
   <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
   <Target Name="GenerateAppxManifest"
           DependsOnTargets="ValidateStoreVersion"
-          BeforeTargets="GenerateAppxPackageFile;GeneratePackageAppxManifest;GenerateManifests"
+          BeforeTargets="_ValidatePresenceOfAppxManifestItems;PrepareForBuild"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
 
     <!-- Copy source manifest template to generated manifest -->
@@ -186,6 +186,11 @@
              Value="$(ApplicationDisplayVersion).$(ApplicationVersion)" />
     <Message Importance="High"
              Text="Setting Identity Version: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
+
+    <!-- Mark the generated file as part of the build outputs -->
+    <ItemGroup>
+      <FileWrites Include="Package.appxmanifest" />
+    </ItemGroup>
   </Target>
 
   <!--
