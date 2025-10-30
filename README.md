@@ -220,6 +220,17 @@ Tests can also be built from the command line using msbuild. Navigate to UnitTes
 msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
 ```
 
+### Upgrade to new Uno Platform versions
+Change `global.json` file at the root of the repo to specify the desired Uno SDK version. Then either select  Tools > Options > NuGet Package Manager > General → Clear All NuGet Cache(s) in Visual Studio or run the following command from a Developer Powershell window in the root of the repo:
+```
+    dotnet nuget locals all --clear
+```
+Then restore restore Nuget packages either in VS via right clicking on the solution or by running:
+```
+    dotnet restore
+```
+Then erase all obj and bin folders, clear and rebuild the solution.
+
 ### Contribution
 You are welcome to submit pull requests to the 'main' branch. For now, I will be the sole approver of changes. I am in the process of building a pipeline for building and validating changes. Currently, this process is manual, and must be handled by me.
 
