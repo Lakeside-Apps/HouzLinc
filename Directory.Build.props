@@ -37,17 +37,10 @@
     https://learn.microsoft.com/en-ca/dotnet/standard/library-guidance/versioning#version-numbers
   -->
   <Target Name="SetVersionProperties"
-          DependsOnTargets="MinVer"
-          BeforeTargets="UpdateAppxManifest;ValidateStoreVersion;GetAssemblyVersion;GenerateNuspec;CoreCompile">
+          DependsOnTargets="MinVer">
 
-    <Message Importance="High" Text="MinVerVersion: $(MinVerVersion)" />
-    <Message Importance="High" Text="MinVerMajor: $(MinVerMajor)" />
-    <Message Importance="High" Text="MinVerMinor: $(MinVerMinor)" />
-    <Message Importance="High" Text="MinVerPatch: $(MinVerPatch)" />
-    <Message Importance="High" Text="Version: $(Version)" />
-    <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
-    <Message Importance="High" Text="FileVersion: $(FileVersion)" />
-    <Message Importance="High" Text="InformationalVersion: $(InformationalVersion)" />
+    <Message Importance="High" Text="MinVerVersion: $(MinVerVersion), MinVerMajor: $(MinVerMajor), MinVerMinor: $(MinVerMinor), MinVerPatch: $(MinVerPatch)" />
+    <Message Importance="High" Text="Version: $(Version), AssemblyVersion: $(AssemblyVersion), FileVersion: $(FileVersion) InformationalVersion: $(InformationalVersion)"/>
   </Target>
 
 </Project>

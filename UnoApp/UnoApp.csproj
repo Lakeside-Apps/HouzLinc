@@ -130,19 +130,21 @@
     This is what users see and what Partner Center validates. 
     Derive from central ProductVersion set in Directory.Build.props 
   -->
-  <Target Name="SetApplicationDisplayVersion"
+  <Target Name="SetApplicationVersion"
           DependsOnTargets="SetVersionProperties"
-          BeforeTargets="ValidateStoreVersion;UpdateAppxManifest">
+          BeforeTargets="UpdateAppxManifest">
     <PropertyGroup>
       <ApplicationDisplayVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ApplicationDisplayVersion>
       <ApplicationVersion>0</ApplicationVersion>
+      <PackageIdentityVersion>$(ApplicationDisplayVersion).$(ApplicationVersion)</PackageIdentityVersion>
     </PropertyGroup>
-    <Message Importance="High" Text="ApplicationDisplayVersion set to: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
+    <Message Importance="High" Text="ApplicationDisplayVersion set to: $(ApplicationDisplayVersion)" />
+    <Message Importance="High" Text="PackageIdentityVersion set to: $(PackageIdentityVersion)" />
   </Target>
 
   <!-- Validate Store build properties -->
   <Target Name="ValidateStoreVersion"
-          DependsOnTargets="SetApplicationDisplayVersion"
+          DependsOnTargets="SetApplicationVersion"
           BeforeTargets="UpdateAppxManifest"
           Condition="'$(BuildForStore)'=='true' and '$(TargetFramework)'=='net9.0-windows10.0.26100'">
     <Error Condition="'$(ApplicationVersion)' != '0'"
@@ -153,11 +155,13 @@
            Text="For store uploads, Publisher must be set."/>
   </Target>
 
-  <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest -->
+  <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest
+       Disabled for design time builds (they don't package and may not have acquired the version numbers) -->
   <Target Name="UpdateAppxManifest"
           DependsOnTargets="ValidateStoreVersion"
-          BeforeTargets="_ValidatePresenceOfAppxManifestItems;PrepareForBuild"
-          Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'">
+          BeforeTargets="PrepareForBuild"
+          Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'
+                   and '$(DesignTimeBuild)'!='true'">
 
     <!-- Publisher -->
     <XmlPoke XmlInputPath=".\Package.appxmanifest"
@@ -180,14 +184,9 @@
     <XmlPoke XmlInputPath=".\Package.appxmanifest"
              Query="/dn:Package/dn:Identity/@Version"
              Namespaces="$(Namespace)"
-             Value="$(ApplicationDisplayVersion).$(ApplicationVersion)" />
+             Value="$(PackageIdentityVersion)" />
     <Message Importance="High"
-             Text="Setting Identity Version: $(ApplicationDisplayVersion).$(ApplicationVersion)" />
-
-    <!-- Mark the generated file as part of the build outputs -->
-    <ItemGroup>
-      <FileWrites Include="Package.appxmanifest" />
-    </ItemGroup>
+             Text="Setting Identity Version: $(PackageIdentityVersion)" />
   </Target>
 
   <!--
