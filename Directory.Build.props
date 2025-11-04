@@ -17,7 +17,7 @@
 
     <!-- MinVer configuration -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
-    <MinVerDefaultPreReleaseIdentifiers>preview;beta</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerDefaultPreReleaseIdentifiers>rc</MinVerDefaultPreReleaseIdentifiers>
     <MinVerVerbosity>minimal</MinVerVerbosity>
     <MinVerIgnoreHeight>true</MinVerIgnoreHeight>
   </PropertyGroup>
