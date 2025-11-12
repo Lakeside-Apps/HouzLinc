@@ -62,7 +62,7 @@ You can also build it yourself. You can build it on a Windows machine using Visu
 
 You can also build it for Android and deploy it to a phone or an emulator using Visual Studio 2022.
 
-The following section contain instructions on how to set up your development environment, build, run and debug HouzLinc on Windows and Android.
+The following sections contain instructions to set up your development environment, build, run and debug HouzLinc on Windows and Android.
 
 ### Repository and toolchain
 First, you need to install the development environment, including the Uno Platform. Refer to the [Uno Platform documentation](https://platform.uno/docs/articles/get-started.html?tabs=windows) to get started with Uno Platform.
