@@ -56,7 +56,13 @@ There is an abstraction of Storage Providers (`StorageProvider` and derived clas
 **UI (View)**: (`UnoApp.*`) written in XAML, the UX uses XAML C# databinding to dynamically keep up to date with the View Model and reflects user changes to the View Model and Model layers. 
 
 ## Getting Started
-I am currently working on deploying the first version of this app to the relevant stores for public consumption. In the meantime, if you want to try out HouzLinc, you will need to build it yourself. You can build it on a Windows machine using Visual Studio 2022, and then either deploy it locally on that machine, or create a MSIX package and install it on any Windows machine with developer mode turned on. You can also build it for Android and deploy it to a phone or an emulator using Visual Studio 2022.
+HouzLinc is now available on the Microsoft Store, or as a sideloadable package on Windows and Android. To download and install HouzLinc, go to https://houzlinc.com. iOS support is comming soon!   
+
+You can also build it yourself. You can build it on a Windows machine using Visual Studio 2022, and then either deploy it locally on that machine, or create a MSIX package and sideload it on any Windows machine with developer mode turned on.
+
+You can also build it for Android and deploy it to a phone or an emulator using Visual Studio 2022.
+
+The following sections contain instructions to set up your development environment, build, run and debug HouzLinc on Windows and Android.
 
 ### Repository and toolchain
 First, you need to install the development environment, including the Uno Platform. Refer to the [Uno Platform documentation](https://platform.uno/docs/articles/get-started.html?tabs=windows) to get started with Uno Platform.
