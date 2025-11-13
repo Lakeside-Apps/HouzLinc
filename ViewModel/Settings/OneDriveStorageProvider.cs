@@ -135,13 +135,14 @@ internal class OneDriveStorageProvider : StorageProvider
     // <returns>success</returns>
     public static async Task<bool> MergeAndSaveHouseToOneDrive(House house)
     {
-        House? lastSavedHouse = null;
+        bool success = false;
         using (var stream = await OneDrive.Instance.ReadFileFromAppRootAsync(HouseFileName))
         {
             if (stream != null)
             {
-                // First load the house model last saved by any other instance of this app
-                lastSavedHouse = await HLSerializer.Deserialize(stream);
+                // First load the house model from storage,
+                // potentially last saved by another instance of this app
+                House? lastSavedHouse = await HLSerializer.Deserialize(stream);
                 if (lastSavedHouse != null)
                 {
                     // Merge in our local changes since we last saved the model
@@ -156,10 +157,11 @@ internal class OneDriveStorageProvider : StorageProvider
                     // (assumes the file was not modified by another instance of the app)
                     Debug.Assert(house.IsIdenticalTo(lastSavedHouse));
 #endif
+                    success = true;
                 }
             }
         }
 
-        return await SaveHouseToOneDrive(house);
+        return success ? await SaveHouseToOneDrive(house) : false;
     }
 }
