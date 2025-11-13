@@ -135,31 +135,33 @@ internal class OneDriveStorageProvider : StorageProvider
     // <returns>success</returns>
     public static async Task<bool> MergeAndSaveHouseToOneDrive(House house)
     {
-        House? lastSavedHouse = null;
+        bool success = false;
         using (var stream = await OneDrive.Instance.ReadFileFromAppRootAsync(HouseFileName))
         {
-            if (stream == null)
-                return false;
-
-            // First load the house model last saved by any other instance of this app
-            lastSavedHouse = await HLSerializer.Deserialize(stream);
-            if (lastSavedHouse != null)
+            if (stream != null)
             {
-                // Merge in our local changes since we last saved the model
-                house.PlayChanges(lastSavedHouse);
+                // First load the house model from storage,
+                // potentially last saved by another instance of this app
+                House? lastSavedHouse = await HLSerializer.Deserialize(stream);
+                if (lastSavedHouse != null)
+                {
+                    // Merge in our local changes since we last saved the model
+                    house.PlayChanges(lastSavedHouse);
 
-                // The result is a new model that is a merge of the last saved model and our local changes
-                // We copy it back to our working house model, allowing UI notificaitons for what may have changed
-                house.CopyFrom(lastSavedHouse);
+                    // The result is a new model that is a merge of the last saved model and our local changes
+                    // We copy it back to our working house model, allowing UI notificaitons for what may have changed
+                    house.CopyFrom(lastSavedHouse);
 
 #if DEBUG
-                // TEMPORARY: Check that the merge worked
-                // (assumes the file was not modified by another instance of the app)
-                Debug.Assert(house.IsIdenticalTo(lastSavedHouse));
+                    // TEMPORARY: Check that the merge worked
+                    // (assumes the file was not modified by another instance of the app)
+                    Debug.Assert(house.IsIdenticalTo(lastSavedHouse));
 #endif
+                    success = true;
+                }
             }
         }
 
-        return await SaveHouseToOneDrive(house);
+        return success ? await SaveHouseToOneDrive(house) : false;
     }
 }
