@@ -138,25 +138,25 @@ internal class OneDriveStorageProvider : StorageProvider
         House? lastSavedHouse = null;
         using (var stream = await OneDrive.Instance.ReadFileFromAppRootAsync(HouseFileName))
         {
-            if (stream != null)
-            {
-                // First load the house model last saved by any other instance of this app
-                lastSavedHouse = await HLSerializer.Deserialize(stream);
-                if (lastSavedHouse != null)
-                {
-                    // Merge in our local changes since we last saved the model
-                    house.PlayChanges(lastSavedHouse);
+            if (stream == null)
+                return false;
 
-                    // The result is a new model that is a merge of the last saved model and our local changes
-                    // We copy it back to our working house model, allowing UI notificaitons for what may have changed
-                    house.CopyFrom(lastSavedHouse);
+            // First load the house model last saved by any other instance of this app
+            lastSavedHouse = await HLSerializer.Deserialize(stream);
+            if (lastSavedHouse != null)
+            {
+                // Merge in our local changes since we last saved the model
+                house.PlayChanges(lastSavedHouse);
+
+                // The result is a new model that is a merge of the last saved model and our local changes
+                // We copy it back to our working house model, allowing UI notificaitons for what may have changed
+                house.CopyFrom(lastSavedHouse);
 
 #if DEBUG
-                    // TEMPORARY: Check that the merge worked
-                    // (assumes the file was not modified by another instance of the app)
-                    Debug.Assert(house.IsIdenticalTo(lastSavedHouse));
+                // TEMPORARY: Check that the merge worked
+                // (assumes the file was not modified by another instance of the app)
+                Debug.Assert(house.IsIdenticalTo(lastSavedHouse));
 #endif
-                }
             }
         }
 
