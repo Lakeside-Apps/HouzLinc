@@ -56,7 +56,7 @@ There is an abstraction of Storage Providers (`StorageProvider` and derived clas
 **UI (View)**: (`UnoApp.*`) written in XAML, the UX uses XAML C# databinding to dynamically keep up to date with the View Model and reflects user changes to the View Model and Model layers. 
 
 ## Getting Started
-HouzLinc is now available on the Microsoft Store, or as a sideloadable package on Windows and Android. To download and install HouzLinc, go to https://houzlinc.com. iOS support is comming soon!   
+HouzLinc is now available on the Microsoft Store, or as a sideloadable package on Windows and Android. To download and install HouzLinc, go to https://houzlinc.com. iOS support is coming soon!   
 
 You can also build it yourself. You can build it on a Windows machine using Visual Studio 2022, and then either deploy it locally on that machine, or create a MSIX package and sideload it on any Windows machine with developer mode turned on.
 
@@ -166,7 +166,7 @@ You can also build and deploy HouzLinc to an Android device from the command lin
 8. HouzLinc should now be installed on your device. You can run it from the app drawer or home screen.
 
 ### Building, Running and Debugging on iOS
-Comming soon!
+Coming soon!
 
 ### Other platforms
 HouzLinc can be built for the Desktop framework and run on Windows or Mac that way. On Windows, just select the `HouseLinc(Destop)` launch profile in Visual Studio. Instead of using Windows App SDK / WinUI3, HouzLinc will use the Uno implementation of that framework. This offers a convenient environment to test on the Uno implementation of the Windows App SDK framework.
@@ -247,9 +247,6 @@ Includes but not limited to:
 - Making the Android emulator work acceptably: [see here](https://stackoverflow.com/questions/69134922/google-chrome-browser-in-android-12-emulator-doesnt-load-any-webpages-internet#:~:text=It%27s%20caused%20by%20vulkan.%20To%20fix%20it%2C%20you,exist%20already%29%3A%20Vulkan%20%3D%20off%20GLDirectMem%20%3D%20on).
 - Detaching the load on a keypadlinc is not supported. We could support it but it is very limited because there is no way to control the load from one of the buttons on the keypadlinc in that configuration.
 
-### Possible Future Work
-- Make HouzLinc available on Microsoft Store and Google Play Store.
-- Build for iOS and make available on Apple Store.
-- Support i1 and i3 Insteon devices.
-- Support schedules, potentially through the Insteon REST API (which would require users to have an Insteon account)
+### Future Work
+[See in Github](https://github.com/Lakeside-Apps/HouzLinc/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature)
 
