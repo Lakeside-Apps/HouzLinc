@@ -247,6 +247,6 @@ Includes but not limited to:
 - Making the Android emulator work acceptably: [see here](https://stackoverflow.com/questions/69134922/google-chrome-browser-in-android-12-emulator-doesnt-load-any-webpages-internet#:~:text=It%27s%20caused%20by%20vulkan.%20To%20fix%20it%2C%20you,exist%20already%29%3A%20Vulkan%20%3D%20off%20GLDirectMem%20%3D%20on).
 - Detaching the load on a keypadlinc is not supported. We could support it but it is very limited because there is no way to control the load from one of the buttons on the keypadlinc in that configuration.
 
-### Possible Future Work
+### Future Work
 [See in Github](https://github.com/Lakeside-Apps/HouzLinc/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature)
 
