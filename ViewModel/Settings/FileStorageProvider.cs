@@ -99,7 +99,9 @@ public class FileStorageProvider : StorageProvider
     // Only houselinc.xml like format supported at this time
     private static async Task<bool> MergeAndSaveHouseToFile(StorageFile file, House house)
     {
-        // First load the house model last saved by any other instance of this app
+        bool success = false;
+        // First load the house model from storage,
+        // potentially last saved by another instance of this app
         var lastSavedHouse = await HLSerializer.Deserialize(file);
         if (lastSavedHouse != null)
         {
@@ -115,8 +117,9 @@ public class FileStorageProvider : StorageProvider
             // (assumes the file was not modified by another instance of the app)
             Debug.Assert(house.IsIdenticalTo(lastSavedHouse));
 #endif
+            success = true;
         }
 
-        return await SaveHouseToFile(file, house);
+        return success ? await SaveHouseToFile(file, house) : false;
     }
 }

@@ -29,7 +29,7 @@ public class NetworkScanner
     private const int minMaskBits = 22;
 
     // Max number of scanning threads
-    private static int maxDegreeOfParallelism = Environment.ProcessorCount * 8;
+    private static int maxDegreeOfParallelism = Environment.ProcessorCount * 2;
 
     /// <summary>
     /// Scan all subnets this computer is connected (except loopback and vEthernet) to for a host with the specified port open.
