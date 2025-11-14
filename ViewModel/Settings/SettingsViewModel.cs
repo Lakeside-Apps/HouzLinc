@@ -698,6 +698,8 @@ public class SettingsViewModel : PageViewModel
             }
         }
 
+// Disabling until issue #191 is fixed.
+#if DISABLED_UNTIL_FIXED
         // Scan for a candidate hub on the local networks this device is connected to.
         // TODO: consider moving this to the Insteon project as ScheduleScanSubnetsForHostWithOpenPort.
         Logger.Log.Running("Scanning Local Subnet");
@@ -718,7 +720,7 @@ public class SettingsViewModel : PageViewModel
         {
             Logger.Log.Failed("Scanning Local Subnet - Failed");
         }
-
+#endif
         // We've failed to locate the hub
         HubDiscoveryState = HubDiscoveryStates.Failed;
         return false;
