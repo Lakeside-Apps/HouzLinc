@@ -78,6 +78,8 @@ public sealed class Gateway
         return DeviceId.ToInt();
     }
 
+    // Copy values from another gateway object with the same id
+    // Generates observer notifications for all properties that changed
     internal void CopyFrom(Gateway fromGateway)
     {
         Debug.Assert(DeviceId == fromGateway.DeviceId);
@@ -87,6 +89,9 @@ public sealed class Gateway
         Port = fromGateway.Port;
         Username = fromGateway.Username;
         Password = fromGateway.Password;
+
+        // Release the httpClient cache as we may have changed the properties above
+        httpClient = null;
     }
 
     internal bool IsIdenticalTo(Gateway other)

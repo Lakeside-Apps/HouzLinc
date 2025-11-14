@@ -62,6 +62,7 @@ public sealed class Devices : OrderedKeyedList<Device>
         {
             if (fromDevices2.TryGetEntry(device.GetHashCode(), out var fromDevice))
             {
+                // We copy in place to generate the proper property change notifications
                 device.CopyFrom(fromDevice);
                 fromDevices2.Remove(fromDevice);
             }
@@ -77,7 +78,8 @@ public sealed class Devices : OrderedKeyedList<Device>
             Remove(device);
         }
 
-        // Add a copy of any new device in the "from" list
+        // Add a copy of any new device in the "from" list.
+        // We copy in place after adding so as to generate the property change notifications
         foreach (var device in fromDevices2)
         {
             var newDevice = new Device(this, device.Id).AddObserver(House.ModelObserver);
