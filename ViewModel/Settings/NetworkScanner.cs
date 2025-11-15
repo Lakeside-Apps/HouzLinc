@@ -13,6 +13,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -29,20 +30,24 @@ public class NetworkScanner
     private const int minMaskBits = 22;
 
     // Max number of scanning threads
-    private static int maxDegreeOfParallelism = Environment.ProcessorCount * 8;
+    private readonly int maxDegreeOfParallelism = Environment.ProcessorCount * 2;
 
     /// <summary>
     /// Scan all subnets this computer is connected (except loopback and vEthernet) to for a host with the specified port open.
+    /// This can only run one scan at a time per instance of NetworkScanner. Returns false if a scan is already ongoing.
     /// </summary>
     /// <param name="port">The port we are looking for</param>
     /// <param name="callback">Passes the IP of the found host, return true to stop the scan if this is the host we were looking for</param>
     /// <returns>True if the host was found, false otherwise</returns>
-    public static async Task<bool> ScanSubnetsForHostWithOpenPort(int port, Func<IPAddress, Task<bool>> callback)
+    public async Task<bool> ScanSubnetsForHostWithOpenPort(int port, Func<IPAddress, Task<bool>> callback)
     {
+        if (cts != null) 
+            return false;
+
         var subnets = NetworkScanner.FindNetworks();
         foreach (var subnet in subnets)
         {
-            if (await NetworkScanner.ScanSubnet(subnet.ip, subnet.mask, 25105, callback))
+            if (await ScanSubnet(subnet.ip, subnet.mask, 25105, callback))
                 return true;
 
             // Uncomment to use UDP broadcast scanning (see notes on it below)
@@ -54,13 +59,16 @@ public class NetworkScanner
 
     /// <summary>
     /// Scan a subnet for a host with the specified port open.
+    /// Currently private but could be made public if needed.
     /// </summary>
     /// <param name="subnetIp">Any ip in the subnet</param>
     /// <param name="subnetMask">Subnet mask</param>
     /// <param name="port">The port we are looking for</param>
     /// <param name="callback">See above</param>
-    public static async Task<bool> ScanSubnet(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
+    private async Task<bool> ScanSubnet(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
     {
+        Debug.Assert(cts == null);
+
         bool success = false;
         var scanStartTime = DateTime.Now;
 
@@ -82,7 +90,7 @@ public class NetworkScanner
         Common.Logger.Log.Debug($"Number of IP addresses in the subnet: {ipEnd - ipStart + 1}");
 
         DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        var cts = new CancellationTokenSource();
+        cts = new CancellationTokenSource();
         try
         {
             var options = new ParallelOptions() { CancellationToken = cts.Token, MaxDegreeOfParallelism = maxDegreeOfParallelism};
@@ -119,6 +127,8 @@ public class NetworkScanner
         {
             var scanTime = DateTime.Now - scanStartTime;
             Common.Logger.Log.Debug($"Subnet scan complete or cancelled after {scanTime.Minutes} min, {scanTime.Seconds} sec");
+            cts.Dispose();
+            cts = null;
         }
 
         return success;
@@ -126,14 +136,16 @@ public class NetworkScanner
 
     /// <summary>
     /// Scan a subnet for a host with the specified port open using UDP broadcast.
-    /// This only works when the host replies to UDP message and apparently INSTEON hub does not!
+    /// Currently unused: this only works when the host replies to UDP messages and apparently INSTEON hub does not!
     /// </summary>
     /// <param name="subnetIp">Any IP in the subnet</param>
     /// <param name="subnetMask">Subnet mask</param>
     /// <param name="port">The port we are looking for</param>
     /// <param name="callback">Passes the IP of the found host, return true to stop the scan if this is the host we were looking for</param>
-    public static async Task ScanSubnetWithUdpBroadcast(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
+    private async Task ScanSubnetWithUdpBroadcast(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
     {
+        Debug.Assert(cts == null);
+
         var broadcastAddress = GetBroadcastAddress(subnetIp, subnetMask);
         var udpClient = new UdpClient();
         udpClient.EnableBroadcast = true;
@@ -141,7 +153,7 @@ public class NetworkScanner
         var message = Encoding.ASCII.GetBytes("Discovery message");
         await udpClient.SendAsync(message, message.Length, new IPEndPoint(broadcastAddress, port));
 
-        var cts = new CancellationTokenSource();
+        cts = new CancellationTokenSource();
         var receiveTask = Task.Run(async () =>
         {
             while (!cts.Token.IsCancellationRequested)
@@ -166,18 +178,21 @@ public class NetworkScanner
         finally
         {
             udpClient.Close();
+            cts.Dispose();
+            cts = null;
         }
     }
 
     /// <summary>
     /// Cancel ongoing subnet scan
+    /// No effect if no scan is ongoing
     /// </summary>
-    public static void CancelSubnetScan()
+    public void CancelSubnetScan()
     {
-        cts.Cancel();
+        cts?.Cancel();
     }
 
-    private static CancellationTokenSource cts = new();
+    private CancellationTokenSource? cts;
 
     // Helper to compute a unint bitmask representation of a subnet ip mask
     private static int ComputeSubnetMaskBitCount(IPAddress mask)

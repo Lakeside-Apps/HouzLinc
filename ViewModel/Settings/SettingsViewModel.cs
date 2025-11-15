@@ -114,7 +114,9 @@ public class SettingsViewModel : PageViewModel
 
     public override void ViewNavigatedFrom()
     {
-        NetworkScanner.CancelSubnetScan();
+        // The user might navigate to another page while we are scanning for the hub
+        // Let the scan complete in the background.
+        //networkScanner?.CancelSubnetScan();
     }
 
     public InsteonID GatewayInsteonID => Holder.House.Gateway.DeviceId;
@@ -515,7 +517,7 @@ public class SettingsViewModel : PageViewModel
             if (value != hubDiscoveryState)
             {
                 if (hubDiscoveryState == HubDiscoveryStates.Searching)
-                    NetworkScanner.CancelSubnetScan();
+                    networkScanner?.CancelSubnetScan();
 
                 hubDiscoveryState = value;
                 OnPropertyChanged();
@@ -653,6 +655,9 @@ public class SettingsViewModel : PageViewModel
         HubPassword = Holder.House.Gateway.Password ?? string.Empty;
     }
 
+    // Network scanner to find the hub on the local network
+    private NetworkScanner? networkScanner;
+
     // Helper to find the hub on the local network, based on information in this Settings page
     public async Task<bool> FindHub()
     {
@@ -671,7 +676,7 @@ public class SettingsViewModel : PageViewModel
         // If we have an IP address, try it
         if (IsValidIPAddress(HubIPAddress))
         {
-            if (await TryPushNewGatewayAsync())
+            if (await TryPushNewGatewayAsync(HubIPAddress))
             {
                 HubDiscoveryState = HubDiscoveryStates.Found;
                 HubInsteonID = GatewayInsteonID;
@@ -688,27 +693,35 @@ public class SettingsViewModel : PageViewModel
             var ip = GetIpAddressByMac(HubMacAddress);
             if (IsValidIPAddress(ip))
             {
-                HubIPAddress = ip;
-                if (await TryPushNewGatewayAsync())
+                if (await TryPushNewGatewayAsync(ip))
                 {
                     HubDiscoveryState = HubDiscoveryStates.Found;
+                    HubIPAddress = ip;
                     HubInsteonID = GatewayInsteonID;
                     return true;
                 }
             }
         }
 
-// Disabling until issue #191 is fixed.
-#if DISABLED_UNTIL_FIXED
         // Scan for a candidate hub on the local networks this device is connected to.
         // TODO: consider moving this to the Insteon project as ScheduleScanSubnetsForHostWithOpenPort.
         Logger.Log.Running("Scanning Local Subnet");
-        if (await NetworkScanner.ScanSubnetsForHostWithOpenPort(int.Parse(hubIPPort), async (ipAddress) =>
+
+        // Cancel any previous scan
+        networkScanner?.CancelSubnetScan();
+        networkScanner = new NetworkScanner();
+
+        if (await networkScanner.ScanSubnetsForHostWithOpenPort(int.Parse(hubIPPort), async (ipAddress) =>
         {
-            HubIPAddress = ipAddress.ToString();
-            if (await TryPushNewGatewayAsync())
+            string ip = ipAddress.ToString();
+            Logger.Log.Running($"Found open port {HubIPPort} at {ip}");
+            if (await TryPushNewGatewayAsync(ip))
+            {
+                HubIPAddress = ip;
                 return true;
-            Logger.Log.Running("Scanning Local Subnet");
+            }
+
+            Logger.Log.Running("Scanning Local Subnet - Continue");
             return false;
         }))
         {
@@ -720,17 +733,18 @@ public class SettingsViewModel : PageViewModel
         {
             Logger.Log.Failed("Scanning Local Subnet - Failed");
         }
-#endif
+
         // We've failed to locate the hub
         HubDiscoveryState = HubDiscoveryStates.Failed;
         return false;
     }
 
-    // Awaitable version of SchedulePushNewGatewayAsync()
-    private Task<bool> TryPushNewGatewayAsync()
+    // Awaitable version of SchedulePushNewGateway()
+    // Passed an ip address to test whether this is the Hub.
+    private Task<bool> TryPushNewGatewayAsync(string ipAddress)
     {
         var tcs = new TaskCompletionSource<bool>();
-        SettingsViewModel.SchedulePushNewGateway(HubMacAddress, HubIPHostName, HubIPAddress, HubIPPort, HubUsername, HubPassword,
+        SettingsViewModel.SchedulePushNewGateway(HubMacAddress, HubIPHostName, ipAddress, HubIPPort, HubUsername, HubPassword,
             (hubFound) =>
             {
                 tcs.SetResult(hubFound);
