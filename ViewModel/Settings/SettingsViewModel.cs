@@ -1,4 +1,4 @@
-/* Copyright 2022 ChristianGa Fortini
+/* Copyright 2022 Christian Fortini
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,15 +13,17 @@
    limitations under the License.
 */
 
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.RegularExpressions;
 using Common;
 using Insteon.Base;
-using System.Diagnostics;
-using System.ComponentModel;
-using UnoApp.Utils;
-using System.Text.RegularExpressions;
-using ViewModel.Base;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
+using UnoApp.Utils;
+using ViewModel.Base;
 
 namespace ViewModel.Settings;
 
@@ -114,7 +116,9 @@ public class SettingsViewModel : PageViewModel
 
     public override void ViewNavigatedFrom()
     {
-        NetworkScanner.CancelSubnetScan();
+        // The user might navigate to another page while we are scanning for the hub
+        // Let the scan complete in the background.
+        //networkScanner?.CancelSubnetScan();
     }
 
     public InsteonID GatewayInsteonID => Holder.House.Gateway.DeviceId;
@@ -515,7 +519,7 @@ public class SettingsViewModel : PageViewModel
             if (value != hubDiscoveryState)
             {
                 if (hubDiscoveryState == HubDiscoveryStates.Searching)
-                    NetworkScanner.CancelSubnetScan();
+                    networkScanner?.CancelSubnetScan();
 
                 hubDiscoveryState = value;
                 OnPropertyChanged();
@@ -631,7 +635,7 @@ public class SettingsViewModel : PageViewModel
     public InsteonID HubInsteonID
     {
         get => hubInsteonID;
-        set
+        set 
         {
             if (value != hubInsteonID)
             {
@@ -653,6 +657,9 @@ public class SettingsViewModel : PageViewModel
         HubPassword = Holder.House.Gateway.Password ?? string.Empty;
     }
 
+    // Network scanner to find the hub on the local network
+    private NetworkScanner? networkScanner;
+
     // Helper to find the hub on the local network, based on information in this Settings page
     public async Task<bool> FindHub()
     {
@@ -671,7 +678,7 @@ public class SettingsViewModel : PageViewModel
         // If we have an IP address, try it
         if (IsValidIPAddress(HubIPAddress))
         {
-            if (await TryPushNewGatewayAsync())
+            if (await TryPushNewGatewayAsync(HubIPAddress))
             {
                 HubDiscoveryState = HubDiscoveryStates.Found;
                 HubInsteonID = GatewayInsteonID;
@@ -688,49 +695,108 @@ public class SettingsViewModel : PageViewModel
             var ip = GetIpAddressByMac(HubMacAddress);
             if (IsValidIPAddress(ip))
             {
-                HubIPAddress = ip;
-                if (await TryPushNewGatewayAsync())
+                if (await TryPushNewGatewayAsync(ip))
                 {
                     HubDiscoveryState = HubDiscoveryStates.Found;
+                    HubIPAddress = ip;
                     HubInsteonID = GatewayInsteonID;
                     return true;
                 }
             }
         }
 
-// Disabling until issue #191 is fixed.
-#if DISABLED_UNTIL_FIXED
         // Scan for a candidate hub on the local networks this device is connected to.
         // TODO: consider moving this to the Insteon project as ScheduleScanSubnetsForHostWithOpenPort.
         Logger.Log.Running("Scanning Local Subnet");
-        if (await NetworkScanner.ScanSubnetsForHostWithOpenPort(int.Parse(hubIPPort), async (ipAddress) =>
+
+        // Cancel any previous scan
+        networkScanner?.CancelSubnetScan();
+        networkScanner = new NetworkScanner();
+
+        // Collect the ip returned via the callback here
+        string hubIpAddress = string.Empty;
+
+        if (await networkScanner.ScanSubnetsForHostWithOpenPort(int.Parse(hubIPPort), async (ipAddress) =>
         {
-            HubIPAddress = ipAddress.ToString();
-            if (await TryPushNewGatewayAsync())
+            // This callback may be called on a worker thread.
+            var ip = ipAddress.ToString();
+            //Logger.Log.Running($"Found open port {HubIPPort} at {ip}");
+            if (await VerifyHubAsync(ip))
+            {
+                // Don't set HubIPAddress directly here because we might be on a worker thread
+                hubIpAddress = ip;
                 return true;
-            Logger.Log.Running("Scanning Local Subnet");
+            }
+
+            Logger.Log.Running("Scanning Local Subnet - Continue");
             return false;
         }))
         {
+            // We found the hub
             HubDiscoveryState = HubDiscoveryStates.Found;
             HubInsteonID = GatewayInsteonID;
+            HubIPAddress = hubIpAddress;
+            await TryPushNewGatewayAsync(HubIPAddress);
             return true;
         }
         else
         {
             Logger.Log.Failed("Scanning Local Subnet - Failed");
         }
-#endif
+
         // We've failed to locate the hub
         HubDiscoveryState = HubDiscoveryStates.Failed;
         return false;
     }
 
-    // Awaitable version of SchedulePushNewGatewayAsync()
-    private Task<bool> TryPushNewGatewayAsync()
+    private HttpClient? _verificationClient;
+
+    private HttpClient CreateVerificationClient(string username, string password)
+    {
+        var handler = new SocketsHttpHandler
+        {
+            MaxConnectionsPerServer = 4
+        };
+        var client = new HttpClient(handler)
+        {
+            Timeout = TimeSpan.FromSeconds(3)
+        };
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
+        }
+
+        return client;
+    }
+
+    // Quick lightweight verification that the gateway HTTP endpoint responds.
+    // Respects cancellation token and runs without capturing UI context.
+    private async Task<bool> VerifyHubAsync(string ipAddress, CancellationToken ct = default)
+    {
+        // Use cached client per gateway to avoid ephemeral port churn
+        _verificationClient ??= CreateVerificationClient(HubUsername, HubPassword);
+
+        // Build URL - use IpAddress/Port fields from Gateway
+        var url = new UriBuilder("http", ipAddress, int.Parse(HubIPPort), "/").Uri;
+
+        try
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            using var resp = await _verificationClient.SendAsync(req, ct).ConfigureAwait(false);
+            return resp.IsSuccessStatusCode;
+        }
+        catch (OperationCanceledException) { return false; }
+        catch (HttpRequestException) { return false; }
+    }
+
+    // Awaitable version of SchedulePushNewGateway()
+    // Passed an ip address to test whether this is the Hub.
+    private Task<bool> TryPushNewGatewayAsync(string ipAddress)
     {
         var tcs = new TaskCompletionSource<bool>();
-        SettingsViewModel.SchedulePushNewGateway(HubMacAddress, HubIPHostName, HubIPAddress, HubIPPort, HubUsername, HubPassword,
+        SettingsViewModel.SchedulePushNewGateway(HubMacAddress, HubIPHostName, ipAddress, HubIPPort, HubUsername, HubPassword,
             (hubFound) =>
             {
                 tcs.SetResult(hubFound);
