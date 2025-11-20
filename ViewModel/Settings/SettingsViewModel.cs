@@ -13,15 +13,17 @@
    limitations under the License.
 */
 
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.RegularExpressions;
 using Common;
 using Insteon.Base;
-using System.Diagnostics;
-using System.ComponentModel;
-using UnoApp.Utils;
-using System.Text.RegularExpressions;
-using ViewModel.Base;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
+using UnoApp.Utils;
+using ViewModel.Base;
 
 namespace ViewModel.Settings;
 
@@ -711,13 +713,18 @@ public class SettingsViewModel : PageViewModel
         networkScanner?.CancelSubnetScan();
         networkScanner = new NetworkScanner();
 
+        // Collect the ip returned via the callback here
+        string hubIpAddress = string.Empty;
+
         if (await networkScanner.ScanSubnetsForHostWithOpenPort(int.Parse(hubIPPort), async (ipAddress) =>
         {
-            string ip = ipAddress.ToString();
-            Logger.Log.Running($"Found open port {HubIPPort} at {ip}");
-            if (await TryPushNewGatewayAsync(ip))
+            // This callback may be called on a worker thread.
+            var ip = ipAddress.ToString();
+            //Logger.Log.Running($"Found open port {HubIPPort} at {ip}");
+            if (await VerifyHubAsync(ip))
             {
-                HubIPAddress = ip;
+                // Don't set HubIPAddress directly here because we might be on a worker thread
+                hubIpAddress = ip;
                 return true;
             }
 
@@ -725,8 +732,11 @@ public class SettingsViewModel : PageViewModel
             return false;
         }))
         {
+            // We found the hub
             HubDiscoveryState = HubDiscoveryStates.Found;
             HubInsteonID = GatewayInsteonID;
+            HubIPAddress = hubIpAddress;
+            await TryPushNewGatewayAsync(HubIPAddress);
             return true;
         }
         else
@@ -737,6 +747,48 @@ public class SettingsViewModel : PageViewModel
         // We've failed to locate the hub
         HubDiscoveryState = HubDiscoveryStates.Failed;
         return false;
+    }
+
+    private HttpClient? _verificationClient;
+
+    private HttpClient CreateVerificationClient(string username, string password)
+    {
+        var handler = new SocketsHttpHandler
+        {
+            MaxConnectionsPerServer = 4
+        };
+        var client = new HttpClient(handler)
+        {
+            Timeout = TimeSpan.FromSeconds(3)
+        };
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
+        }
+
+        return client;
+    }
+
+    // Quick lightweight verification that the gateway HTTP endpoint responds.
+    // Respects cancellation token and runs without capturing UI context.
+    private async Task<bool> VerifyHubAsync(string ipAddress, CancellationToken ct = default)
+    {
+        // Use cached client per gateway to avoid ephemeral port churn
+        _verificationClient ??= CreateVerificationClient(HubUsername, HubPassword);
+
+        // Build URL - use IpAddress/Port fields from Gateway
+        var url = new UriBuilder("http", ipAddress, int.Parse(HubIPPort), "/").Uri;
+
+        try
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            using var resp = await _verificationClient.SendAsync(req, ct).ConfigureAwait(false);
+            return resp.IsSuccessStatusCode;
+        }
+        catch (OperationCanceledException) { return false; }
+        catch (HttpRequestException) { return false; }
     }
 
     // Awaitable version of SchedulePushNewGateway()

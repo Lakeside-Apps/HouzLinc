@@ -15,10 +15,10 @@
 
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
-using Microsoft.UI.Dispatching;
 
 namespace UnoApp.Utils;
 
@@ -29,8 +29,12 @@ public class NetworkScanner
     // If the host we are looking for is not in the portion of the range we scan, we will not find it.
     private const int minMaskBits = 22;
 
-    // Max number of scanning threads
-    private readonly int maxDegreeOfParallelism = Environment.ProcessorCount * 2;
+    // Max number of scanning threads (kept for heuristic)
+    private readonly int maxDegreeOfParallelism = Environment.ProcessorCount * 8;
+
+    // Tunables
+    private const int maxInFlightConnects = 64; // cap concurrent connect attempts
+    private const int perAddressTimeoutMs = 300; // per-address timeout to avoid long tail
 
     /// <summary>
     /// Scan all subnets this computer is connected (except loopback and vEthernet) to for a host with the specified port open.
@@ -41,18 +45,18 @@ public class NetworkScanner
     /// <returns>True if the host was found, false otherwise</returns>
     public async Task<bool> ScanSubnetsForHostWithOpenPort(int port, Func<IPAddress, Task<bool>> callback)
     {
-        if (cts != null) 
+        if (cts != null)
             return false;
 
-        var subnets = NetworkScanner.FindNetworks();
+        var subnets = FindNetworks();
         foreach (var subnet in subnets)
         {
-            if (await ScanSubnet(subnet.ip, subnet.mask, 25105, callback))
+            if (await ScanSubnet(subnet.ip, subnet.mask, port, callback).ConfigureAwait(false))
                 return true;
 
             // Uncomment to use UDP broadcast scanning (see notes on it below)
-            //if (await NetworkScanner.ScanSubnetWithUdpBroadcast(subnet.ip, subnet.mask, 25105, callback))
-            //    return true;
+            //if (await NetworkScanner.ScanSubnetWithUdpBroadcast(subnet.ip, subnet.mask, port, callback).ConfigureAwait(false))
+            // return true;
         }
         return false;
     }
@@ -76,7 +80,7 @@ public class NetworkScanner
         if (maskBits < 0 || maskBits > 32) return false;
         if (maskBits < minMaskBits) maskBits = minMaskBits;
 
-        Common.Logger.Log.Debug($"Scaning subnet: {subnetIp}, mask: {subnetMask}");
+        Common.Logger.Log.Debug($"Scanning subnet: {subnetIp}, mask: {subnetMask}");
 
         // Compute the ip range of the subnet, expressed as uints
         var ipBytes = subnetIp.GetAddressBytes();
@@ -89,38 +93,90 @@ public class NetworkScanner
         // Compute number of ip addresses in the subnet
         Common.Logger.Log.Debug($"Number of IP addresses in the subnet: {ipEnd - ipStart + 1}");
 
-        DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        // create Cancellation token for this scan
         cts = new CancellationTokenSource();
         try
         {
-            var options = new ParallelOptions() { CancellationToken = cts.Token, MaxDegreeOfParallelism = maxDegreeOfParallelism};
-            await Parallel.ForAsync<uint>(ipStart, ipEnd, options, async (i, cancellationToken) =>
+            int inFlightLimit = Math.Max(1, Math.Min(maxInFlightConnects, maxDegreeOfParallelism));
+            int taskListCap = Math.Max(512, inFlightLimit * 128);
+
+            using var semaphore = new SemaphoreSlim(inFlightLimit, inFlightLimit);
+            var tasks = new List<Task>();
+
+            uint i = ipStart;
+            while (true)
             {
-                if (cancellationToken.IsCancellationRequested)
+                cts.Token.ThrowIfCancellationRequested();
+
+                await semaphore.WaitAsync(cts.Token).ConfigureAwait(false);
+
+                // Build IP address bytes directly
+                var b0 = (byte)((i >> 24) & 0xFF);
+                var b1 = (byte)((i >> 16) & 0xFF);
+                var b2 = (byte)((i >> 8) & 0xFF);
+                var b3 = (byte)(i & 0xFF);
+                var address = new IPAddress(new byte[] { b0, b1, b2, b3 });
+
+                var task = Task.Run(async () =>
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    try
+                    {
+                        if (await ScanAddressAsync(address, port, perAddressTimeoutMs, cts.Token).ConfigureAwait(false))
+                        {
+                            var cancelSource = cts; // capture local reference to avoid race where field becomes null
+                            try
+                            {
+                                // Invoke callback on the worker thread for performace.
+                                // Caller must marshal UI updates, but best to avoid them altogether
+                                // as switching will be slow due to ongoing scan of the network.
+                                if (await callback(address).ConfigureAwait(false))
+                                {
+                                    try { cancelSource?.Cancel(); } catch { /* ignore */ }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Common.Logger.Log.Debug($"Callback exception: {ex.Message}");
+                            }
+
+                            Common.Logger.Log.Debug($"Open port found at {address}:{port}");
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // ignore, scan cancelled
+                    }
+                    catch (Exception ex)
+                    {
+                        // minimal logging
+                        Common.Logger.Log.Debug(ex.Message);
+                    }
+                    finally
+                    {
+                        semaphore.Release();
+                    }
+                }, cts.Token);
+
+                tasks.Add(task);
+
+                // bound task list growth
+                if (tasks.Count > taskListCap)
+                {
+                    var completed = await Task.WhenAny(tasks).ConfigureAwait(false);
+                    tasks.Remove(completed);
                 }
 
-                var bytes = BitConverter.GetBytes(i);
-                Array.Reverse(bytes);
-                IPAddress address = new IPAddress(bytes);
-                if (await ScanAddressAsync(address, port))
-                {
-                    // invoke callback on the calling thread
-                    dispatcherQueue.TryEnqueue(async () =>
-                    {
-                        if (await callback.Invoke(address))
-                        {
-                            // We've got the host we were looking for
-                            cts.Cancel();
-                        }
-                    });
-                }
-            });
+                if (i == ipEnd)
+                    break;
+                i++;
+            }
+
+            // wait for remaining
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
-            Common.Logger.Log.Debug("Host found, subnet scan cancelled.");
+            Common.Logger.Log.Debug("Host found or scan cancelled.");
             success = true;
         }
         finally
@@ -151,25 +207,25 @@ public class NetworkScanner
         udpClient.EnableBroadcast = true;
 
         var message = Encoding.ASCII.GetBytes("Discovery message");
-        await udpClient.SendAsync(message, message.Length, new IPEndPoint(broadcastAddress, port));
+        await udpClient.SendAsync(message, message.Length, new IPEndPoint(broadcastAddress, port)).ConfigureAwait(false);
 
         cts = new CancellationTokenSource();
         var receiveTask = Task.Run(async () =>
         {
             while (!cts.Token.IsCancellationRequested)
             {
-                var result = await udpClient.ReceiveAsync();
+                var result = await udpClient.ReceiveAsync().ConfigureAwait(false);
                 var responseIp = result.RemoteEndPoint.Address;
-                if (await callback.Invoke(responseIp))
+                if (await callback.Invoke(responseIp).ConfigureAwait(false))
                 {
-                    cts.Cancel();
+                    try { cts?.Cancel(); } catch { /* ignore */ }
                 }
             }
         }, cts.Token);
 
         try
         {
-            await receiveTask;
+            await receiveTask.ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -274,36 +330,87 @@ public class NetworkScanner
     }
 
     // Helper to scan a specific ip address for a given open port
-    private static async Task<bool> ScanAddressAsync(IPAddress ip, int port)
+    private static async Task<bool> ScanAddressAsync(IPAddress ip, int port, int timeoutMs, CancellationToken ct)
     {
         try
         {
-            using (TcpClient client = new TcpClient())
+            using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.NoDelay = true;
+            var endPoint = new IPEndPoint(ip, port);
+            Common.Logger.Log.Debug($"Scanning: {ip}:{port}");
+
+            using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            timeoutCts.CancelAfter(timeoutMs);
+
+            try
             {
-                client.NoDelay = true;
-                IPEndPoint endPoint = new IPEndPoint(ip, port);
-                var cancelTask = Task.Delay(1000);
-                Common.Logger.Log.Debug($"Scanning: {ip}:{port}");
-                var connectTask = client.ConnectAsync(ip, port);
-
-                // double await so if cancelTask throws exception, this throws it
-                await Task.WhenAny(connectTask, cancelTask);
-
-                if (connectTask.IsCompleted && !connectTask.IsFaulted)
-                {
-                    Common.Logger.Log.Debug($"Open port found at {ip}:{port}");
-                    return true;
-                }
-                else
-                {
-                    throw new ScanTimeOutException($"Scan timed out at {ip}:{port}");
-                }
+                await socket.ConnectAsync(endPoint, timeoutCts.Token).ConfigureAwait(false);
+                Common.Logger.Log.Debug($"Open port found at {ip}:{port}");
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                // timeout or cancellation
+                return false;
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+            finally
+            {
+                try { socket.Close(); } catch { }
             }
         }
         catch (Exception e)
         {
+            // keep debug logging minimal
             Common.Logger.Log.Debug(e.Message);
         }
         return false;
+    }
+
+    private HttpClient? _verificationClient;
+
+    private HttpClient CreateVerificationClient(string username, string password)
+    {
+        var handler = new SocketsHttpHandler
+        {
+            MaxConnectionsPerServer = 1
+        };
+        var client = new HttpClient(handler)
+        {
+            Timeout = TimeSpan.FromSeconds(3)
+        };
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
+        }
+
+        return client;
+    }
+
+    /// <summary>
+    /// Quick lightweight verification that the gateway HTTP endpoint responds.
+    /// Respects cancellation token and runs without capturing UI context.
+    /// </summary>
+    public async Task<bool> VerifyHubAsync(string ipAddress, string port, string username, string password, string path = "/", CancellationToken ct = default)
+    {
+        // Use cached client per gateway to avoid ephemeral port churn
+        _verificationClient ??= CreateVerificationClient(username, password);
+
+        // Build URL - use IpAddress/Port fields from Gateway
+        var url = new UriBuilder("http", ipAddress, int.Parse(port), path).Uri;
+
+        try
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            using var resp = await _verificationClient.SendAsync(req, ct).ConfigureAwait(false);
+            return resp.IsSuccessStatusCode;
+        }
+        catch (OperationCanceledException) { return false; }
+        catch (HttpRequestException) { return false; }
     }
 }
