@@ -1,4 +1,4 @@
-/* Copyright 2022 ChristianGa Fortini
+/* Copyright 2022 Christian Fortini
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -635,7 +635,7 @@ public class SettingsViewModel : PageViewModel
     public InsteonID HubInsteonID
     {
         get => hubInsteonID;
-        set
+        set 
         {
             if (value != hubInsteonID)
             {

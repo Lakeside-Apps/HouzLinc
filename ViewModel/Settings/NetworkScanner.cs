@@ -27,13 +27,14 @@ public class NetworkScanner
     // Min number of bits set to 1 in the subnet mask.
     // We use this to limit the ip range we scan for performance reason.
     // If the host we are looking for is not in the portion of the range we scan, we will not find it.
+    // Acccording to GPT5, network sizes are as follow:
+    // /24 (255.255.255.0, 256 addresses, ~254 usable) — most home/small office networks
+    // /23 (255.255.254.0, 512 addresses) or /22 (255.255.252.0, 1024 addresses) — larger internal segments
+•	// /16 (255.255.0.0) — legacy large enterprise, now less common
     private const int minMaskBits = 22;
 
-    // Max number of scanning threads (kept for heuristic)
+    // Max number of scanning threads and timeout per device (tunable)
     private readonly int maxDegreeOfParallelism = Environment.ProcessorCount * 8;
-
-    // Tunables
-    private const int maxInFlightConnects = 64; // cap concurrent connect attempts
     private const int perAddressTimeoutMs = 300; // per-address timeout to avoid long tail
 
     /// <summary>
@@ -57,6 +58,9 @@ public class NetworkScanner
             // Uncomment to use UDP broadcast scanning (see notes on it below)
             //if (await NetworkScanner.ScanSubnetWithUdpBroadcast(subnet.ip, subnet.mask, port, callback).ConfigureAwait(false))
             // return true;
+
+            if (cts?.IsCancellationRequested == true)
+                break;
         }
         return false;
     }
@@ -71,9 +75,8 @@ public class NetworkScanner
     /// <param name="callback">See above</param>
     private async Task<bool> ScanSubnet(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
     {
-        Debug.Assert(cts == null);
-
         bool success = false;
+        bool hostFound = false;
         var scanStartTime = DateTime.Now;
 
         int maskBits = ComputeSubnetMaskBitCount(subnetMask);
@@ -94,7 +97,12 @@ public class NetworkScanner
         Common.Logger.Log.Debug($"Number of IP addresses in the subnet: {ipEnd - ipStart + 1}");
 
         // create Cancellation token for this scan
-        cts = new CancellationTokenSource();
+        var newCts = new CancellationTokenSource();
+        if (Interlocked.CompareExchange(ref cts, newCts, null) != null)
+        {
+            newCts.Dispose();
+            return false; // another scan already running
+        }
         try
         {
             var options = new ParallelOptions() { CancellationToken = cts.Token, MaxDegreeOfParallelism = maxDegreeOfParallelism };
@@ -118,6 +126,7 @@ public class NetworkScanner
                         // as switching can be slow due to ongoing scan of the network.
                         if (await callback(address).ConfigureAwait(false))
                         {
+                            Volatile.Write(ref hostFound, true);
                             try { cts.Cancel(); } catch { /* ignore */ }
                         }
                     }
@@ -131,6 +140,7 @@ public class NetworkScanner
             });
         }
         catch (OperationCanceledException)
+        when(cts?.IsCancellationRequested == true && Volatile.Read(ref hostFound))
         {
             Common.Logger.Log.Debug("Host found, subnet scan cancelled.");
             success = true;
@@ -139,6 +149,8 @@ public class NetworkScanner
         {
             var scanTime = DateTime.Now - scanStartTime;
             Common.Logger.Log.Debug($"Subnet scan complete or cancelled after {scanTime.Minutes} min, {scanTime.Seconds} sec");
+            try { cts?.Dispose(); } catch { /* Ignore */ }
+            cts = null;
         }
 
         return success;
@@ -152,9 +164,10 @@ public class NetworkScanner
     /// <param name="subnetMask">Subnet mask</param>
     /// <param name="port">The port we are looking for</param>
     /// <param name="callback">Passes the IP of the found host, return true to stop the scan if this is the host we were looking for</param>
-    private async Task ScanSubnetWithUdpBroadcast(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
+    private async Task<bool> ScanSubnetWithUdpBroadcast(IPAddress subnetIp, IPAddress subnetMask, int port, Func<IPAddress, Task<bool>> callback)
     {
-        Debug.Assert(cts == null);
+        bool success = false;
+        bool hostFound = false;
 
         var broadcastAddress = GetBroadcastAddress(subnetIp, subnetMask);
         var udpClient = new UdpClient();
@@ -163,15 +176,22 @@ public class NetworkScanner
         var message = Encoding.ASCII.GetBytes("Discovery message");
         await udpClient.SendAsync(message, message.Length, new IPEndPoint(broadcastAddress, port)).ConfigureAwait(false);
 
-        cts = new CancellationTokenSource();
+        var newCts = new CancellationTokenSource();
+        if (Interlocked.CompareExchange(ref cts, newCts, null) != null)
+        {
+            newCts.Dispose();
+            return false; // another scan already running
+        }
         var receiveTask = Task.Run(async () =>
         {
-            while (!cts.Token.IsCancellationRequested)
+            var cancellationToken = cts.Token;
+            while (!cancellationToken.IsCancellationRequested)
             {
                 var result = await udpClient.ReceiveAsync().ConfigureAwait(false);
                 var responseIp = result.RemoteEndPoint.Address;
                 if (await callback.Invoke(responseIp).ConfigureAwait(false))
                 {
+                    Volatile.Write(ref hostFound, true);
                     try { cts?.Cancel(); } catch { /* ignore */ }
                 }
             }
@@ -182,15 +202,19 @@ public class NetworkScanner
             await receiveTask.ConfigureAwait(false);
         }
         catch (OperationCanceledException)
+        when (cts?.IsCancellationRequested == true && Volatile.Read(ref hostFound))
         {
             Common.Logger.Log.Debug("Host found, UDP broadcast scan cancelled.");
+            success = true;
         }
         finally
         {
             udpClient.Close();
-            cts.Dispose();
+            try { cts?.Dispose(); } catch { /* Ignore */ }
             cts = null;
         }
+
+        return success;
     }
 
     /// <summary>
@@ -313,7 +337,7 @@ public class NetworkScanner
             }
             finally
             {
-                try { socket.Close(); } catch { }
+                try { socket.Close(); } catch { /* Ignore */ }
             }
         }
         catch (Exception e)
