@@ -97,18 +97,10 @@ public class NetworkScanner
         cts = new CancellationTokenSource();
         try
         {
-            int inFlightLimit = Math.Max(1, Math.Min(maxInFlightConnects, maxDegreeOfParallelism));
-            int taskListCap = Math.Max(512, inFlightLimit * 128);
-
-            using var semaphore = new SemaphoreSlim(inFlightLimit, inFlightLimit);
-            var tasks = new List<Task>();
-
-            uint i = ipStart;
-            while (true)
+            var options = new ParallelOptions() { CancellationToken = cts.Token, MaxDegreeOfParallelism = maxDegreeOfParallelism };
+            await Parallel.ForAsync<uint>(ipStart, ipEnd, options, async (i, cancellationToken) =>
             {
-                cts.Token.ThrowIfCancellationRequested();
-
-                await semaphore.WaitAsync(cts.Token).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
 
                 // Build IP address bytes directly
                 var b0 = (byte)((i >> 24) & 0xFF);
@@ -117,74 +109,36 @@ public class NetworkScanner
                 var b3 = (byte)(i & 0xFF);
                 var address = new IPAddress(new byte[] { b0, b1, b2, b3 });
 
-                var task = Task.Run(async () =>
+                if (await ScanAddressAsync(address, port, perAddressTimeoutMs, cts.Token).ConfigureAwait(false))
                 {
                     try
                     {
-                        if (await ScanAddressAsync(address, port, perAddressTimeoutMs, cts.Token).ConfigureAwait(false))
+                        // Invoke callback on the worker thread for performace.
+                        // Caller must marshal UI updates, but best to avoid them altogether
+                        // as switching can be slow due to ongoing scan of the network.
+                        if (await callback(address).ConfigureAwait(false))
                         {
-                            var cancelSource = cts; // capture local reference to avoid race where field becomes null
-                            try
-                            {
-                                // Invoke callback on the worker thread for performace.
-                                // Caller must marshal UI updates, but best to avoid them altogether
-                                // as switching will be slow due to ongoing scan of the network.
-                                if (await callback(address).ConfigureAwait(false))
-                                {
-                                    try { cancelSource?.Cancel(); } catch { /* ignore */ }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Common.Logger.Log.Debug($"Callback exception: {ex.Message}");
-                            }
-
-                            Common.Logger.Log.Debug($"Open port found at {address}:{port}");
+                            try { cts.Cancel(); } catch { /* ignore */ }
                         }
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // ignore, scan cancelled
                     }
                     catch (Exception ex)
                     {
-                        // minimal logging
-                        Common.Logger.Log.Debug(ex.Message);
+                        Common.Logger.Log.Debug($"Callback exception: {ex.Message}");
                     }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
-                }, cts.Token);
 
-                tasks.Add(task);
-
-                // bound task list growth
-                if (tasks.Count > taskListCap)
-                {
-                    var completed = await Task.WhenAny(tasks).ConfigureAwait(false);
-                    tasks.Remove(completed);
+                    Common.Logger.Log.Debug($"Open port found at {address}:{port}");
                 }
-
-                if (i == ipEnd)
-                    break;
-                i++;
-            }
-
-            // wait for remaining
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            });
         }
         catch (OperationCanceledException)
         {
-            Common.Logger.Log.Debug("Host found or scan cancelled.");
+            Common.Logger.Log.Debug("Host found, subnet scan cancelled.");
             success = true;
         }
         finally
         {
             var scanTime = DateTime.Now - scanStartTime;
             Common.Logger.Log.Debug($"Subnet scan complete or cancelled after {scanTime.Minutes} min, {scanTime.Seconds} sec");
-            cts.Dispose();
-            cts = null;
         }
 
         return success;
