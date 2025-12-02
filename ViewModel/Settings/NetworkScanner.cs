@@ -30,7 +30,7 @@ public class NetworkScanner
     // Acccording to GPT5, network sizes are as follow:
     // /24 (255.255.255.0, 256 addresses, ~254 usable) — most home/small office networks
     // /23 (255.255.254.0, 512 addresses) or /22 (255.255.252.0, 1024 addresses) — larger internal segments
-•	// /16 (255.255.0.0) — legacy large enterprise, now less common
+    // /16 (255.255.0.0) — legacy large enterprise, now less common
     private const int minMaskBits = 22;
 
     // Max number of scanning threads and timeout per device (tunable)
