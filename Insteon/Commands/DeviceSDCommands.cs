@@ -24,10 +24,10 @@ namespace Insteon.Commands;
 public sealed class LightOnCommand : DeviceCommand
 {
     public const string Name = "LightOn";
-    public const string Help = "<DeviceID> <Level (0-255, default 255)>";
+    public const string Help = "<DeviceID> <Level (0-255 or 0-100% default 255 (100%))>";
     public const byte CommandCode = CommandCode_LightON;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return "Level: " + Command2; }
+    private protected override string GetLogParams() { return $"Level: {Command2 / 255.0:P0} ({Command2})"; }
 
     public LightOnCommand(Gateway gateway, InsteonID deviceID, byte level) : base(gateway, deviceID)
     {
@@ -38,7 +38,7 @@ public sealed class LightOnCommand : DeviceCommand
     private protected override void Done()
     {
         base.Done();
-        LogOutput($"Device {StandardResponseMessage.FromDeviceId} Level: " + Level);
+        LogOutput($"Device {StandardResponseMessage.FromDeviceId} Level: {Level / 255.0:P0} ({Level})");
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public sealed class LightOffCommand : DeviceCommand
     public const string Help = "<DeviceID>";
     public const byte CommandCode = CommandCode_LightOFF;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return "Level: " + Command2; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public LightOffCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {
@@ -77,10 +77,10 @@ public sealed class LightOffCommand : DeviceCommand
 public sealed class FastLightOnCommand : DeviceCommand
 {
     public const string Name = "FastLightOn";
-    public const string Help = "<DeviceID> [Level], with Level = 0-255, default 0";
+    public const string Help = "<DeviceID> <Level (0-255 or 0-100% default 255 (100%))>";
     public const byte CommandCode = CommandCode_FastLightON;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return "Level: " + Command2; }
+    private protected override string GetLogParams() {return $"Level: {Command2 / 255.0:P0} ({Command2})";}
 
     public FastLightOnCommand(Gateway gateway, InsteonID deviceID, byte level) : base(gateway, deviceID)
     {
@@ -91,7 +91,7 @@ public sealed class FastLightOnCommand : DeviceCommand
     private protected override void Done()
     {
         base.Done();
-        LogOutput($"Device {StandardResponseMessage.FromDeviceId} Level: " + Level);
+        LogOutput($"Device {StandardResponseMessage.FromDeviceId} Level: {Level / 255.0:P0} ({Level})");
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public sealed class FastLightOffCommand : DeviceCommand
     public const string Help = "<DeviceID>";
     public const byte CommandCode = CommandCode_FastLightOFF;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return "Level: " + Command2; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public FastLightOffCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {
@@ -133,7 +133,7 @@ public sealed class BrighterCommand : DeviceCommand
     public const string Help = "<DeviceID>";
     public const byte CommandCode = CommandCode_IncrementalBright;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return ""; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public BrighterCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {
@@ -153,10 +153,10 @@ public sealed class BrighterCommand : DeviceCommand
 public sealed class DimmerCommand : DeviceCommand
 {
     public const string Name = "Dimmer";
-    public const string Help = "<DeviceId>";
+    public const string Help = "<DeviceID>";
     public const byte CommandCode = CommandCode_IncrementalDim;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return ""; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public DimmerCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {
@@ -176,10 +176,10 @@ public sealed class DimmerCommand : DeviceCommand
 public sealed class GetOnLevelCommand : DeviceCommand
 {
     public const string Name = "GetOnLevel";
-    public const string Help = "<DeviceID";
+    public const string Help = "<DeviceID>";
     public const byte CommandCode = CommandCode_LightStatusRequest;
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return ""; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public GetOnLevelCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {
@@ -190,7 +190,7 @@ public sealed class GetOnLevelCommand : DeviceCommand
     private protected override void Done()
     {
         base.Done();
-        LogOutput($"Device {StandardResponseMessage.FromDeviceId}, On-Level: " + OnLevel + ", DB Delta: " + DBDelta);
+        LogOutput($"Device {StandardResponseMessage.FromDeviceId}, On-Level: {OnLevel / 255.0:P0} ({OnLevel}), DB Delta: {DBDelta}");
     }
 
     /// <summary>
@@ -210,7 +210,7 @@ public sealed class GetOnLevelMovingToCommand : DeviceCommand
     public const string Name = "GetOnLevelMovingTo";
     public const string Help = "";
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return ""; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     internal GetOnLevelMovingToCommand(Gateway gateway) : base(gateway)
     {
@@ -221,7 +221,7 @@ public sealed class GetOnLevelMovingToCommand : DeviceCommand
     private protected override void Done()
     {
         base.Done();
-        LogOutput($"Device {StandardResponseMessage.FromDeviceId}, OnLevelMovingTo: " + OnLevelMovingTo);
+        LogOutput($"Device {StandardResponseMessage.FromDeviceId}, OnLevelMovingTo: {OnLevelMovingTo / 255.0:P0} ({OnLevelMovingTo})");
     }
 
     internal int OnLevelMovingTo => Command2;
@@ -235,7 +235,7 @@ public sealed class GetInsteonEngineVersionCommand : DeviceCommand
     public const string Name = "GetInsteonEngineVersion";
     public const string Help = "<DeviceID>";
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return ""; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public GetInsteonEngineVersionCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {
@@ -274,7 +274,7 @@ public sealed class PingCommand : DeviceCommand
     public const string Name = "Ping";
     public const string Help = "<DeviceID>";
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return ""; }
+    private protected override string GetLogParams() { return string.Empty; }
 
     public PingCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
     {

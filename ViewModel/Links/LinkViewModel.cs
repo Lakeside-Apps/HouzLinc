@@ -391,6 +391,11 @@ public class LinkViewModel : CollectionItemViewModel<LinkListViewModel, LinkView
     private int data1;
 
     /// <summary>
+    /// Gets the value of OnLevel as a double fractional percentage (0 to 1D)
+    /// </summary>
+    public double OnLevelAsFractionalPercent => (IsResponder && device.IsDimmableLightingControl) ? OnLevel / 255.0 : 0;
+
+    /// <summary>
     /// Ramp rate on links for dimmable devices
     /// </summary>
     public int RampRate

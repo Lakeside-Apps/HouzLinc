@@ -24,9 +24,9 @@ namespace Insteon.Commands;
 public sealed class SetOnLevelForGroupCommand : DeviceCommand
 {
     public const string Name = "SetOnLevelForGroup";
-    public const string Help = "<DeviceID> <Group> <OnLevel (0-255)>";
+    public const string Help = "<DeviceID> <Group> <OnLevel (0-255 or 0-100%)>";
     private protected override string GetLogName() { return Name; }
-    private protected override string GetLogParams() { return "Group: " + Group.ToString() + ", OnLevel: " + OnLevel.ToString(); }
+    private protected override string GetLogParams() { return $"Group: {Group}, OnLevel: {OnLevel / 255.0:P0} ({OnLevel})"; }
 
     public SetOnLevelForGroupCommand(Gateway gateway, InsteonID deviceID, byte group, byte onLevel) : base(gateway, deviceID)
     {
