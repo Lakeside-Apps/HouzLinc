@@ -1069,6 +1069,27 @@ public sealed class CommandProcessor : ICommandProcessor
                 throw new FormatException($"'{input}' should be an hex number", e);
             }
         }
+        else if (input.EndsWith('%'))
+        {
+            // Parse as percentage (0% - 100%) and map to 0-255
+            try
+            {
+                var percentText = input.TrimEnd('%');
+                var percent = double.Parse(percentText);
+
+                // Clamp to [0, 1D]
+                if (percent < 0) percent = 0;
+                if (percent >= 100) percent = 100;
+
+                // Scale to 0-255 with conventional rounding
+                var scaled = (int)Math.Round(percent * 255.0 / 100, MidpointRounding.AwayFromZero);
+                return (byte)scaled;
+            }
+            catch (FormatException e)
+            {
+                throw new FormatException($"'{input}' should be a percentage (0 - 100%)", e);
+            }
+        }
         else
         {
             // Parse as decimal

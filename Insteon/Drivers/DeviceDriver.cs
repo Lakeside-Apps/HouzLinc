@@ -128,7 +128,7 @@ internal class DeviceDriver : DeviceDriverBase
     /// <summary>
     /// Return the current on-level of the device load
     /// </summary>
-    /// <returns>On level (0F-100F)</returns>
+    /// <returns>On level (0-1D)</returns>
     internal override async Task<double> TryGetLightOnLevel()
     {
         var command = new GetOnLevelCommand(House.Gateway, Id);

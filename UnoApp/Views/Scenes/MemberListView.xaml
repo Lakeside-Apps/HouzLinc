@@ -89,7 +89,8 @@
                                     <TextBlock Visibility="{x:Bind DeviceHasRoom}" Text="{x:Bind DeviceRoom}" TextWrapping="NoWrap"/>
                                     <TextBlock Visibility="{x:Bind DeviceHasChannels}" Text="{x:Bind DeviceChannelTypeIdAndName}" TextWrapping="NoWrap"/>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Bind OnLevel, Converter={StaticResource StringFormatConverter}, ConverterParameter='Level: {0}'}" TextWrapping="NoWrap"/>
+                                        <TextBlock Text="{x:Bind OnLevelAsFractionalPercent, Converter={StaticResource StringFormatConverter}, ConverterParameter='Level: {0:P0}'}" TextWrapping="NoWrap"/>
+                                        <TextBlock Text="{x:Bind OnLevel, Converter={StaticResource StringFormatConverter}, ConverterParameter=' ({0})'}" TextWrapping="NoWrap"/>
                                         <TextBlock Text="{x:Bind RampRateAsString, Converter={StaticResource StringFormatConverter}, ConverterParameter=', Ramp: {0}'}" TextWrapping="NoWrap"/>
                                     </StackPanel>
                                 </StackPanel>

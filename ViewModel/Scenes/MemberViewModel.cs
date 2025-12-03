@@ -236,6 +236,8 @@ public sealed class MemberViewModel : CollectionItemViewModel<MemberListViewMode
     }
     private int onLevel;
 
+    public double OnLevelAsFractionalPercent => OnLevel / 255.0;
+
     public int RampRate
     {
         get => rampRate;

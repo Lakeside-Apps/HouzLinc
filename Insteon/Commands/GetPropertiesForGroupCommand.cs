@@ -74,7 +74,7 @@ public sealed class GetPropertiesForGroupCommand : DeviceCommand
                     "X10 House Code: " + X10HouseCode.ToString("X2") + "\r\n" +
                     "X10 Unit: " + X10Unit.ToString("X2") + "\r\n" +
                     "Ramp Rate: " + RampRate.ToString() + "\r\n" +
-                    "On-Level: " + OnLevel.ToString() + "\r\n" +
+                    "On-Level: " + $"{OnLevel / 255.0:P0} ({OnLevel.ToString()})" + "\r\n" +
                     "Global LED Brightness: " + LEDBrightness.ToString() + " (Group ignored)\r\n" +
                     "Non-Toggle Mask: " + Convert.ToString(NonToggleMask, 2) + "\r\n" +
                     "LED bit Mask: " + Convert.ToString(LEDOnMask, 2) + "\r\n" +
