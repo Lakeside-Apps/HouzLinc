@@ -954,7 +954,7 @@ public class DeviceViewModel : LinkHostViewModel, IDeviceObserver, IRoomsObserve
     }
 
     /// <summary>
-    /// Handler for the "Force Sync Device" menu
+    /// Handler for the "Read and Update Device" menu
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
