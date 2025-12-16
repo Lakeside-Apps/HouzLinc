@@ -86,7 +86,7 @@
                     Style="{ThemeResource SplitViewPaneButtonStyle}">
                     <Button.Flyout>
                         <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem Text="Force Sync Device" Click="{x:Bind deviceListViewModel.PresentedItem.ForceSyncDevice_Click}"/>
+                            <MenuFlyoutItem Text="Read and Update Device" Click="{x:Bind deviceListViewModel.PresentedItem.ForceSyncDevice_Click}"/>
                             <MenuFlyoutItem Text="Check Connection Status" Click="{x:Bind deviceListViewModel.PresentedItem.ForceCheckDeviceConnectionStatus_Click}"/>
                             <MenuFlyoutItem Text="Remove Device" Click="{x:Bind RemoveDevice_Click}"/>
                             <MenuFlyoutItem Text="Replace Device" Click="{x:Bind ReplaceDevice_Click}"/>
