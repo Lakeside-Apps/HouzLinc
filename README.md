@@ -1,12 +1,20 @@
 # HouzLinc
 
-This project builds an application to program a network of Insteon devices. It leverages publicly available documentation on how to program the Insteon hub and Insteon devices on the local network. The concept is similar to the old Houselinc program for Windows that Insteon used to distribute some years ago.
+This project creates an application to program a network of Insteon devices. It leverages publicly available documentation on how to program the Insteon hub and Insteon devices on the local network. The concept is similar to the old Houselinc program for Windows that Insteon used to distribute some years ago.
 
-I have a network of over 100 Insteon devices and more than 90 scenes in my house, which I configured back in 2013 using Houselinc. Transitioning to the new Insteon Director app (or its previous incarnation) was not straightforward, prompting me to develop my own app. I called it HouzLinc.
+I have a network of over 100 Insteon devices and more than 90 scenes in my house, which I configured back in 2013 using HouseLinc. Transitioning to the new Insteon Director app (or its previous incarnation) was not straightforward, prompting me to develop my own app. I called it HouzLinc.
 
-HouzLinc currently runs on Windows and Android. Porting it to iOS should be relatively straightforward (see below for why). On Windows HouzLinc takes advantage of the size of a laptop or desktop screen. On a phone, it works more like a mobile app.
+HouzLinc currently runs on Windows and Android. iOS is under development. On Windows HouzLinc takes advantage of the size of a laptop or desktop screen. On a phone, it works more like a mobile app.
 
-HouzLinc does not require a service to run. It operates on a local machine connected to the same local network as the Insteon Hub. The house configuration representing the programming of the devices is stored in a single file that can reside on a local drive or on an online file service like Microsoft OneDrive, Google Drive, Dropbox, etc. (Only OneDrive is supported at this time). This ensures that the user's data remains under their control as well as private, always accessible, and transferrable to new house owners, renters, etc.
+## Motivations
+
+HouzLinc differentiates itself from the Insteon Director app by operating solely on the local network, connecting directly to the Insteon Hub without relying on a web service. While it can be used to control scenes and devices directly (from the local network), its primary function is to configure devices and build scenes.
+
+The motivation behind HouzLinc stems from the belief that the configuration data for your network of devices should be private and fully owned by you, the user. You should have the flexibility to store it as you wish, share it with other household members or tenants, and transfer it to the new owner upon the sale of your home. Modifying this data should be free as this is your network and your data and only resources fully owned and operated by you are involved.
+
+An online account and potential subscription may be necessary, but only if you wish to access scenes or devices remotely—such as when controlling lights while away from home. This is because enabling remote access requires Insteon or a third party to run a web service, which incurs operational costs.
+
+HouzLinc represents a step toward this idea of local configuration and selective exposure to remote access. It operates on your local network and stores configuration data in a single file, which you can save locally or to a cloud service (currently only OneDrive supported). You can operate devices and scenes from HouzLinc on your local network. My goal is to eventually have HouzLinc promote scenes to remote access using the Insteon REST API. This would not reveal the entire scene to the web service but only negotiate the Hub channel used for that scene. Today, however, this requires some manual mapping between Director and HouzLinc views of the Hub channel configuration.
 
 Multiple instances of HouzLinc can run simultaneously on different devices, sharing the same configuration file. This allows users to choose the most suitable device for their needs, whether it's a large screen or a mobile phone.
 
@@ -16,7 +24,17 @@ HouzLinc also offers the following:
 - HouzLinc includes a Console view which can be used to send commands directly to the hub or to individual devices, providing further investigation capabilities.
 - Some handy batch operations are provided, such as removing or replacing a device, copying a device configuration to another, cleaning up after device removal, and so on. More can be added over time as the need arises.
 
-This project is open source with an Apache license. As it is still in development, it contains bugs and limitations and usability can be improved in certain places. It has not been pushed to an app store yet, so it has to be built and side-loaded on Windows or Android. Contributions to fix issues, enhance or add functionality are welcome!
+This project is open source with an Apache license. Contributions to fix issues, enhance or add functionality are welcome!
+
+## Main Limitations
+
+As it is still in development, HouzLinc contains bugs and limitations and usability can be improved in places.
+
+The Windows version is available on the [Windows Store](https://apps.microsoft.com/detail/9NW6GKTTNW83), but the Android version has not been pushed to the Android Play Store yet. So it has to be built and side-loaded on Android.
+
+As mentioned above, the iOS version is not available yet. However, since Uno Platform supports iOS, porting HouzLinc to iOS should be straightforward.
+
+Schedules remain a current limitation. The Insteon Hub operates schedules locally, but no publicly available documentation exists on how to set that up from the local network. And the relationship between schedule, scenes, and devices seems to be in flux in the Director app at the moment. Ideally, a "scheduler" would just be a device like any other, offering the ability to set up a schedule on each of its channels. These devices could then be added to a scene to operate it on a schedule. Today, the Hub serves that purpose, which is fine, except for the lack of documentation on how to set that up locally. As an alternative, I am also envioning using the Insteon REST API to set up schedules remotely.
 
 ## Screenshots
 Here is a screenshot of the app running on Windows:
