@@ -453,7 +453,7 @@ internal class DeviceDriver : DeviceDriverBase
         {
             success = false;
 
-            var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead);
+            var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead, EngineVersion);
             if (await command.TryRunAsync(maxAttempts: 15))
             {
                 Debug.Assert(command.AllLinkRecord != null);
@@ -496,7 +496,7 @@ internal class DeviceDriver : DeviceDriverBase
         {
             while (true)
             {
-                var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead){ MockPhysicalDevice = MockPhysicalDevice };
+                var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead, EngineVersion){ MockPhysicalDevice = MockPhysicalDevice };
                 if (await command.TryRunAsync(maxAttempts: 15))
                 {
                     Debug.Assert(command.AllLinkRecord != null);

@@ -100,9 +100,9 @@ public sealed class AllLinkRecord
         Data3 = hexString.Byte(8);
     }
 
-    internal AllLinkRecord(InsteonExtendedMessage message)
+    internal AllLinkRecord(InsteonExtendedMessage message, int engineVersion = 2)
     {
-        if (!IsChecksumValid(message))
+        if (engineVersion >= 2 && !IsChecksumValid(message))
         {
             throw new InvalidAllLinkRecordException("AllLinkRecord extended message checksum invalid");
         }

@@ -24,12 +24,12 @@ namespace Insteon.Commands;
 public sealed class GetDeviceDatabaseCommand : DeviceCommand
 {
     public const string Name = "GetDB";
-    public const string Help = "<DeviceID>";
+    public const string Help = "<DeviceID> [<Insteon Engine Version (default: 2)]";
     private protected override string GetLogName() { return Name; }
     private protected override string GetLogParams() { return ""; }
 
-    public GetDeviceDatabaseCommand(Gateway gateway, InsteonID deviceID) : 
-        base(gateway, deviceID, isMacroCommand: true) { }
+    public GetDeviceDatabaseCommand(Gateway gateway, InsteonID deviceID, int engineVersion) : 
+        base(gateway, deviceID, isMacroCommand: true, engineVersion) { }
 
     /// <summary>
     /// Database return by this command
@@ -62,7 +62,7 @@ public sealed class GetDeviceDatabaseCommand : DeviceCommand
         // If using the multi-record command, attempt to get records that way
         if (useMultiRecordCommand)
         {
-            GetDeviceLinkRecordsCommand cmd = new GetDeviceLinkRecordsCommand(gateway, ToDeviceID);
+            GetDeviceLinkRecordsCommand cmd = new GetDeviceLinkRecordsCommand(gateway, ToDeviceID, EngineVersion);
 
             // Since we will be patching up the returned Records list using the single-record command (see below)
             // - allow only one attempt
@@ -84,7 +84,7 @@ public sealed class GetDeviceDatabaseCommand : DeviceCommand
 
             if (i == Records.Count || Records[i] == null)
             {
-                GetDeviceLinkRecordCommand cmd = new GetDeviceLinkRecordCommand(gateway, ToDeviceID, i);
+                GetDeviceLinkRecordCommand cmd = new GetDeviceLinkRecordCommand(gateway, ToDeviceID, i, EngineVersion);
                 cmd.SuppressLogging = true;
 
                 if (await cmd.TryRunAsync(maxAttempts: 10))
