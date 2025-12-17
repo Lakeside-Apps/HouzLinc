@@ -25,15 +25,16 @@ namespace Insteon.Commands;
 /// </summary>
 public abstract class DeviceCommand : HubCommand
 {
-    internal DeviceCommand(Gateway gateway, bool isMacroCommand = false) : base (gateway, isMacroCommand)
+    internal DeviceCommand(Gateway gateway, bool isMacroCommand = false, int engineVersion = 2) : base (gateway, isMacroCommand)
     {
         IMCommandType = IMCommandTypes.IM;
         IMCommandCode = IMCommandCode_SendInsteonMessage;
         ToDeviceID = InsteonID.Null;
+        EngineVersion = engineVersion;
     }
 
-    internal DeviceCommand(Gateway gateway, InsteonID toDeviceId, bool isMacroCommand = false) : 
-        this(gateway, isMacroCommand)
+    internal DeviceCommand(Gateway gateway, InsteonID toDeviceId, bool isMacroCommand = false, int engineVersion = 2) : 
+        this(gateway, isMacroCommand, engineVersion)
     {
         ToDeviceID = toDeviceId;
     }
@@ -109,6 +110,11 @@ public abstract class DeviceCommand : HubCommand
     ///  Derived classes should set to true if they expect one
     /// </summary>
     protected bool ExpectExtendedResponseMessage = false;
+
+    /// <summary>
+    /// Version of the Insteon engine on the device
+    /// </summary>
+    protected int EngineVersion = 2;
 
     /// <summary>
     ///  Helpers to get/set Data in a 1-based manner, as in the Insteon doc

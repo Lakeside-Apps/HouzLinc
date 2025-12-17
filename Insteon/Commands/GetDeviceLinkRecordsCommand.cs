@@ -29,12 +29,12 @@ namespace Insteon.Commands;
 public sealed class GetDeviceLinkRecordsCommand : DeviceCommand
 {
     public const string Name = "GetLinkRecords";
-    public const string Help = "<DeviceID>";
+    public const string Help = "<DeviceID> [<Insteon Engine Version (default: 2)]";
 
     private protected override string GetLogName() { return Name; }
     private protected override string GetLogParams() { return ""; }
 
-    internal GetDeviceLinkRecordsCommand(Gateway gateway, InsteonID deviceID) : base(gateway, deviceID)
+    internal GetDeviceLinkRecordsCommand(Gateway gateway, InsteonID deviceID, int engineVersion) : base(gateway, deviceID, isMacroCommand: false, engineVersion: engineVersion)
     {
         Command1 = CommandCode_GetDatabase;
         Command2 = 0;
@@ -80,7 +80,7 @@ public sealed class GetDeviceLinkRecordsCommand : DeviceCommand
             // Set this to ensure Done() does not report an error
             ExtendedResponseMessage = message;
 
-            AllLinkRecord record = new AllLinkRecord(message);
+            AllLinkRecord record = new AllLinkRecord(message, EngineVersion);
             if (AddRecord(record))
             {
                 if (record.IsLast)

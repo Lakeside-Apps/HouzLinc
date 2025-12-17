@@ -26,11 +26,11 @@ namespace Insteon.Commands;
 public sealed class GetDeviceLinkRecordCommand : DeviceCommand
 {
     public const string Name = "GetLink";
-    public const string Help = "<DeviceID> <Record Seq Number>";
+    public const string Help = "<DeviceID> <Record Seq Number> [<Insteon Engine Version (default: 2)]";
     private protected override string GetLogName() { return Name; }
     private protected override string GetLogParams() { return "Seq: " + LinkRecordSeq.ToString(); }
 
-    public GetDeviceLinkRecordCommand(Gateway gateway, InsteonID deviceID, int linkRecordSeq) : base(gateway, deviceID)
+    public GetDeviceLinkRecordCommand(Gateway gateway, InsteonID deviceID, int linkRecordSeq, int engineVersion) : base(gateway, deviceID, isMacroCommand: false, engineVersion: engineVersion)
     {
         Command1 = CommandCode_GetDatabase;
         Command2 = 0;
@@ -82,7 +82,7 @@ public sealed class GetDeviceLinkRecordCommand : DeviceCommand
 
         try
         {
-            AllLinkRecord allLinkRecord = new AllLinkRecord(message);
+            AllLinkRecord allLinkRecord = new AllLinkRecord(message, EngineVersion);
             Logger.Log.Debug("Received record");
             if (allLinkRecord.Address == Address)
             {

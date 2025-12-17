@@ -589,9 +589,15 @@ public sealed class CommandProcessor : ICommandProcessor
                 seq = ParseByteNumber(tokens[2]);
             }
 
+            int engineVersion = 2;
+            if (tokens.Count() >= 4)
+            {
+                engineVersion = ParseByteNumber(tokens[3]);
+            }
+
             if (seq >= 0)
             {
-                var deviceCommand = new GetDeviceLinkRecordCommand(Settings.Holder.House.Gateway,   deviceID, seq);
+                var deviceCommand = new GetDeviceLinkRecordCommand(Settings.Holder.House.Gateway, deviceID, seq, engineVersion);
                 await deviceCommand.TryRunAsync();
             }
         }
@@ -644,7 +650,13 @@ public sealed class CommandProcessor : ICommandProcessor
             string s = tokens[1];
             InsteonID deviceID = new InsteonID(s);
 
-            var deviceCommand = new GetDeviceDatabaseCommand(Settings.Holder.House.Gateway, deviceID);
+            int engineVersion = 2;
+            if (tokens.Count() >= 3)
+            {
+                engineVersion = ParseByteNumber(tokens[2]);
+            }
+
+            var deviceCommand = new GetDeviceDatabaseCommand(Settings.Holder.House.Gateway, deviceID, engineVersion);
             await deviceCommand.TryRunAsync();
         }
         else
