@@ -1,4 +1,4 @@
-/* Copyright 2022 Christian Fortini
+/*b Copyright 2022 Christian Fortini
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -120,8 +120,6 @@ public class SettingsViewModel : PageViewModel
         // Let the scan complete in the background.
         //networkScanner?.CancelSubnetScan();
     }
-
-    public InsteonID GatewayInsteonID => Holder.House.Gateway.DeviceId;
 
     /// <summary>
     /// Called from the UI to pass the values read from the configuration file (appsettings.json)
@@ -681,7 +679,7 @@ public class SettingsViewModel : PageViewModel
             if (await TryPushNewGatewayAsync(HubIPAddress))
             {
                 HubDiscoveryState = HubDiscoveryStates.Found;
-                HubInsteonID = GatewayInsteonID;
+                HubInsteonID = Holder.House.Gateway.DeviceId;
                 return true;
             }
         }
@@ -695,11 +693,14 @@ public class SettingsViewModel : PageViewModel
             var ip = GetIpAddressByMac(HubMacAddress);
             if (IsValidIPAddress(ip))
             {
+                // We have an ip address. Attempt to push new gateway with this ip.
                 if (await TryPushNewGatewayAsync(ip))
                 {
-                    HubDiscoveryState = HubDiscoveryStates.Found;
+                    // If successful, update this Settings view
                     HubIPAddress = ip;
-                    HubInsteonID = GatewayInsteonID;
+                    HubInsteonID = Holder.House.Gateway.DeviceId;
+                    // Set this last as assignments above might set it to NotFound
+                    HubDiscoveryState = HubDiscoveryStates.Found;
                     return true;
                 }
             }
@@ -714,7 +715,7 @@ public class SettingsViewModel : PageViewModel
         networkScanner = new NetworkScanner();
 
         // Collect the ip returned via the callback here
-        string hubIpAddress = string.Empty;
+        string hubIp = string.Empty;
 
         if (await networkScanner.ScanSubnetsForHostWithOpenPort(int.Parse(hubIPPort), async (ipAddress) =>
         {
@@ -724,7 +725,7 @@ public class SettingsViewModel : PageViewModel
             if (await VerifyHubAsync(ip))
             {
                 // Don't set HubIPAddress directly here because we might be on a worker thread
-                hubIpAddress = ip;
+                hubIp = ip;
                 return true;
             }
 
@@ -732,12 +733,16 @@ public class SettingsViewModel : PageViewModel
             return false;
         }))
         {
-            // We found the hub
-            HubDiscoveryState = HubDiscoveryStates.Found;
-            HubInsteonID = GatewayInsteonID;
-            HubIPAddress = hubIpAddress;
-            await TryPushNewGatewayAsync(HubIPAddress);
-            return true;
+            // We found the hub ip. Attempt to push new gateway with this ip.
+            if (await TryPushNewGatewayAsync(hubIp))
+            {
+                // If successfull, update this Settings view
+                HubIPAddress = hubIp;
+                HubInsteonID = Holder.House.Gateway.DeviceId;
+                // Set this last as assignments above might set it to NotFound
+                HubDiscoveryState = HubDiscoveryStates.Found;
+                return true;
+            }
         }
         else
         {
