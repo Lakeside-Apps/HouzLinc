@@ -721,7 +721,7 @@ public class SettingsViewModel : PageViewModel
         {
             // This callback may be called on a worker thread.
             var ip = ipAddress.ToString();
-            //Logger.Log.Running($"Found open port {HubIPPort} at {ip}");
+            Logger.Log.Running($"Found open port {HubIPPort} at {ip}");
             if (await VerifyHubAsync(ip))
             {
                 // Don't set HubIPAddress directly here because we might be on a worker thread
@@ -754,8 +754,6 @@ public class SettingsViewModel : PageViewModel
         return false;
     }
 
-    private HttpClient? _verificationClient;
-
     private HttpClient CreateVerificationClient(string username, string password)
     {
         var handler = new SocketsHttpHandler
@@ -776,20 +774,18 @@ public class SettingsViewModel : PageViewModel
         return client;
     }
 
-    // Quick lightweight verification that the gateway HTTP endpoint responds.
+    // Quick lightweight verification that the candidate gateway HTTP endpoint responds.
     // Respects cancellation token and runs without capturing UI context.
     private async Task<bool> VerifyHubAsync(string ipAddress, CancellationToken ct = default)
     {
-        // Use cached client per gateway to avoid ephemeral port churn
-        _verificationClient ??= CreateVerificationClient(HubUsername, HubPassword);
-
         // Build URL - use IpAddress/Port fields from Gateway
         var url = new UriBuilder("http", ipAddress, int.Parse(HubIPPort), "/").Uri;
 
         try
         {
+            var verificationClient = CreateVerificationClient(HubUsername, HubPassword);
             using var req = new HttpRequestMessage(HttpMethod.Get, url);
-            using var resp = await _verificationClient.SendAsync(req, ct).ConfigureAwait(false);
+            using var resp = await verificationClient.SendAsync(req, ct).ConfigureAwait(false);
             return resp.IsSuccessStatusCode;
         }
         catch (OperationCanceledException) { return false; }
