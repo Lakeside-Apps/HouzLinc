@@ -15,6 +15,7 @@
 
 using Common;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 
 namespace ViewModel.Settings;
 
@@ -47,10 +48,8 @@ public sealed class StatusTextLogger : ILogger
 
     public StatusTextLogger()
     {
-        messageTimer = new DispatcherTimer();
-        messageTimer.Interval = tickPeriod;
-        messageTimer.Tick += TimerTick;
-
+        messageTimer = new System.Timers.Timer(tickPeriod.TotalMilliseconds);
+        messageTimer.Elapsed += (s, e) => TimerTick(s, EventArgs.Empty);
     }
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -58,7 +57,7 @@ public sealed class StatusTextLogger : ILogger
         if (Logger.Log.GetLogEventClass(eventId.Id) == LogEventClass.Job ||
             Logger.Log.GetLogEventClass(eventId.Id) == LogEventClass.UserAction)
         {
-            if (!messageTimer.IsEnabled)
+            if (!messageTimer.Enabled)
             {
                 tickCount = 0;
                 messageTimer.Start();
@@ -128,9 +127,11 @@ public sealed class StatusTextLogger : ILogger
         if (userActionRequestEvent == null)
         {
             var isUserActionRequested = (shownEvent?.EventId.Id ?? 0) == (int)LogEventId.UserActionRequested;
-            UpdateStatusTextCallback?.Invoke(
-                text: shownEvent?.Text ?? string.Empty,
-                isUserActionRequest: isUserActionRequested);
+
+            if (UpdateStatusTextCallback is { } cb)
+            {
+                dispatcherQueue.TryEnqueue(() => cb(shownEvent?.Text ?? string.Empty, isUserActionRequested));
+            }
         }
 
         if (shownEvent != null && shownEvent.EventId.Id == (int)LogEventId.UserActionRequested)
@@ -165,11 +166,12 @@ public sealed class StatusTextLogger : ILogger
     private static LogEvent? shownEvent;
     private static LogEvent? userActionRequestEvent = default;
     private Queue<LogEvent> pendingEvents = new Queue<LogEvent>();
-    private DispatcherTimer messageTimer;
+    private readonly System.Timers.Timer messageTimer;
     private int tickCount;
     private readonly TimeSpan tickPeriod = TimeSpan.FromMilliseconds(100);
     private const int TickCountToHideMessage = 20; // 2s - Time to take down shown message
     private const int TickCountToShowPendingMessage = 1; // .1s - Time to show pending message
+    private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 }
 
 public sealed class StatusTextLoggerProvider : ILoggerProvider

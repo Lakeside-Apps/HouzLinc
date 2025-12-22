@@ -134,8 +134,6 @@ public class NetworkScanner
                     {
                         Common.Logger.Log.Debug($"Callback exception: {ex.Message}");
                     }
-
-                    Common.Logger.Log.Debug($"Open port found at {address}:{port}");
                 }
             });
         }
