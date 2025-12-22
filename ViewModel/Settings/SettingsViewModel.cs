@@ -708,7 +708,7 @@ public class SettingsViewModel : PageViewModel
 
         // Scan for a candidate hub on the local networks this device is connected to.
         // TODO: consider moving this to the Insteon project as ScheduleScanSubnetsForHostWithOpenPort.
-        Logger.Log.Running("Scanning Local Subnet");
+        Logger.Log.Running("Scanning local subnet for the Hub");
 
         // Cancel any previous scan
         networkScanner?.CancelSubnetScan();
@@ -729,7 +729,7 @@ public class SettingsViewModel : PageViewModel
                 return true;
             }
 
-            Logger.Log.Running("Scanning Local Subnet - Continue");
+            Logger.Log.Running("Failed to respond - Continue scanning");
             return false;
         }))
         {
@@ -746,7 +746,7 @@ public class SettingsViewModel : PageViewModel
         }
         else
         {
-            Logger.Log.Failed("Scanning Local Subnet - Failed");
+            Logger.Log.Failed("Scanning local subnet failed to find Hub");
         }
 
         // We've failed to locate the hub
