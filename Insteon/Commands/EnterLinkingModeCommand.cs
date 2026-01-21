@@ -36,7 +36,7 @@ public sealed class EnterLinkingModeCommand : DeviceCommand
     {
         // Determine the version of the Insteon engine on the device
         var command = new GetInsteonEngineVersionCommand(gateway, ToDeviceID);
-        if (await command.TryRunAsync(parentCommand: Running) && command.EngineVersion >= 2)
+        if (await command.TryRunAsync(parentCommand: Running) && command.ReturnedEngineVersion >= 2)
         {
             // If version 2 or above, send extended command
             ClearData();
