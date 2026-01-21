@@ -86,7 +86,7 @@ public class ProductData
                     SubCategory = command.SubCategory,
                     ProductKey = command.ProductKey,
                     Revision = command.FirmwareRev,
-                    EngineVersion = command2.EngineVersion
+                    EngineVersion = command2.ReturnedEngineVersion
                 };
                 return productData;
             }
@@ -106,7 +106,7 @@ public class ProductData
         var command = new GetInsteonEngineVersionCommand(house.Gateway, deviceId) { MockPhysicalDevice = house.GetMockPhysicalDevice(deviceId) };
         if (await command.TryRunAsync())
         {
-            return command.EngineVersion;
+            return command.ReturnedEngineVersion;
         }
         return 0;
     }

@@ -259,11 +259,11 @@ public sealed class GetInsteonEngineVersionCommand : DeviceCommand
     private protected override void Done()
     {
         base.Done();
-        LogOutput($"Device {StandardResponseMessage.FromDeviceId} Engine version: {EngineVersion}");
+        LogOutput($"Device {StandardResponseMessage.FromDeviceId} Engine version: {ReturnedEngineVersion}");
     }
 
-    // Verion is 01 (e1) or 02 (i2)
-    internal int EngineVersion => StandardResponseMessage.Command2;
+    // Insteon engine version returned by the device
+    internal int ReturnedEngineVersion => StandardResponseMessage.Command2;
 }
 
 /// <summary>
