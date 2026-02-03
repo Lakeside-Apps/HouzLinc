@@ -8,15 +8,15 @@ HouzLinc currently runs on Windows and Android. iOS is under development. On Win
 
 ## Motivations
 
-HouzLinc differentiates itself from the Insteon Director app by operating solely on the local network, connecting directly to the Insteon Hub without relying on a web service. While it can be used to control scenes and devices directly (from the local network), its primary function is to configure devices and build scenes.
+HouzLinc differentiates itself from the Insteon Director app by operating solely on the local network, connecting directly to the Insteon Hub without relying on a web service. While it can be used to activate scenes and devices directly (from the local network), its primary function is to configure devices and build scenes.
 
 The motivation behind HouzLinc stems from the belief that the configuration data for your network of devices should be private and fully owned by you, the user. You should have the flexibility to store it as you wish, share it with other household members or tenants, and transfer it to the new owner upon the sale of your home. Modifying this data should be free as this is your network and your data and only resources fully owned and operated by you are involved.
 
-An online account and potential subscription may be necessary, but only if you wish to access scenes or devices remotely—such as when controlling lights while away from home. This is because enabling remote access requires Insteon or a third party to run a web service, which incurs operational costs.
+An online account and potential subscription may be necessary, but only to access scenes or devices remotely—such as when controlling lights while away from home. This is because enabling remote access requires Insteon or a third party to run a web service, which incurs operational costs.
 
-HouzLinc represents a step toward this idea of local configuration and selective exposure to remote access. It operates on your local network and stores configuration data in a single file, which you can save locally or to a cloud service (currently only OneDrive supported). You can operate devices and scenes from HouzLinc on your local network. My goal is to eventually have HouzLinc promote scenes to remote access using the Insteon REST API. This would not reveal the entire scene to the web service but only negotiate the Hub channel used for that scene. Today, however, this requires some manual mapping between Director and HouzLinc views of the Hub channel configuration.
+HouzLinc represents a step toward this idea of free local configuration and selective exposure to remote access, potentially for a fee. It operates on your local network and stores configuration data in a single file, which you can save locally or to a cloud service (currently only OneDrive supported). You can operate devices and scenes from HouzLinc on your local network. My goal is to eventually have HouzLinc promote scenes to remote access using the Insteon REST API. This would not reveal the entire scene to the web service but only negotiate the Hub channel used for that scene. Today, however, this requires some manual mapping between Director and HouzLinc views of the Hub channel configuration.
 
-Multiple instances of HouzLinc can run simultaneously on different devices, sharing the same configuration file. This allows users to choose the most suitable device for their needs, whether it's a large screen or a mobile phone.
+Multiple instances of HouzLinc can run simultaneously on different devices, sharing the same configuration file. This allows users to choose the most suitable device at any moment, whether it's a large screen or a mobile phone.
 
 HouzLinc also offers the following:
 - Updates to the configuration of scenes and devices are performed asynchronously, allowing users to continue making changes while previous updates are being applied to the devices.
