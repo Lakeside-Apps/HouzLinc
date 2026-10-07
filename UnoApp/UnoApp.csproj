@@ -199,6 +199,10 @@
     <When Condition="'$(TargetFramework)'=='net9.0-android'">
       <PropertyGroup>
         <SupportedOSPlatformVersion>35.0</SupportedOSPlatformVersion>
+        <!-- Release enables PublishTrimmed/PublishSelfContained, which makes the .NET SDK add the host RID (win-x64)
+             to RuntimeIdentifiers. Android then fails to restore a non-existent Mono win-x64 runtime pack (NU1102),
+             which in turn surfaces in Visual Studio as NU1010. -->
+        <UseDefaultPublishRuntimeIdentifier>false</UseDefaultPublishRuntimeIdentifier>
   </PropertyGroup>
     </When>
     <When Condition="'$(TargetFramework)'=='net9.0-maccatalyst'">

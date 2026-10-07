@@ -3,4 +3,11 @@
 		<!-- Removes native usings to avoid Ambiguous reference -->
 		<Using Remove="@(Using->HasMetadata('Platform'))" />
 	</ItemGroup>
+
+	<!-- Unblock DLLs after build to prevent Application Control policy errors -->
+	<Target Name="UnblockOutputDlls" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Get-Item '$(TargetDir)*.dll' -ErrorAction SilentlyContinue | Unblock-File&quot;" 
+					IgnoreExitCode="true" 
+					ContinueOnError="true" />
+	</Target>
 </Project>
