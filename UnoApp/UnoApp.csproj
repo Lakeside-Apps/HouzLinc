@@ -155,16 +155,24 @@
            Text="For store uploads, Publisher must be set."/>
   </Target>
 
-  <!-- Dynamically propagate publisher, identity name and version to Package.appxmanifest
+  <!-- Dynamically propagate publisher, identity name and version to the generated Package.appxmanifest.
+       Uno.Resizetizer copies Package.appxmanifest to obj and repoints @(AppxManifest) at the copy, so we poke
+       that copy right after it is generated. The source Package.appxmanifest is never modified.
        Disabled for design time builds (they don't package and may not have acquired the version numbers) -->
   <Target Name="UpdateAppxManifest"
           DependsOnTargets="ValidateStoreVersion"
-          BeforeTargets="PrepareForBuild"
+          AfterTargets="UnoGeneratePackageAppxManifest"
           Condition="'$(TargetFramework)'=='net9.0-windows10.0.26100'
                    and '$(DesignTimeBuild)'!='true'">
 
+    <PropertyGroup>
+      <_GeneratedAppxManifest>@(AppxManifest->'%(FullPath)')</_GeneratedAppxManifest>
+    </PropertyGroup>
+    <Error Condition="!$(_GeneratedAppxManifest.StartsWith($([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)'))))"
+           Text="Expected AppxManifest to point to the generated copy in obj, but it is '$(_GeneratedAppxManifest)'. Refusing to modify the source manifest." />
+
     <!-- Publisher -->
-    <XmlPoke XmlInputPath=".\Package.appxmanifest"
+    <XmlPoke XmlInputPath="$(_GeneratedAppxManifest)"
              Query="/dn:Package/dn:Identity/@Publisher"
              Namespaces="$(Namespace)"
              Value="$(Publisher)" />
@@ -173,7 +181,7 @@
 
     <!-- Identity Name (Store builds) -->
     <XmlPoke Condition=" '$(BuildForStore)' == 'true' "
-             XmlInputPath=".\Package.appxmanifest"
+             XmlInputPath="$(_GeneratedAppxManifest)"
              Query="/dn:Package/dn:Identity/@Name"
              Namespaces="$(Namespace)"
              Value="$(StorePackageIdentityName)" />
@@ -181,7 +189,7 @@
              Text="Setting Identity Name: $(StorePackageIdentityName)" />
 
     <!-- Version -->
-    <XmlPoke XmlInputPath=".\Package.appxmanifest"
+    <XmlPoke XmlInputPath="$(_GeneratedAppxManifest)"
              Query="/dn:Package/dn:Identity/@Version"
              Namespaces="$(Namespace)"
              Value="$(PackageIdentityVersion)" />
