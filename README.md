@@ -205,11 +205,13 @@ Create a file named appsettings.json in the project UnoApp folder under your rep
 ```
 <your repo root>/UnoApp/appsettings.json
 ```
-Containing the following section:
-```
-"Msal": {
+Containing the following:
+```json
+{
+  "Msal": {
     "ClientId": "<Your MSAL client Id>",
-    "AndroidRedirectURI": <Your Android Redirect URI>"
+    "AndroidRedirectUri": "<Your Android Redirect URI>"
+  }
 }
 ```
 Where you enter your client Id and redirect URI for Android obtained from your Azure app registration.
@@ -225,13 +227,13 @@ The appsettings.json file contains developer-specific application configuration 
 #### Sync and Save buttons
 As an optional feature, it is possible to show "Sync" and "Save" buttons on the bottom right of the window to force user confirmation when syncing the house configuration with network devices or saving the house configuration to a local or online file. These buttons are designed to help developers confirm the state before syncing or saving when working on new features.
 
-To enable these buttons, add the following section to the appsettings.json file:
+To enable these buttons, add the following section to the appsettings.json file, next to the "Msal" section (separate the two sections with a comma):
 
-```
+```json
 "FeatureFlags": {
-    "EnableHouseSaveButton": true,
-    "EnableHouseSyncButton": true,
-  },
+  "EnableHouseSaveButton": true,
+  "EnableHouseSyncButton": true
+}
 ```
 
 Rebuild and relaunch the app. The buttons will appear on the bottom right of the window.

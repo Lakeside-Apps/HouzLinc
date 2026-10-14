@@ -163,6 +163,14 @@ public sealed class OneDrive
         if (session != null && !IsTokenExpired())
             return true;
 
+        // The client id comes from the Msal section of UnoApp/appsettings.json, which is not part of the repo
+        if (string.IsNullOrEmpty(clientId))
+        {
+            Common.Logger.Log.Error("OneDrive: MSAL client id is not configured. Create UnoApp/appsettings.json " +
+                "with an Msal section (see \"App Configuration\" in README.md) and rebuild.");
+            return false;
+        }
+
         var retry = false;
         var redirectUri = redirectUri1;
 
