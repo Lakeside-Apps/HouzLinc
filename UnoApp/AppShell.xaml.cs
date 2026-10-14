@@ -107,8 +107,12 @@ public sealed partial class AppShell : Page, INotifyPropertyChanged
             SettingsViewModel.ShowOpenHouseDialogHandler += ShowOpenHouseDialog;
 
             // Load or create the house configuration
+            // If the user cancelled out of the OpenHouseDialog, terminate the app
             if (!await SettingsViewModel.Instance.EnsureHouse())
+            {
+                Application.Current.Exit();
                 return;
+            }
 
             // Attempt to discover and connect to the Hub
             await SettingsViewModel.Instance.FindHub();
