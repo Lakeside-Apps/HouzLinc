@@ -107,8 +107,12 @@ public sealed partial class AppShell : Page, INotifyPropertyChanged
             SettingsViewModel.ShowOpenHouseDialogHandler += ShowOpenHouseDialog;
 
             // Load or create the house configuration
+            // If the user cancelled out of the OpenHouseDialog, terminate the app
             if (!await SettingsViewModel.Instance.EnsureHouse())
+            {
+                Application.Current.Exit();
                 return;
+            }
 
             // Attempt to discover and connect to the Hub
             await SettingsViewModel.Instance.FindHub();
@@ -512,13 +516,21 @@ public sealed partial class AppShell : Page, INotifyPropertyChanged
 
     private async Task<SettingsViewModel.OpenHouseDialogActions> ShowOpenHouseDialog(bool showPreviousError)
     {
-        OpenHouseDialog dialog = new OpenHouseDialog(this.XamlRoot, showPreviousError);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        while (true)
         {
-            return dialog.Action;
-        }
+            OpenHouseDialog dialog = new OpenHouseDialog(this.XamlRoot, showPreviousError);
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                return dialog.Action;
+            }
 
-        return SettingsViewModel.OpenHouseDialogActions.Exit;
+            // Where the app can exit, Cancel or dismissing the dialog (e.g., Escape) exits the app.
+            // Elsewhere, there is no Cancel button and we show the dialog again if dismissed (e.g., Android Back key).
+            if (OpenHouseDialog.CanExitApp)
+            {
+                return SettingsViewModel.OpenHouseDialogActions.Exit;
+            }
+        }
     }
 
     /// <summary>
