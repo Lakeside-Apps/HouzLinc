@@ -29,9 +29,20 @@ public sealed partial class OpenHouseDialog : ContentDialog
     {
         this.InitializeComponent();
         this.XamlRoot = xamlRoot;
-        IsPrimaryButtonEnabled = false; 
+        IsPrimaryButtonEnabled = false;
         ShowPreviousError = showPreviousError;
+
+        // No Cancel button where the app can't exit, an empty text hides the button
+        if (!CanExitApp)
+        {
+            SecondaryButtonText = string.Empty;
+        }
     }
+
+    // Whether the app can terminate itself when the user cancels out of this dialog.
+    // Application.Exit is not supported with Uno's native renderer (Android, iOS) or on WebAssembly,
+    // and iOS apps are not allowed to exit themselves anyway.
+    public static bool CanExitApp => !(OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsBrowser());
 
     private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
