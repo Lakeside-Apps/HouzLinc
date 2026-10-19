@@ -690,9 +690,14 @@ public abstract class Scheduler
             runCount++;
 
             // If prehandler is provided, call it and cancel job if it returns false
+            // The job has already been removed from the queue, so it must still complete: otherwise its group,
+            // if any, would never complete and the group and job completion callbacks would never be called.
             if (jobPrehandlerAsync != null && !await jobPrehandlerAsync.Invoke())
             {
                 LogDebug($"Prehandler cancelled job {Description}");
+                IsPending = false;
+                NotifyCompleted(false);
+                jobCompletionCallback?.Invoke(default!);
                 return;
             }
 
