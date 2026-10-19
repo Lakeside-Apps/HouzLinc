@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Plain .NET unit tests for the non-UI layers (Common, Insteon).
+    Run with "dotnet test" or the Visual Studio Test Explorer. No app deployment needed.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>UnitTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Insteon\Insteon.csproj" />
+  </ItemGroup>
+
+  <!-- Test input models and reference files, read from the output folder at test time -->
+  <ItemGroup>
+    <None Include="Models\**\*.xml;Refs\**\*.xml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

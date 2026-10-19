@@ -14,4 +14,4 @@
 */
 
 using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo(assemblyName: "UnitTestApp")]
+[assembly: InternalsVisibleTo(assemblyName: "UnitTests")]
