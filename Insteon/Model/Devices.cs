@@ -22,9 +22,6 @@ using Microsoft.UI.Dispatching;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleToAttribute("UnitTestApp")]
 
 namespace Insteon.Model;
 

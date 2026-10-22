@@ -239,12 +239,11 @@ To enable these buttons, add the following section to the appsettings.json file,
 Rebuild and relaunch the app. The buttons will appear on the bottom right of the window.
 
 ### Unit Tests
-The project currently contains some non-UI unit tests for the Insteon layer. These tests are written using the MSTest framework. They can be run in Visual Studio by selecting the `Test` menu and then `Run All Tests`. The tests are located in the `UnitTestApp` project.
-
-Tests can also be built from the command line using msbuild. Navigate to UnitTestApp folder under the root of the repo and run the following command:
+The project currently contains some non-UI unit tests for the Insteon layer. These tests are written using the MSTest framework and are located in the `UnitTests` project, a plain .NET (`net9.0`) test project that does not require deploying an app. They can be run in Visual Studio by selecting the `Test` menu and then `Run All Tests`, or from the command line at the root of the repo:
 ```
-msbuild /p:TargetFramework=net9.0-windows10.0.26100 /p:Configuration=Release /p:Platform=x64 /p:PublishUnsignedPackage=true /p:AppxPackageDir="<output directory>" /v:minimal
+dotnet test UnitTests/UnitTests.csproj
 ```
+Some tests compare the model they produce with reference files in `UnitTests/Refs`. The files produced by the tests are saved under `HouzLincTests` in your temp folder, and the path of both files is shown when a comparison fails.
 
 ### Upgrade to new Uno Platform versions
 Change `global.json` file at the root of the repo to specify the desired Uno SDK version. Then either select  Tools > Options > NuGet Package Manager > General → Clear All NuGet Cache(s) in Visual Studio or run the following command from a Developer Powershell window in the root of the repo:
