@@ -93,19 +93,27 @@ public sealed class TestScheduler
         Assert.AreEqual(3, runCount, "No more runs after maxRunCount");
     }
 
+    // Async job handlers resume after an await (e.g., waiting on a device response) on the scheduler thread,
+    // as on the UI thread in the app, and within RunUntilIdle, so tests can assert right after pumping.
     [TestMethod]
-    public void AsyncJob_ContinuationsRunOnDispatcher()
+    public void AsyncJob_ResumesAfterAwait_OnTestThread_BeforeRunUntilIdleReturns()
     {
+        int testThreadId = Environment.CurrentManagedThreadId;
+        int? resumedThreadId = null;
         bool? result = null;
         scheduler.AddAsyncJob("Async job", async () =>
         {
+            // Force the handler to suspend; the rest of it is a continuation queued to run later
             await Task.Yield();
+            resumedThreadId = Environment.CurrentManagedThreadId;
             return true;
         },
         success => result = success);
 
         dispatcher.RunUntilIdle();
-        Assert.AreEqual(true, result);
+
+        Assert.AreEqual(testThreadId, resumedThreadId, "Handler should resume on the test thread");
+        Assert.AreEqual(true, result, "Job should complete before RunUntilIdle returns");
     }
 
     [TestMethod]
