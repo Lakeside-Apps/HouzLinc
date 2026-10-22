@@ -46,7 +46,6 @@ public sealed class TestScenesWithDuplicateMembers
     [TestInitialize]
     public async Task Init()
     {
-        ApplicationType.IsUnitTestFramework = true;
         var h = await ModelHolderForTest.LoadFromFile("Scenes", "Scene2Expanded");
         Assert.IsNotNull(h);
         this.house = h!;

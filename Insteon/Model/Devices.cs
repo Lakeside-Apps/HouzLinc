@@ -18,7 +18,6 @@ using Insteon.Base;
 using Insteon.Commands;
 using Insteon.Mock;
 using Insteon.Synchronization;
-using Microsoft.UI.Dispatching;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -508,8 +507,7 @@ public sealed class Devices : OrderedKeyedList<Device>
     // Helper to run the background syncing of devices
     private void RunBackgroundDeviceSync()
     {
-        var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        dispatcherQueue.TryEnqueue(async () =>
+        InsteonScheduler.Instance.Dispatcher.Post(async () =>
         {
             // Wait until SyncDevicesNow is called
             await syncSemaphore.WaitAsync();

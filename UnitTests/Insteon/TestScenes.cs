@@ -45,7 +45,6 @@ public sealed class TestScenes
     [TestInitialize]
     public async Task Init()
     {
-        ApplicationType.IsUnitTestFramework = true;
         var h = await ModelHolderForTest.LoadFromFile("Scenes", "Scene1");
         Assert.IsNotNull(h);
         this.house = h!;

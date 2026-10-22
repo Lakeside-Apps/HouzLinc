@@ -14,7 +14,6 @@
 */
 
 using System.Diagnostics;
-using Microsoft.UI.Dispatching;
 
 namespace Common;
 
@@ -463,7 +462,7 @@ public abstract class Scheduler
         /// <summary>
         /// Wether job is ready to run (whether delay has expired)
         /// </summary>
-        public bool IsReady => DateTime.Now >= ReadyTime;
+        public bool IsReady => scheduler.Now >= ReadyTime;
 
         /// <summary>
         /// Whether this job is run in steps with a step handler
@@ -481,7 +480,7 @@ public abstract class Scheduler
                 // Schedule continuation steps at front of queue, to run ahead of jobs of same priority or lower
                 LogDebug($"Scheduling {(runCount > 1 ? "Step Retry:" : "Next Step:")} {Description} at {PriorityAsString} priority");
                 scheduler.jobs.Insert(0, this);
-                ReadyTime = DateTime.Now;
+                ReadyTime = scheduler.Now;
             }
             else
             {
@@ -489,7 +488,7 @@ public abstract class Scheduler
                 LogDebug($"Scheduling {(runCount > 1 ? " Retry:" : ":")} {Description} to run in {Delay.ToString()} at {PriorityAsString} priority");
                 IsPending = true;
                 scheduler.jobs.Add(this);
-                ReadyTime = DateTime.Now + Delay;
+                ReadyTime = scheduler.Now + Delay;
             }
             scheduler.Start();
         }
@@ -973,8 +972,7 @@ public abstract class Scheduler
             // whatever is necessary to cancel the running job
             if (cancellationHandler != null)
             {
-                DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-                dispatcherQueue.TryEnqueue(async () => await cancellationHandler());
+                dispatcher.Post(async () => await cancellationHandler());
             }
         }
 
@@ -1025,7 +1023,7 @@ public abstract class Scheduler
             if (obj is Job job)
             {
                 job.Delay = TimeSpan.Zero;
-                job.ReadyTime = DateTime.Now;
+                job.ReadyTime = Now;
                 LogDebug($"Cleared delay of {job.Description}");
                 Start();
             }
@@ -1044,15 +1042,11 @@ public abstract class Scheduler
 
         stopCount--;
 
-        if (stopCount == 0 && jobs.Count > 0 && !ApplicationType.IsUnitTestFramework)
+        if (stopCount == 0 && jobs.Count > 0)
         {
-            Debug.Assert(Environment.CurrentManagedThreadId == SchedulerThreadId);
+            Debug.Assert(dispatcher.HasThreadAccess);
 
-            var queue = DispatcherQueue.GetForCurrentThread();
-            timer = queue.CreateTimer();
-            timer.Tick += TimerTick;
-            timer.Interval = GetTimerInterval();
-            timer.Start();
+            timer = dispatcher.StartTimer(GetTimerInterval(), TimerTick);
         }
     }
 
@@ -1063,7 +1057,7 @@ public abstract class Scheduler
 
         if (stopCount == 0 && timer != null)
         {
-            timer.Stop();
+            timer.Dispose();
             timer = null;
         }
 
@@ -1085,15 +1079,15 @@ public abstract class Scheduler
             }
         }
 
-        TimeSpan ts = soonestReadyTime - DateTime.Now;
+        TimeSpan ts = soonestReadyTime - Now;
         return (ts > TimeSpan.Zero) ? ts : TimeSpan.Zero;
     }
 
     // Handler of the timer
-    private async void TimerTick(object sender, object e)
+    private async void TimerTick()
     {
-        // We should always be called on the UI thread
-        Debug.Assert(Environment.CurrentManagedThreadId == SchedulerThreadId);
+        // We should always be called on the scheduler (UI) thread
+        Debug.Assert(dispatcher.HasThreadAccess);
 
         Stop();
         await RunAsync();
@@ -1245,8 +1239,28 @@ public abstract class Scheduler
         }
     }
 
+    /// <summary>
+    /// Thread (event loop) and clock this scheduler runs on. Defaults to the DispatcherQueue of the thread
+    /// the scheduler was created on, and the system clock. Unit tests replace it to run jobs deterministically.
+    /// </summary>
+    public ISchedulerDispatcher Dispatcher
+    {
+        get => dispatcher;
+        set
+        {
+            // Restart the timer, if needed, on the new dispatcher
+            Stop();
+            dispatcher = value;
+            Start();
+        }
+    }
+    private ISchedulerDispatcher dispatcher = new DispatcherQueueSchedulerDispatcher();
+
+    // Current time per the dispatcher's clock
+    private DateTime Now => dispatcher.Now;
+
     // Scheduler timer
-    private DispatcherQueueTimer? timer;
+    private IDisposable? timer;
 
     // Pending jobs
     private List<JobBase> jobs = new List<JobBase>();
@@ -1256,9 +1270,6 @@ public abstract class Scheduler
 
     // Running high pri job (can run over a medium or low pri job)
     private Job? runningHighPriJob;
-
-    // For debug purposes, Id of the thread the scheduler was created on
-    int SchedulerThreadId = Environment.CurrentManagedThreadId;
 
     // Number of times Stop() was called without a matching call to Start()
     int stopCount = 0;
