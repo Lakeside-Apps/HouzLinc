@@ -30,12 +30,6 @@ public sealed class TestModelMerge : ModelTestsBase
         // Place breakpoint here to collect the test files
     }
 
-    [TestInitialize]
-    public void Init()
-    {
-        ApplicationType.IsUnitTestFramework = true;
-    }
-
     [TestCleanup]
     public void Cleanup()
     {
