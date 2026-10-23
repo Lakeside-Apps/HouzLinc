@@ -62,7 +62,16 @@ internal sealed class TestDispatcher : ISchedulerDispatcher
         SynchronizationContext.SetSynchronizationContext(synchronizationContext);
         try
         {
-            while (TryRunNext()) { }
+            // Guard against work that keeps requeuing itself without the clock moving, which would hang the test run
+            int steps = 0;
+            while (TryRunNext())
+            {
+                if (++steps > MaxStepsUntilIdle)
+                {
+                    throw new InvalidOperationException(
+                        $"TestDispatcher did not become idle after {MaxStepsUntilIdle} steps at {Now:HH:mm:ss}: work keeps requeuing itself");
+                }
+            }
         }
         finally
         {
@@ -132,6 +141,9 @@ internal sealed class TestDispatcher : ISchedulerDispatcher
         public override void Post(SendOrPostCallback d, object? state) => dispatcher.Post(() => d(state));
         public override SynchronizationContext CreateCopy() => this;
     }
+
+    // Max number of actions and timers RunUntilIdle runs at a given simulated time
+    private const int MaxStepsUntilIdle = 100_000;
 
     private readonly Queue<Action> queue = new();
     private readonly List<Timer> timers = new();

@@ -207,7 +207,8 @@ public abstract class Command
     internal const int DefaultMaxAttempts = 3;
 
     // Wait time before retrying after the command returns a error that could be due to network or device instability
-    private static TimeSpan waitBeforeRetryAfterError = TimeSpan.FromMilliseconds(100);
+    // Unit tests set this to zero as they run on a simulated clock.
+    internal static TimeSpan WaitBeforeRetryAfterError { get; set; } = TimeSpan.FromMilliseconds(100);
 
     // Semaphore to allow only one command to run at a time
     private static SemaphoreSlim commandSemaphore = new SemaphoreSlim(1, 1);
@@ -237,53 +238,73 @@ public abstract class Command
         bool success = false;
         gateway.OnGatewayTraffic(true);
 
-        for (int attempt = 1; attempt <= maxAttempts; attempt++)
+        try
         {
-            var holdingSemaphore = false;
-
-            // If running as a sub-command, the semaphore must be held by the parent command
-            Debug.Assert(parentCommand == null || 
-                (Running == parentCommand && commandSemaphore.CurrentCount == 0));
-
-            if (!isMacroCommand && parentCommand == null)
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
-                // We allow only one command to run at a time
-                await commandSemaphore.WaitAsync();
-                holdingSemaphore = true;
-                Running = this;
+                var holdingSemaphore = false;
+
+                // If running as a sub-command, the semaphore must be held by the parent command
+                Debug.Assert(parentCommand == null || 
+                    (Running == parentCommand && commandSemaphore.CurrentCount == 0));
+
+                if (!isMacroCommand && parentCommand == null)
+                {
+                    // We allow only one command to run at a time
+                    await commandSemaphore.WaitAsync();
+                    holdingSemaphore = true;
+                    Running = this;
+                }
+
+                try
+                {
+                    Echo(attempt, maxAttempts);
+                    success = SimulatesMockFailure() ? false : await RunAsync();
+                }
+                finally
+                {
+                    // Release the semaphore even if the command throws.
+                    // Otherwise all subsequent commands would wait forever, stopping all communication with the hub.
+                    if (holdingSemaphore)
+                    {
+                        Running = null;
+                        commandSemaphore.Release();
+                    }
+                }
+
+                if (success)
+                    break;
+
+                Debug.Assert(ErrorReason != ErrorReasons.NoError, "Command.TryRunAsync: failure with no error reason");
+
+                if (attempt == maxAttempts)
+                    break;
+
+                // We retry for recoverable errors (network, IM or device instability)
+                if (!IsRecoverable(ErrorReason))
+                    break;
+
+                // Wait a bit and retry. Increase the wait for each attempt.
+                // This seems to work with devices not responding reliably
+                TimeSpan wait = WaitBeforeRetryAfterError * attempt;
+                Logger.Log.Debug($"Waiting {wait} before next attempt");
+                await Task.Delay(wait);
             }
-
-            Echo(attempt, maxAttempts);
-            success = await RunAsync();
-
-            if (holdingSemaphore)
-            {
-                Running = null;
-                commandSemaphore.Release();
-            }
-
-            if (success)
-                break;
-
-            Debug.Assert(ErrorReason != ErrorReasons.NoError, "Command.TryRunAsync: failure with no error reason");
-
-            if (attempt == maxAttempts)
-                break;
-
-            // We retry for recoverable errors (network, IM or device instability)
-            if (!IsRecoverable(ErrorReason))
-                break;
-
-            // Wait a bit and retry. Increase the wait for each attempt.
-            // This seems to work with devices not responding reliably
-            TimeSpan wait = waitBeforeRetryAfterError * attempt;
-            Logger.Log.Debug($"Waiting {wait} before next attempt");
-            await Task.Delay(wait);
+        }
+        finally
+        {
+            // Clear the traffic indicator even if the command throws
+            gateway.OnGatewayTraffic(false);
         }
 
-        gateway.OnGatewayTraffic(false);
         return success;
     }
+
+    /// <summary>
+    /// For unit tests: whether a mock physical device simulates a failure of this command.
+    /// If so, this sets ErrorReason and the command is not run.
+    /// </summary>
+    private protected virtual bool SimulatesMockFailure() => false;
 
     /// <summary>
     ///  Whether to suppress normal logging for this command

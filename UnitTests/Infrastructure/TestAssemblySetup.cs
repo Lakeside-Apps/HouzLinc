@@ -13,6 +13,7 @@
    limitations under the License.
 */
 
+using Insteon.Commands;
 using Insteon.Synchronization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -30,6 +31,12 @@ public static class TestAssemblySetup
     [AssemblyInitialize]
     public static void Initialize(TestContext context)
     {
+        // Capture the app log, before Common.Logger creates its logger
+        global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = TestLog.Instance;
+
+        // Tests run without a hub: any command not served by a mock device fails the test instead of reaching the network
+        HubCommand.IsNetworkAccessDisabled = true;
+
         InsteonDispatcher = new TestDispatcher();
         InsteonScheduler.Instance.Dispatcher = InsteonDispatcher;
     }

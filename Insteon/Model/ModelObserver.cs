@@ -45,6 +45,20 @@ public sealed class ModelObserver :
         OnModelNeedsSync?.Invoke();
     }
 
+    // Notify that the model needs sync on a change to a device that still has changes to sync.
+    // This covers further changes to a device whose sync status is already "Changed", e.g., because
+    // it could not be reached, which do not change its sync status and so do not trigger a sync on their own.
+    // Requesting a sync pass does not cause any network traffic for devices that are in sync.
+    // Devices whose product data is not known yet (e.g., being added) are skipped, as evaluating
+    // NeedsSync requires their device driver. Their sync status changes trigger a sync instead.
+    private void NotifyModelNeedsSyncIfDeviceNeedsSync(Device? device)
+    {
+        if (device != null && device.IsProductDataKnown && device.NeedsSync && !device.Snoozed)
+        {
+            OnModelNeedsSync?.Invoke();
+        }
+    }
+
     void IGatewaysObserver.GatewayChanged(Gateway newGateway)
     {
         modelChangePlayer.Record(new GatewayChangedChange(newGateway));
@@ -80,6 +94,7 @@ public sealed class ModelObserver :
             return;
 
         modelChangePlayer.Record(new DevicePropertyChangedChange(device, propertyName));
+        NotifyModelNeedsSyncIfDeviceNeedsSync(device);
         OnModelChanged?.Invoke();
     }
 
@@ -160,6 +175,7 @@ public sealed class ModelObserver :
             return;
 
         modelChangePlayer.Record(new AllLinkRecordAddedChange(device, record));
+        NotifyModelNeedsSyncIfDeviceNeedsSync(device);
         OnModelChanged?.Invoke();
     }
 
@@ -169,6 +185,7 @@ public sealed class ModelObserver :
             return;
 
         modelChangePlayer.Record(new AllLinkRecordRemovedChange(device, record));
+        NotifyModelNeedsSyncIfDeviceNeedsSync(device);
         OnModelChanged?.Invoke();
     }
 
@@ -178,6 +195,7 @@ public sealed class ModelObserver :
             return;
 
         modelChangePlayer.Record(new AllLinkRecordReplacedChange(device, recordToReplace, newRecord));
+        NotifyModelNeedsSyncIfDeviceNeedsSync(device);
         OnModelChanged?.Invoke();
     }
 

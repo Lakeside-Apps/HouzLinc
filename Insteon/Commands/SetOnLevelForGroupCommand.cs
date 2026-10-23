@@ -38,6 +38,21 @@ public sealed class SetOnLevelForGroupCommand : DeviceCommand
         ExpectExtendedResponseMessage = false;
     }
 
+    private protected override async Task<bool> RunAsync()
+    {
+        if (MockPhysicalDevice != null)
+        {
+            // Mock implementation of this command for testing purposes only
+            // Only group 1 (the device main load) is simulated
+            if (Group == 1)
+            {
+                MockPhysicalDevice.OnLevel = OnLevel;
+            }
+            return true;
+        }
+        return await base.RunAsync();
+    }
+
     private protected override void Done()
     {
         base.Done();

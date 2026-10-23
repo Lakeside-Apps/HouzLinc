@@ -130,6 +130,14 @@ public abstract class HubCommand : Command
     {
         Debug.Assert(MockPhysicalIM == null, "HubCommand.RunAsync() should not be called for testing");
 
+        // Unit tests run without a hub: a command getting here has no mock implementation or was created without its mock
+        if (IsNetworkAccessDisabled)
+        {
+            Debug.Fail($"Command {GetLogName()} attempted to reach the hub while network access is disabled. Missing mock?");
+            ErrorReason = ErrorReasons.HttpRequestError;
+            return false;
+        }
+
         IsComplete = false;
 
         // Ensure previous command finished more than MinTimeBetweenCommands ago
@@ -649,4 +657,7 @@ public abstract class HubCommand : Command
 
     // Mock physical IM, only set for unit-testing
     internal MockPhysicalIM? MockPhysicalIM { get; init; }
+
+    // Set by unit tests to fail any command that would reach the hub over the network
+    internal static bool IsNetworkAccessDisabled { get; set; }
 }
