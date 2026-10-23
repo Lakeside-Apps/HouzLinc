@@ -1211,9 +1211,11 @@ public abstract class Scheduler
          Logger.Log.Failed(message);
     }
 
+    // Debug messages are prefixed with the scheduler name to tell schedulers apart in the debug log.
+    // Running/Completed/Failed messages are not, as they are shown to the user.
     protected virtual void LogDebug(string message)
     {
-        Logger.Log.Debug(message);
+        Logger.Log.Debug($"{GetName()} - {message}");
     }
 
     // Evalute success of the job handler based on return type
