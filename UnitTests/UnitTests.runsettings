@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <MSTest>
+    <!-- Fail a test that waits forever (e.g., on an async operation that never completes)
+         instead of hanging the whole test run. Tests normally complete in well under a second. -->
+    <TestTimeout>30000</TestTimeout>
+  </MSTest>
+</RunSettings>

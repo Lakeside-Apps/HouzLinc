@@ -207,7 +207,7 @@ internal class DeviceDriver : DeviceDriverBase
             {
                 if (operatingFlags[i] != OperatingFlags[i])
                 {
-                    var command = new SetOperatingFlagCommand(House.Gateway, Id, (byte)(operatingFlags[i] ? i * 2 : i * 2 + 1));
+                    var command = new SetOperatingFlagCommand(House.Gateway, Id, (byte)(operatingFlags[i] ? i * 2 : i * 2 + 1)) { MockPhysicalDevice = House.GetMockPhysicalDevice(Id) };
                     if (!await command.TryRunAsync(maxAttempts: 15))
                     {
                         success = false;
@@ -453,7 +453,7 @@ internal class DeviceDriver : DeviceDriverBase
         {
             success = false;
 
-            var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead, EngineVersion);
+            var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead, EngineVersion) { MockPhysicalDevice = MockPhysicalDevice };
             if (await command.TryRunAsync(maxAttempts: 15))
             {
                 Debug.Assert(command.AllLinkRecord != null);

@@ -8,6 +8,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>UnitTests</RootNamespace>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\UnitTests.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>

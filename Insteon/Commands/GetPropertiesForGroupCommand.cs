@@ -39,11 +39,14 @@ public sealed class GetPropertiesForGroupCommand : DeviceCommand
         {
             // Mock implementation of this command for testing purposes only
             // Simulate a response from the device
-            // For now this only responds with the global LED brightness. 
+            // For now this only responds with ramp rate (D7), on-level (D8) and global LED brightness (D9).
+            // Ramp rate and on-level are only simulated for group 1 (the device main load).
             // TODO: implement other properties
+            byte rampRate = Group == 1 ? MockPhysicalDevice.RampRate : (byte)0;
+            byte onLevel = Group == 1 ? MockPhysicalDevice.OnLevel : (byte)0;
             OnExtendedResponseReceived(new InsteonExtendedMessage(
                     InsteonMessage.BuildHexString(ToDeviceID, InsteonID.Null, (byte)MessageType.Direct | (byte)MessageLength.Extended, command1: CommandCode_SetForGroup, command2: 0,
-                    data: $"{Group:X2}01000000000000{MockPhysicalDevice.LEDBrightness:X2}0000000000")));
+                    data: $"{Group:X2}0100000000{rampRate:X2}{onLevel:X2}{MockPhysicalDevice.LEDBrightness:X2}0000000000")));
             return true;
         }
         return await base.RunAsync();

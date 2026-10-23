@@ -498,6 +498,9 @@ public sealed class Devices : OrderedKeyedList<Device>
     /// </summary>
     internal void StartBackgroundDeviceSync()
     {
+        // Any change that needs sync restarts the backoff of retries of unreachable devices
+        House.ModelObserver.OnModelNeedsSync += ResetRetryBackoff;
+
         RunBackgroundDeviceSync();
         // TODO: temporary, won't be necessary when we start the syncSemaphore at 1 (see above)
         House.ModelObserver.NotifyModelNeedsSync();
@@ -523,10 +526,58 @@ public sealed class Devices : OrderedKeyedList<Device>
             ScheduleSyncDevices((success) =>
             {
                 completionCallback?.Invoke(success);
+                ScheduleRetryOfUnreachableDevices();
                 RunBackgroundDeviceSync();
             }, forceRead: forceRead);
-            
+
         });
+    }
+
+    // Background retry of devices that have changes to sync but could not be reached (e.g., unplugged, or a lost message).
+    // Retry passes back off exponentially to limit traffic on the slow Insteon network while a device stays unreachable.
+    // A retry pass pings each unreachable device with changes to sync once, and does nothing for devices in sync.
+    internal static readonly TimeSpan FirstRetryDelay = TimeSpan.FromMinutes(1);
+    internal static readonly TimeSpan MaxRetryDelay = TimeSpan.FromMinutes(30);
+    private TimeSpan nextRetryDelay = FirstRetryDelay;
+    private object? retryJob;
+
+    // Called at the end of each sync pass to schedule a retry pass if there are unreachable devices with changes to sync
+    private void ScheduleRetryOfUnreachableDevices()
+    {
+        bool hasUnreachableDevicesToSync = this.Any(d =>
+            (d.Status == Device.ConnectionStatus.Disconnected || d.Status == Device.ConnectionStatus.GatewayError) &&
+            !d.Snoozed && d.IsProductDataKnown && d.NeedsSync);
+
+        if (!hasUnreachableDevicesToSync)
+        {
+            ResetRetryBackoff();
+            return;
+        }
+
+        if (retryJob == null)
+        {
+            var delay = nextRetryDelay;
+            nextRetryDelay = delay * 2 < MaxRetryDelay ? delay * 2 : MaxRetryDelay;
+            retryJob = InsteonScheduler.Instance.AddJob($"Retrying unreachable devices after {delay}",
+                handler: () => true,
+                completionCallback: (_) =>
+                {
+                    retryJob = null;
+                    SyncDevicesNow();
+                },
+                delay: delay, priority: Scheduler.Priority.Low, maxRunCount: 1, logLevel: Scheduler.LogLevel.DebugOnly);
+        }
+    }
+
+    // Restart retries of unreachable devices from the shortest delay
+    private void ResetRetryBackoff()
+    {
+        nextRetryDelay = FirstRetryDelay;
+        if (retryJob != null)
+        {
+            InsteonScheduler.Instance.CancelJob(retryJob);
+            retryJob = null;
+        }
     }
 
     /// <summary>
@@ -545,15 +596,16 @@ public sealed class Devices : OrderedKeyedList<Device>
     /// <summary>
     /// Allows a synchronization pass to start. If a pass is currently running,
     /// another one will be allowed to start once the current one is done.
-    /// The passed forceRead is used only for the next pass to run, then reset.
-    /// The passed callback is called when the next pass is done, then reset.
+    /// Requests made before the next pass starts are merged into it: it forces reading if any of them did,
+    /// and calls all their callbacks when done. forceRead and callbacks are then reset for the pass after.
     /// <param name="completionCallback"></param>
     /// <param name="forceRead"></param>  
     /// </summary>
     public void SyncDevicesNow(Scheduler.JobCompletionCallback<bool>? completionCallback = null, bool forceRead = false)
     {
-        syncContext.forceRead = forceRead;
-        syncContext.complectionCallback = completionCallback;
+        // Merge with any request not started yet: keep a requested forced read, and call all callbacks
+        syncContext.forceRead |= forceRead;
+        syncContext.complectionCallback += completionCallback;
         if (syncSemaphore.CurrentCount == 0)
             syncSemaphore.Release();
     }

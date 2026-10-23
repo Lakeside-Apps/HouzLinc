@@ -41,6 +41,9 @@ public sealed class MockPhysicalIM : MockPhysicalDevice
     // Index for ManageIMAllLinkRecordCommand findNext
     internal int nextRecordIndex = 0;
 
+    // Index of the next record returned by GetIMNextAllLinkRecordCommand (reset by GetIMFirstAllLinkRecordCommand)
+    internal int nextRecordToRead = 0;
+
     internal InsteonAllLinkingCompletedMessage HandleLinkingAction(LinkingAction action, byte group, InsteonID deviceId, MockPhysicalDevice? mockPhysicalDevice)
     {
         if (action == LinkingAction.CreateAutoLink)

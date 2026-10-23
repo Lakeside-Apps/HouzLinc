@@ -562,4 +562,16 @@ public abstract class DeviceCommand : HubCommand
 
     // Mock physical device, only set for unit-testing
     internal MockPhysicalDevice? MockPhysicalDevice { get; init; }
+
+    // Let the mock device record this command and decide whether to simulate a failure
+    private protected override bool SimulatesMockFailure()
+    {
+        var failure = MockPhysicalDevice?.ReceiveCommand(GetLogName()) ?? ErrorReasons.NoError;
+        if (failure != ErrorReasons.NoError)
+        {
+            ErrorReason = failure;
+            return true;
+        }
+        return false;
+    }
 }

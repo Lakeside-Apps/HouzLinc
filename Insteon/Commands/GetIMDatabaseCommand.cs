@@ -35,6 +35,24 @@ public sealed class GetIMFirstAllLinkRecordCommand : HubCommand
         IMCommandParams = "";
     }
 
+    private protected override async Task<bool> RunAsync()
+    {
+        if (MockPhysicalIM != null)
+        {
+            // Mock implementation of this command for testing purposes only
+            // Like the IM, respond with NAK if the database is empty
+            MockPhysicalIM.nextRecordToRead = 0;
+            if (MockPhysicalIM.AllLinkDatabase.Count == 0)
+            {
+                ErrorReason = ErrorReasons.NAK;
+                return false;
+            }
+            Record = MockPhysicalIM.AllLinkDatabase[MockPhysicalIM.nextRecordToRead++];
+            return true;
+        }
+        return await base.RunAsync();
+    }
+
     /// <summary>
     ///  Received response/ACK from the IM
     ///  See base class for details
@@ -109,6 +127,23 @@ public sealed class GetIMNextAllLinkRecordCommand : HubCommand
         IMCommandCode = IMCommandCode_GetNextAllLinkRecord;
         IMResponseLength = 0;
         IMCommandParams = "";
+    }
+
+    private protected override async Task<bool> RunAsync()
+    {
+        if (MockPhysicalIM != null)
+        {
+            // Mock implementation of this command for testing purposes only
+            // Like the IM, respond with NAK past the last record
+            if (MockPhysicalIM.nextRecordToRead >= MockPhysicalIM.AllLinkDatabase.Count)
+            {
+                ErrorReason = ErrorReasons.NAK;
+                return false;
+            }
+            Record = MockPhysicalIM.AllLinkDatabase[MockPhysicalIM.nextRecordToRead++];
+            return true;
+        }
+        return await base.RunAsync();
     }
 
     /// <summary>
