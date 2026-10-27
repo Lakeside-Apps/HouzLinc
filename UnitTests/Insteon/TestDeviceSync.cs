@@ -155,6 +155,56 @@ public sealed class TestDeviceSync : SyncTestsBase
         Assert.AreEqual(2, mock.ReceivedCommands.Count(c => c == "Ping"));
     }
 
+    // Smoke test scenario: hub unreachable (e.g., wrong credentials), edit, hub back, edit again
+    [TestMethod]
+    public async Task EditsAfterHubWasUnreachable_AreSynced()
+    {
+        var (device, mock) = await AddDimmer("11.22.33");
+        StartSync();
+
+        // Hub becomes unreachable: commands fail at the HTTP level, devices are rechecked
+        mock.IsReachable = false;
+        mock.FailureReason = global::Insteon.Commands.Command.ErrorReasons.HttpRequestError;
+        foreach (var d in house.Devices) d.OnGatewayChanged();
+        device.OnLevel = 100;
+        dispatcher.AdvanceBy(TimeSpan.FromSeconds(30));
+        Assert.AreNotEqual((byte)100, mock.OnLevel);
+
+        // Hub found again
+        mock.IsReachable = true;
+        foreach (var d in house.Devices) d.OnGatewayChanged();
+        dispatcher.AdvanceBy(TimeSpan.FromMinutes(5));
+        Assert.AreEqual((byte)100, mock.OnLevel, "Pending edit not synced once the hub is back");
+
+        // Edit again
+        device.OnLevel = 50;
+        dispatcher.AdvanceBy(TimeSpan.FromSeconds(30));
+        Assert.AreEqual((byte)50, mock.OnLevel, "Edit after the hub came back not synced");
+    }
+
+    // Smoke test scenario: a write the device applied but whose acknowledgement was lost left the app believing
+    // the device still had the old value, so setting the property back to that old value was considered in sync
+    [TestMethod]
+    public async Task EditBackToOldValue_AfterWriteWithLostAcknowledgement_IsSynced()
+    {
+        var (device, mock) = await AddDimmer("11.22.33");
+        var oldOnLevel = mock.OnLevel;
+        StartSync();
+
+        // The device applies the write, but the acknowledgements are lost
+        mock.LoseNextResponses = int.MaxValue;
+        device.OnLevel = 100;
+        dispatcher.AdvanceBy(TimeSpan.FromSeconds(30));
+        Assert.AreEqual((byte)100, mock.OnLevel, "Device should have applied the write");
+
+        // Acknowledgements work again, and the user sets the property back to its old value
+        mock.LoseNextResponses = 0;
+        device.OnLevel = oldOnLevel;
+        dispatcher.AdvanceBy(TimeSpan.FromMinutes(1));
+
+        Assert.AreEqual(oldOnLevel, mock.OnLevel, "Device should be set back to the old value");
+    }
+
     // A command throwing an exception must not leave the command semaphore held,
     // which would block all further communication with the hub
     [TestMethod]

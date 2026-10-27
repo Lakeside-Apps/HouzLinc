@@ -87,6 +87,11 @@ internal class ChannelDriver : ChannelBase
             FollowMask = followMask;
             success = true;
         }
+        else
+        {
+            // Channel properties unknown after a failed write (the device might have applied it). Read them again next time.
+            ArePropertiesRead = false;
+        }
 
         return success;
     }
@@ -107,6 +112,11 @@ internal class ChannelDriver : ChannelBase
             FollowOffMask = followOffMask;
             success = true;
         }
+        else
+        {
+            // Channel properties unknown after a failed write (the device might have applied it). Read them again next time.
+            ArePropertiesRead = false;
+        }
         return success;
     }
 
@@ -125,6 +135,11 @@ internal class ChannelDriver : ChannelBase
             this.OnLevel = onLevel;
             success = true;
         }
+        else
+        {
+            // Channel properties unknown after a failed write (the device might have applied it). Read them again next time.
+            ArePropertiesRead = false;
+        }
         return success;
     }
 
@@ -142,6 +157,11 @@ internal class ChannelDriver : ChannelBase
         {
             this.RampRate = rampRate;
             success = true;
+        }
+        else
+        {
+            // Channel properties unknown after a failed write (the device might have applied it). Read them again next time.
+            ArePropertiesRead = false;
         }
         return success;
     }

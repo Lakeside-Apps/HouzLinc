@@ -574,4 +574,16 @@ public abstract class DeviceCommand : HubCommand
         }
         return false;
     }
+
+    // Let the mock device decide whether the response to this command, which it executed, is lost
+    private protected override bool SimulatesMockLostResponse()
+    {
+        var failure = MockPhysicalDevice?.LoseResponse() ?? ErrorReasons.NoError;
+        if (failure != ErrorReasons.NoError)
+        {
+            ErrorReason = failure;
+            return true;
+        }
+        return false;
+    }
 }

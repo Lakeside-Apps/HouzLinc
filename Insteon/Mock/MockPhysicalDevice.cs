@@ -60,6 +60,23 @@ public class MockPhysicalDevice : DeviceBase
     public int FailNextCommands { get; set; }
 
     /// <summary>
+    /// Number of upcoming commands that the device executes but whose response is lost, so they fail with FailureReason,
+    /// e.g., to simulate a lost acknowledgement: the device applied a write, but the app does not know it.
+    /// </summary>
+    public int LoseNextResponses { get; set; }
+
+    // Called by commands sent to this device after it executed them. Returns the error to simulate if the response is lost.
+    internal Command.ErrorReasons LoseResponse()
+    {
+        if (LoseNextResponses > 0)
+        {
+            LoseNextResponses--;
+            return FailureReason;
+        }
+        return Command.ErrorReasons.NoError;
+    }
+
+    /// <summary>
     /// Error reported by failing commands
     /// </summary>
     public Command.ErrorReasons FailureReason { get; set; } = Command.ErrorReasons.NoDeviceResponse;

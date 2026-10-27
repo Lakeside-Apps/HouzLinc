@@ -260,6 +260,10 @@ public abstract class Command
                 {
                     Echo(attempt, maxAttempts);
                     success = SimulatesMockFailure() ? false : await RunAsync();
+                    if (success && SimulatesMockLostResponse())
+                    {
+                        success = false;
+                    }
                 }
                 finally
                 {
@@ -305,6 +309,12 @@ public abstract class Command
     /// If so, this sets ErrorReason and the command is not run.
     /// </summary>
     private protected virtual bool SimulatesMockFailure() => false;
+
+    /// <summary>
+    /// For unit tests: whether a mock physical device simulates losing the response to this command after executing it.
+    /// If so, this sets ErrorReason and the command reports failure.
+    /// </summary>
+    private protected virtual bool SimulatesMockLostResponse() => false;
 
     /// <summary>
     ///  Whether to suppress normal logging for this command

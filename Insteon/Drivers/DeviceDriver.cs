@@ -221,6 +221,12 @@ internal class DeviceDriver : DeviceDriverBase
         {
             OperatingFlags = operatingFlags;
         }
+        else
+        {
+            // Flags unknown after a failed write (flags written before the failure, or even the failed one,
+            // might have been applied). Read them again before comparing or writing next time.
+            AreOperatingFlagsRead = false;
+        }
 
         return success;
     }
@@ -274,6 +280,11 @@ internal class DeviceDriver : DeviceDriverBase
                 this.IsLEDBrightnessRead = true;
                 success = true;
             }
+            else
+            {
+                // Value unknown after a failed write, see TryWriteOnLevelAsync
+                this.IsLEDBrightnessRead = false;
+            }
         }
 
         return success;
@@ -322,6 +333,12 @@ internal class DeviceDriver : DeviceDriverBase
                 this.IsOnLevelRead = true;
                 success = true;
             }
+            else
+            {
+                // The device might have applied the write even though it failed (e.g., lost acknowledgement)
+                // so we don't know its value anymore. Read it again before comparing or writing next time.
+                this.IsOnLevelRead = false;
+            }
         }
 
         return success;
@@ -369,6 +386,11 @@ internal class DeviceDriver : DeviceDriverBase
                 this.RampRate = rampRate;
                 this.IsRampRateRead= true;
                 success = true;
+            }
+            else
+            {
+                // Value unknown after a failed write, see TryWriteOnLevelAsync
+                this.IsRampRateRead = false;
             }
         }
 
