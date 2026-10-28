@@ -203,8 +203,9 @@ public partial class App : Application
             builder.AddFilter("Microsoft", LogLevel.Warning);
 
 #if DEBUG
+            // Use LogLevel.Trace to also see hub protocol details (hub buffer reads, raw messages)
             builder.AddFilter("HouzLinc", LogLevel.Debug);
-#else   
+#else
             // To see our own log in status bar and Insteon Console
             builder.AddFilter("HouzLinc", LogLevel.Information);
 #endif

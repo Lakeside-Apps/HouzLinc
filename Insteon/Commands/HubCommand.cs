@@ -231,7 +231,7 @@ public abstract class HubCommand : Command
             default:
                 break;
         }
-        Logger.Log.Debug("Sending command (" + GetLogName() + "): " + requestString);
+        Logger.Log.Trace("Sending command (" + GetLogName() + "): " + requestString);
 
         HttpResponseMessage httpResponse;
         try
@@ -431,7 +431,7 @@ public abstract class HubCommand : Command
             if (response.Byte(ResponseHeaderLength + IMResponseLength + 1) == IMCommandCode_ACK)
             {
                 response = response.SubHexString(1 + ResponseHeaderLength, IMResponseLength);
-                Logger.Log.Debug("Received valid response from the IM: " + response.ToString());
+                Logger.Log.Trace("Received valid response from the IM: " + response.ToString());
 
                 if (OnIMResponseReceived(response))
                 {
