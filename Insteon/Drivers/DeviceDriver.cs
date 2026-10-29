@@ -207,7 +207,7 @@ internal class DeviceDriver : DeviceDriverBase
             {
                 if (operatingFlags[i] != OperatingFlags[i])
                 {
-                    var command = new SetOperatingFlagCommand(House.Gateway, Id, (byte)(operatingFlags[i] ? i * 2 : i * 2 + 1));
+                    var command = new SetOperatingFlagCommand(House.Gateway, Id, (byte)(operatingFlags[i] ? i * 2 : i * 2 + 1)) { MockPhysicalDevice = House.GetMockPhysicalDevice(Id) };
                     if (!await command.TryRunAsync(maxAttempts: 15))
                     {
                         success = false;
@@ -220,6 +220,12 @@ internal class DeviceDriver : DeviceDriverBase
         if (success)
         {
             OperatingFlags = operatingFlags;
+        }
+        else
+        {
+            // Flags unknown after a failed write (flags written before the failure, or even the failed one,
+            // might have been applied). Read them again before comparing or writing next time.
+            AreOperatingFlagsRead = false;
         }
 
         return success;
@@ -274,6 +280,11 @@ internal class DeviceDriver : DeviceDriverBase
                 this.IsLEDBrightnessRead = true;
                 success = true;
             }
+            else
+            {
+                // Value unknown after a failed write, see TryWriteOnLevelAsync
+                this.IsLEDBrightnessRead = false;
+            }
         }
 
         return success;
@@ -322,6 +333,12 @@ internal class DeviceDriver : DeviceDriverBase
                 this.IsOnLevelRead = true;
                 success = true;
             }
+            else
+            {
+                // The device might have applied the write even though it failed (e.g., lost acknowledgement)
+                // so we don't know its value anymore. Read it again before comparing or writing next time.
+                this.IsOnLevelRead = false;
+            }
         }
 
         return success;
@@ -369,6 +386,11 @@ internal class DeviceDriver : DeviceDriverBase
                 this.RampRate = rampRate;
                 this.IsRampRateRead= true;
                 success = true;
+            }
+            else
+            {
+                // Value unknown after a failed write, see TryWriteOnLevelAsync
+                this.IsRampRateRead = false;
             }
         }
 
@@ -453,7 +475,7 @@ internal class DeviceDriver : DeviceDriverBase
         {
             success = false;
 
-            var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead, EngineVersion);
+            var command = new GetDeviceLinkRecordCommand(House.Gateway, Id, allLinkDatabase.NextRecordToRead, EngineVersion) { MockPhysicalDevice = MockPhysicalDevice };
             if (await command.TryRunAsync(maxAttempts: 15))
             {
                 Debug.Assert(command.AllLinkRecord != null);

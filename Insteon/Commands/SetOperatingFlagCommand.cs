@@ -82,6 +82,21 @@ public sealed class SetOperatingFlagCommand : DeviceCommand
         ExpectExtendedResponseMessage = false;
     }
 
+    private protected override async Task<bool> RunAsync()
+    {
+        if (MockPhysicalDevice != null)
+        {
+            // Mock implementation of this command for testing purposes only.
+            // Uses the generic mapping of DeviceDriver.TryWriteOperatingFlagsAsync:
+            // command code 2*i sets operating flag bit i, 2*i+1 clears it.
+            var operatingFlags = MockPhysicalDevice.OperatingFlags;
+            operatingFlags[Command2 / 2] = Command2 % 2 == 0;
+            MockPhysicalDevice.OperatingFlags = operatingFlags;
+            return true;
+        }
+        return await base.RunAsync();
+    }
+
     private protected override void Done()
     {
         base.Done();

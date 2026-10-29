@@ -225,10 +225,9 @@ internal sealed class KeypadLincDriver : DeviceDriver
     {
         bool success = await base.TryWriteOperatingFlagsAsync(operatingFlags, opFlags2);
 
-        if (AreOperatingFlagsRead)
+        // Only write OpFlags2 if the operating flags were written successfully, and report a failure of the base write
+        if (success && AreOperatingFlagsRead)
         {
-            success = true;
-
             // Write the flags that are different
             // TODO: For now, only write the Detached Load flag (5)
             Bits writeMask = 0x40;
@@ -249,6 +248,11 @@ internal sealed class KeypadLincDriver : DeviceDriver
         if (success)
         {
             OpFlags2 = opFlags2;
+        }
+        else
+        {
+            // Flags unknown after a failed write, see DeviceDriver.TryWriteOperatingFlagsAsync
+            AreOperatingFlagsRead = false;
         }
 
         return success;

@@ -14,6 +14,7 @@
 */
 
 using Common;
+using Insteon.Commands;
 using Insteon.Model;
 
 namespace Insteon.Mock;
@@ -41,4 +42,72 @@ public class MockPhysicalDevice : DeviceBase
     }
 
     internal AllLinkDatabase AllLinkDatabase;
+
+    /// <summary>
+    /// Names of the commands this device received, in order, to let tests check network traffic.
+    /// Includes commands that failed, as they were still sent on the network.
+    /// </summary>
+    public List<string> ReceivedCommands { get; } = new();
+
+    /// <summary>
+    /// Whether the device responds. When false, every command sent to it fails with FailureReason.
+    /// </summary>
+    public bool IsReachable { get; set; } = true;
+
+    /// <summary>
+    /// Number of upcoming commands that fail with FailureReason, e.g., to simulate messages lost on the network
+    /// </summary>
+    public int FailNextCommands { get; set; }
+
+    /// <summary>
+    /// Number of upcoming commands that the device executes but whose response is lost, so they fail with FailureReason,
+    /// e.g., to simulate a lost acknowledgement: the device applied a write, but the app does not know it.
+    /// </summary>
+    public int LoseNextResponses { get; set; }
+
+    // Called by commands sent to this device after it executed them. Returns the error to simulate if the response is lost.
+    internal Command.ErrorReasons LoseResponse()
+    {
+        if (LoseNextResponses > 0)
+        {
+            LoseNextResponses--;
+            return FailureReason;
+        }
+        return Command.ErrorReasons.NoError;
+    }
+
+    /// <summary>
+    /// Error reported by failing commands
+    /// </summary>
+    public Command.ErrorReasons FailureReason { get; set; } = Command.ErrorReasons.NoDeviceResponse;
+
+    /// <summary>
+    /// When true, the next command sent to this device throws, to simulate unexpected errors
+    /// </summary>
+    public bool ThrowOnNextCommand { get; set; }
+
+    // Called by commands sent to this device. Returns the error to simulate, or NoError to respond normally.
+    internal Command.ErrorReasons ReceiveCommand(string commandName)
+    {
+        ReceivedCommands.Add(commandName);
+
+        if (ThrowOnNextCommand)
+        {
+            ThrowOnNextCommand = false;
+            throw new InvalidOperationException($"Simulated exception in command {commandName}");
+        }
+
+        if (!IsReachable)
+        {
+            return FailureReason;
+        }
+
+        if (FailNextCommands > 0)
+        {
+            FailNextCommands--;
+            return FailureReason;
+        }
+
+        return Command.ErrorReasons.NoError;
+    }
 }

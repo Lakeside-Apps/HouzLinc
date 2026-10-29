@@ -341,7 +341,7 @@ internal sealed class IMDriver : DeviceDriverBase
             if (restart)
             {
                 physicalAllLinkDatabase = new AllLinkDatabase();
-                var cmd = new GetIMFirstAllLinkRecordCommand(House.Gateway) { SuppressLogging = true };
+                var cmd = new GetIMFirstAllLinkRecordCommand(House.Gateway) { SuppressLogging = true, MockPhysicalIM = MockPhysicalIM };
                 if (await cmd.TryRunAsync())
                 {
                     Debug.Assert(cmd.Record != null);
@@ -354,7 +354,7 @@ internal sealed class IMDriver : DeviceDriverBase
             }
             else
             {
-                var cmd = new GetIMNextAllLinkRecordCommand(House.Gateway) { SuppressLogging = true };
+                var cmd = new GetIMNextAllLinkRecordCommand(House.Gateway) { SuppressLogging = true, MockPhysicalIM = MockPhysicalIM };
                 if (await cmd.TryRunAsync(maxAttempts: 10))
                 {
                     Debug.Assert(cmd.Record != null);
