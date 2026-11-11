@@ -167,6 +167,10 @@ public abstract class DeviceCommand : HubCommand
     {
         Debug.Assert(MockPhysicalDevice == null, "DeviceCommand.RunAsync() should not be called while unit-testing");
 
+        // Forget responses from any previous attempt, so they are not mistaken for responses to this one
+        standardResponseMessage = null;
+        extendedResponseMessage = null;
+
         // Prepare command string and expected response length
         byte messageFlags = (byte)((byte)MessageType.Direct + (byte)MessageMaxHops.Direct + ((Data != null) ? (byte)MessageLength.Extended : (byte)MessageLength.Standard));
         IMCommandParams = ToDeviceID.ToCommandString() + messageFlags.ToString("X2") + Command1.ToString("X2") + Command2.ToString("X2");
@@ -476,10 +480,12 @@ public abstract class DeviceCommand : HubCommand
         {
             LogOutput("Command " + GetLogName() + " " + ToDeviceID + " timed out!");
         }
-        // Note: we use lower-case standardResponseMessage here as getting StandardResponseMessage
-        // throws if the command did not return a standard response message, and asserts if the command
-        // expects an extended response, whereas a device can respond to such a command with a standard NAK.
-        else if (ErrorReason == ErrorReasons.NAK && standardResponseMessage != null)
+        // Report the reason of a NAK from the device, if that's why the command failed.
+        // A device NAK only fails commands expecting a standard response (see OnDirectNAKReceived). Commands expecting
+        // an extended response ignore device NAKs and keep waiting, so if they fail with a NAK, it came from the IM,
+        // and any standard message received is not the reason of the failure.
+        // We use lower-case standardResponseMessage as StandardResponseMessage throws if there is none.
+        else if (ErrorReason == ErrorReasons.NAK && !ExpectExtendedResponseMessage && standardResponseMessage != null)
         {
             string errorCode;
             switch (standardResponseMessage.DirectNAKErrorCode)
