@@ -43,7 +43,8 @@ public enum LogEventId
     CommandOutput,
     CommandError,
     UserActionRequested,
-    UserActionCleared
+    UserActionCleared,
+    Trace
 }
 
 // Common.Logger class to handle existing logging code.
@@ -80,6 +81,7 @@ public partial class Logger
         LogLevel.Error,         // CommandError
         LogLevel.Information,   // UserActionRequested
         LogLevel.Information,   // UserActionCleared
+        LogLevel.Trace,         // Trace
     };
 
     // Class (grouping) of log events to facilitate filtering in the ilogger implementations
@@ -97,7 +99,8 @@ public partial class Logger
         LogEventClass.Command,  // CommandOutput
         LogEventClass.Command,  // CommandError
         LogEventClass.UserAction,  // UserActionRequested
-        LogEventClass.UserAction   // UserActionCleared
+        LogEventClass.UserAction,  // UserActionCleared
+        LogEventClass.General,     // Trace
     };
 
     public LogEventClass GetLogEventClass(int logEventId)
@@ -131,6 +134,15 @@ public partial class Logger
     public void Debug(string message)
     {
         Debug(logger, message);
+    }
+
+    // Most detailed level, e.g., hub protocol details such as hub buffer reads and raw messages.
+    // Not shown by default in Debug builds, see the log filters in App.xaml.cs.
+    [LoggerMessage(EventId = (int)LogEventId.Trace, Message = "{message}", Level = LogLevel.Trace)]
+    static partial void Trace(ILogger logger, string message);
+    public void Trace(string message)
+    {
+        Trace(logger, message);
     }
 
     // Scheduler logging

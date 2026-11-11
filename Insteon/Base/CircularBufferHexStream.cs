@@ -103,7 +103,7 @@ internal abstract class CircularBufferHexStream : IHexStream
         if (Logger.Log.IsEnabled(LogEventId.Debug) &&
             (!acquireData || !_contentBuffer.Equals(_previousBuffer, StringComparison.Ordinal)))
         {
-            Logger.Log.Debug("Reading " + byteCount + (byteCount > 1 ? " bytes" : " byte") + " from 'C' to 'N'");
+            Logger.Log.Trace("Reading " + byteCount + (byteCount > 1 ? " bytes" : " byte") + " from 'C' to 'N'");
             WriteToDebug();
         }
 
@@ -129,7 +129,7 @@ internal abstract class CircularBufferHexStream : IHexStream
     {
         // Update the new current position
         _currentCharPos = _newCharPos;
-        Logger.Log.Debug("Advancing 'C' to 'N'");
+        Logger.Log.Trace("Advancing 'C' to 'N'");
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ internal abstract class CircularBufferHexStream : IHexStream
         // Update the new current position
         _newCharPos = _currentCharPos + byteCount * 2;
         _currentCharPos = _newCharPos;
-        Logger.Log.Debug("Advancing 'C' and 'N' by " + byteCount + " bytes");
+        Logger.Log.Trace("Advancing 'C' and 'N' by " + byteCount + " bytes");
     }
 
     // Write the content of the buffer and the new and current positions to the debug logger
@@ -159,7 +159,7 @@ internal abstract class CircularBufferHexStream : IHexStream
         if (l < n) l = n;
         b = b.PadRight(l, '0');
         if (l < _contentBufferLength) b = b + "...";
-        Logger.Log.Debug(b);
+        Logger.Log.Trace(b);
 
         // Write the current and new positions just under the buffer content
         if (c < n)
@@ -167,19 +167,19 @@ internal abstract class CircularBufferHexStream : IHexStream
             string s = "N";
             s = s.PadLeft(n - c);
             s = "C" + s;
-            Logger.Log.Debug(s.PadLeft(n + 1));
+            Logger.Log.Trace(s.PadLeft(n + 1));
         }
         else if (c > n)
         {
             string s = "C";
             s = s.PadLeft(c - n);
             s = "N" + s;
-            Logger.Log.Debug(s.PadLeft(c + 1));
+            Logger.Log.Trace(s.PadLeft(c + 1));
         }
         else
         {
             string s = "C";
-            Logger.Log.Debug(s.PadLeft(c + 1));
+            Logger.Log.Trace(s.PadLeft(c + 1));
         }
     }
 
