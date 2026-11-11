@@ -476,12 +476,13 @@ public abstract class DeviceCommand : HubCommand
         {
             LogOutput("Command " + GetLogName() + " " + ToDeviceID + " timed out!");
         }
-        // Note: we check lower-case standardResponseMessage here as getting
-        // StandardResponseMessage throws if command did not return a standard response message.
+        // Note: we use lower-case standardResponseMessage here as getting StandardResponseMessage
+        // throws if the command did not return a standard response message, and asserts if the command
+        // expects an extended response, whereas a device can respond to such a command with a standard NAK.
         else if (ErrorReason == ErrorReasons.NAK && standardResponseMessage != null)
         {
             string errorCode;
-            switch (StandardResponseMessage.DirectNAKErrorCode)
+            switch (standardResponseMessage.DirectNAKErrorCode)
             {
                 case DirectNAKErrorCodes.PreNAK:
                     errorCode = "Pre NAK";
